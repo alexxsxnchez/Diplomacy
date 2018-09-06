@@ -69,6 +69,32 @@ void MoveProcessor::processMoves() {
 
 		// for each attacked location
 		for(auto it = attacks_.begin(); it != attacks_.end(); it++) {
+
+			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+				bool isHoldMove = it2->first->getPiece()->getLocation() == it->first;
+				if(!isHoldMove) {
+					auto it3 = attacks_.find(it2->first->getPiece()->getLocation());
+					if(it3 != attacks_.end()) {
+						bool found = false;
+						for(auto it4 : it3->second) {
+							if(it4.first->getPiece()->getLocation() == it->first && it4.second >= it2->second) {
+								// turn into hold move BEFORE calculating winningattack move
+								HoldMove * newHoldMove = new HoldMove((it2->first)->getPiece());
+								holdMovesToBeAdded.push_back(newHoldMove);
+								mustReprocess = true;
+								it2 = (it->second).erase(it2);
+								found = true;
+								break;
+							}
+						}
+						if(found) {
+							break;
+						}
+					}
+				}
+			}
+
+
 			const Move * winningAttackMove = NULL;
 			float largestValue = 0;
 
@@ -91,21 +117,24 @@ void MoveProcessor::processMoves() {
 				// for each attack on this location
 				for(auto it2 = it->second.begin(); it2 != it->second.end(); i++) {
 					std::cout << "i: " << i << std::endl;
-					// need to remove all attacks that is not the winner and replace it with a hold move
 					bool isHoldMove = it2->first->getPiece()->getLocation() == it->first;
-					bool isStrongerOrEqualAttackFromDestination = false;
+/*					bool isStrongerOrEqualAttackFromDestination = false;
 					if(!isHoldMove) {
 						auto it3 = attacks_.find(it2->first->getPiece()->getLocation());
 						if(it3 != attacks_.end()) {
 							for(auto it4 : it3->second) {
 								if(it4.first->getPiece()->getLocation() == it->first && it4.second >= it2->second) {
 									isStrongerOrEqualAttackFromDestination = true;
+									// turn into hold move BEFORE calculating winningattack move
+
+
 									break;
 								}
 							}
 						}
 					}
-					if(it2->second != largestValue || winningAttackMove == NULL || isStrongerOrEqualAttackFromDestination) {
+*/					// need to remove all attacks that is not the winner and replace it with a hold move
+					if(it2->second != largestValue || winningAttackMove == NULL/* || isStrongerOrEqualAttackFromDestination*/) {
 						if(!isHoldMove) {
 							std::cout << "removing: " << it2->first->getPiece()->getLocation() << " moving to " << it->first << std::endl;
 							HoldMove * newHoldMove = new HoldMove((it2->first)->getPiece());

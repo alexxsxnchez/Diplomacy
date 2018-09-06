@@ -25,6 +25,11 @@ void SupportMove::process(map<string, map<const Move *, float> > & attacks) cons
 	// if not attacked, then add support functionality
 	auto it = attacks.find(getPiece()->getLocation());
 
+// PROBLEMS -- support can still be cut if only attack is from destination. but now instead of merely being attacked, if the support is dislodged, the support is only then cut
+
+// possible solution: when attack from destination is detected, move supportmove into a queue, and process after all other supports are processed
+
+
 	bool isAttackedFromNotDestination = false;
 	if(it != attacks.end()) {
 		for(auto it2 : it->second) {

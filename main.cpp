@@ -213,6 +213,70 @@ static void tc10() {
 	std::cout << "----" << std::endl;
 }
 
+static void tc11() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::TURKEY, "Bulgaria"), "Rumania"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Rumania"), "Bulgaria"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Sevastopol"), "Rumania"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Serbia"), "Rumania", "Bulgaria"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Greece"), "Rumania", "Bulgaria"));
+	p.addMove(new SupportMove(new FleetPiece(Nation::RUSSIA, "Black_Sea"), "Bulgaria", "Rumania"));
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+static void tc12() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Prussia"), "Warsaw"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia", "Warsaw"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Bohemia"), "Silesia"));
+	p.addMove(new HoldMove(new ArmyPiece(Nation::RUSSIA, "Warsaw")));
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+static void tc13() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Prussia"), "Warsaw"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia", "Warsaw"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Silesia"));
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+static void tc14() {  PROBLEM
+	MoveProcessor p;
+	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "Berlin"), "Prussia"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Berlin", "Prussia"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Silesia"));
+	p.addMove(new MovementMove(new FleetPiece(Nation::RUSSIA, "Baltic_Sea"), "Prussia"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Prussia", "Silesia"));
+	p.processMoves();
+	std::cout << "----" << std::endl;	
+}
+
+static void tc14_5() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Piedmont"), "Marseilles"));	
+	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Venice"), "Piedmont"));	
+	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Piedmont"));	
+	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Burgundy"), "Marseilles"));	
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+static void tc14_6() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Piedmont"), "Marseilles"));	
+	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Venice"), "Piedmont"));	
+	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Piedmont"));	
+	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Piedmont", "Marseilles"));
+	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "Gulf_of_Lyons"), "Marseilles", "Marseilles"));
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+
 int main() {
 	Graph * g = new Graph;
 	readInNodes(*g);
@@ -252,6 +316,12 @@ int main() {
 	tc8();
 	tc9();
 	tc10();
+	tc11();
+	tc12();
+	tc13();
+	tc14();
+	tc14_5();
+	tc14_6();
 
 	list<string> path = g->searchPath("Clyde", "London");
 	for(string s : path) {
