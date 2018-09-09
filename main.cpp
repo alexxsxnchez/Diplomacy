@@ -153,7 +153,7 @@ static void tc4() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc5() {
+static void tc5() { // fail
 	MoveProcessor p;
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Gascony"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Burgundy"));
@@ -172,7 +172,7 @@ static void tc6() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc7() {
+static void tc7() { // fail
 	MoveProcessor p;
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::GERMANY, "Baltic_Sea"), "Silesia", "Prussia"));
@@ -181,7 +181,7 @@ static void tc7() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc8() {
+static void tc8() { // fail
 	MoveProcessor p;
 	p.addMove(new MovementMove(new FleetPiece(Nation::FRANCE, "Gulf_of_Lyons"), "Tyrrehenian_Sea"));
 	p.addMove(new HoldMove(new FleetPiece(Nation::ITALY, "Tyrrehenian_Sea")));
@@ -244,7 +244,7 @@ static void tc13() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc14() {  PROBLEM
+static void tc14() {  //PROBLEM
 	MoveProcessor p;
 	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "Berlin"), "Prussia"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Berlin", "Prussia"));
@@ -319,7 +319,7 @@ int main() {
 	tc11();
 	tc12();
 	tc13();
-	tc14();
+	tc14(); // problematic
 	tc14_5();
 	tc14_6();
 

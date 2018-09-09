@@ -21,7 +21,9 @@ bool ConvoyMove::isLegal(Graph * graph) const {
 	return getPiece()->isConvoyValid(this, graph);
 }
 
-void ConvoyMove::process(map<string, map<const Move *, float> > & attacks) const {
+void ConvoyMove::process(map<string, map<const Move *, float> > & attacks, 
+			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
+			map<string, map<string, string> > & convoys) const {
 
 }
 

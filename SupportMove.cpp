@@ -21,7 +21,11 @@ bool SupportMove::isLegal(Graph * graph) const {
 	return getPiece()->isSupportValid(this, graph);
 }
 
-void SupportMove::process(map<string, map<const Move *, float> > & attacks) const {
+void SupportMove::process(map<string, map<const Move *, float> > & attacks, 
+			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
+			map<string, map<string, string> > & convoys) const {
+	
+	/*
 	// if not attacked, then add support functionality
 	auto it = attacks.find(getPiece()->getLocation());
 
@@ -61,27 +65,36 @@ void SupportMove::process(map<string, map<const Move *, float> > & attacks) cons
 			}
 		}
 	}
+	
+	*/
+	auto itS = supports.find(destination_);
+	if(itS == supports.end()) {
+		std::map<string, std::unordered_set<const SupportMove *> > supportsToDestination;
+		std::unordered_set<const SupportMove *> setOfMoves;
+		setOfMoves.insert(this);
+		supportsToDestination.insert(std::make_pair(source_, setOfMoves));
+		supports.insert(std::make_pair(destination_, supportsToDestination));
+	} else {
+		auto it2 = itS->second.find(source_);
+		if(it2 == itS->second.end()) {
+			std::unordered_set<const SupportMove *> setOfMoves;
+			setOfMoves.insert(this);
+			itS->second.insert(std::make_pair(source_, setOfMoves));
+		} else {
+			auto supportsFromSource = supports.at(source_);
+			it2->second.insert(this);
+		}
+	}
+	
 	// act as hold move
-	it = attacks.find(getPiece()->getLocation());
+	auto itA = attacks.find(getPiece()->getLocation());
 	std::pair<const Move *, float> pair = std::make_pair(this, 1.5);
-	if(it == attacks.end()) {
+	if(itA == attacks.end()) {
 		std::map<const Move *, float> map;
 		map.insert(pair);
 		attacks.insert(std::make_pair(getPiece()->getLocation(), map));
 	} else {
-		bool found = false;
-		for(auto it2 = (it->second).begin(); it2 != (it->second).end(); it2++) {
-			if(it2->first->getPiece()->getLocation() == getPiece()->getLocation()) {
-				float value = it2->second;
-				delete it2->first;
-				(it->second).insert(std::make_pair(this, 1.5 + (value * -1)));
-				found = true;
-				break;
-			}
-		}
-		if(!found) {
-			(it->second).insert(pair);
-		}
+		itA->second.insert(pair);
 	}
 }
 

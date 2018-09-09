@@ -19,7 +19,9 @@ bool MovementMove::isLegal(Graph * graph) const {
 	return getPiece()->isMovementValid(this, graph);
 }
 
-void MovementMove::process(map<string, map<const Move *, float> > & attacks) const {
+void MovementMove::process(map<string, map<const Move *, float> > & attacks, 
+			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
+			map<string, map<string, string> > & convoys) const {
 	auto it = attacks.find(destination_);
 	std::pair<const Move *, float> pair = std::make_pair(this, 1.0);
 	if(it == attacks.end()) {
