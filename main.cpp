@@ -153,7 +153,7 @@ static void tc4() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc5() { // fail
+static void tc5() {
 	MoveProcessor p;
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Gascony"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Burgundy"));
@@ -172,7 +172,7 @@ static void tc6() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc7() { // fail
+static void tc7() {
 	MoveProcessor p;
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::GERMANY, "Baltic_Sea"), "Silesia", "Prussia"));
@@ -181,7 +181,7 @@ static void tc7() { // fail
 	std::cout << "----" << std::endl;
 }
 
-static void tc8() { // fail
+static void tc8() {
 	MoveProcessor p;
 	p.addMove(new MovementMove(new FleetPiece(Nation::FRANCE, "Gulf_of_Lyons"), "Tyrrehenian_Sea"));
 	p.addMove(new HoldMove(new FleetPiece(Nation::ITALY, "Tyrrehenian_Sea")));
@@ -220,7 +220,7 @@ static void tc11() {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Sevastopol"), "Rumania"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Serbia"), "Rumania", "Bulgaria"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Greece"), "Rumania", "Bulgaria"));
-	p.addMove(new SupportMove(new FleetPiece(Nation::RUSSIA, "Black_Sea"), "Bulgaria", "Rumania"));
+	p.addMove(new SupportMove(new FleetPiece(Nation::TURKEY, "Black_Sea"), "Bulgaria", "Rumania"));
 	p.processMoves();
 	std::cout << "----" << std::endl;
 }
@@ -244,7 +244,7 @@ static void tc13() {
 	std::cout << "----" << std::endl;
 }
 
-static void tc14() {  //PROBLEM
+static void tc14() {
 	MoveProcessor p;
 	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "Berlin"), "Prussia"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Berlin", "Prussia"));
@@ -272,6 +272,18 @@ static void tc14_6() {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Piedmont"));	
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Piedmont", "Marseilles"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "Gulf_of_Lyons"), "Marseilles", "Marseilles"));
+	p.processMoves();
+	std::cout << "----" << std::endl;
+}
+
+static void tc15() {
+	MoveProcessor p;
+	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Munich"), "Silesia"));
+	p.addMove(new HoldMove(new ArmyPiece(Nation::GERMANY, "Berlin")));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::AUSTRIA, "Bohemia"), "Munich"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Berlin"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::AUSTRIA, "Tyrolia"), "Bohemia", "Munich"));
+	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Silesia"), "Prussia", "Berlin"));
 	p.processMoves();
 	std::cout << "----" << std::endl;
 }
@@ -319,9 +331,10 @@ int main() {
 	tc11();
 	tc12();
 	tc13();
-	tc14(); // problematic
+	tc14();
 	tc14_5();
 	tc14_6();
+	tc15();
 
 	list<string> path = g->searchPath("Clyde", "London");
 	for(string s : path) {
