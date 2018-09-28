@@ -22,10 +22,13 @@ class MoveProcessor {
 		std::unordered_set<Move *> moves_;
 //		map<string, Move *> moves_;
 		map<string, map<const Move *, float> > attacks_;
+		map<string, map<const MovementMove *, float> > attacksViaConvoy_;
+		
 		map<string, map<string, std::unordered_set<const SupportMove *> > > supports_;
-		map<string, map<string, string> > convoys_;
+		map<string, map<string, std::unordered_set<const ConvoyMove *> > > convoys_;
 		//		map<string, std::pair<std::unordered_set<const SupportMove *>, float> > supports_;
 		float calculateSupportStrength(string source, string destination);
+		void processMovesByConvoys();
 		void processConvoys();
 		void processSupports();
 		void processAttacks();

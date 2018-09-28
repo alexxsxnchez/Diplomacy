@@ -33,7 +33,7 @@ bool ArmyPiece::isMovementValid(const MovementMove * move, Graph * graph) const 
 	unordered_set<string> neighbours = graph->getArmyNeighbours(getLocation());
 	bool isDestinationInNeighbours = neighbours.find(destinationString) != neighbours.end();
 
-	return (destination->getType() == Territory::Type::COAST && graph->getTerritory(getLocation())->getType() == Territory::Type::COAST) || isDestinationInNeighbours;
+	return (destination->getType() == Territory::Type::COAST && graph->getTerritory(getLocation())->getType() == Territory::Type::COAST && move->getViaConvoy()) || isDestinationInNeighbours;
 }
 
 bool ArmyPiece::isSupportValid(const SupportMove * move, Graph * graph) const {

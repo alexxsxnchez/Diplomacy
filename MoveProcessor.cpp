@@ -40,8 +40,51 @@ float MoveProcessor::calculateSupportStrength(string source, string destination)
 	return (float) supportFromSource.size();
 }
 
-void MoveProcessor::processConvoys() {
+// convoy does not cut certain supports rule is similar to supporting unit getting attacked
+// by unit from destination
+// for when convoy does cut via alternate route, the way it should be handled is any convoy
+// that is "dislodged" by rule above, cannot participate in convoy. Whether or not that fleet does
+// actually get dislodged will be handled with the support logic (already taken care of). 
 
+void MoveProcessor::processMovesByConvoys() {
+// remove convoys that do not match any moves
+// nvm don't need to do the above
+}
+
+// ALGO
+// 1. check if convoy is attacked with support greater than itself.
+// if so remove itself from convoy map -> except we don't know if that support is cut by 
+// something else entirely, can't just check attack map, since attack could be another convoy,
+// that could also be disrupted
+// 2.
+
+bool MoveProcessor::checkPaths(const Move * move, std::unordered_set<const ConvoyMove *> convoys) {
+// TODO
+}
+
+void MoveProcessor::processConvoys() {
+// find at least a single pathway for the move to reach its destination thru use of convoys
+	for(auto itA = attacksViaConvoy_.begin(); itA != attacksViaConvoy_.end(); it++) {
+		for(auto it2A = itA->second.begin(); it2A != itA->second.end(); ) {
+			if(!it2A->first->getViaConvoy()) {
+				continue;
+			}
+			
+			try {
+				auto convoysToDestination = convoys_.at(itA->first);
+				auto correctConvoys = convoysToDestination.at(it2A->first->getPiece()->getLocation());
+				bool isAPath = checkPaths(itA2->first, correctConvoys);
+				if(isAPath) {
+					
+					it2A++;
+				} else {
+					it2A = itA->second.erase(it2A);
+				}
+			} catch(std::out_of_range) {
+				it2A = itA->second.erase(it2A);
+			}
+		}
+	}
 }
 
 //		map<string, map<string, std::unordered_set<const SupportMove *> > > supports_;
@@ -58,7 +101,7 @@ void MoveProcessor::processSupports() {
 			try {
 				auto attacks = attacks_.at(destination);
 				for(auto it3 : attacks) {
-					if(it3.first->getPiece()->getLocation() == source) {
+					if(it3.first->getPiece()->getLocation() == source && it3.first->isValid()) {
 						isAttackThatMatches = true;
 						break;
 					}
@@ -111,7 +154,7 @@ void MoveProcessor::processSupports() {
 				try {
 					auto attacks = attacks_.at(location);
 					for(auto it4 : attacks) {
-						if(it4.first->getPiece()->getLocation() == destination) {
+						if(it4.first->getPiece()->getLocation() == destination && it4.first->isValid()) {
 							valueOfAttack = it4.second;
 						} else if(it4.first->getPiece()->getLocation() == location) {
 							valueOfHold = it4.second;
@@ -139,6 +182,18 @@ void MoveProcessor::processSupports() {
 	}
 }
 
+// for all invalid convoy attacks, check to see if the attack strength on convoy is equal to
+// or less than hold strength for every convoy in all chains. If true for any, invalid attack
+// is now valid, and must return true at end of function.
+bool processConvoysThatMaybeAreDislodgedByDestination() {
+	for(auto itA = attacks_.begin(); itA != attacks_.end(); itA++) {
+		for(auto it2A = itA->second.begin(); it2A != itA->second.end(); it2A++) {
+			if(it2A->first->get
+		}
+	}
+
+}
+
 void MoveProcessor::processAttacks() {
 // make this function return the dislodgelist
 
@@ -151,10 +206,17 @@ void MoveProcessor::processMoves() {
 	for(Move * move : moves_) {
 		move->process(attacks_, supports_, convoys_);
 	}
-
-	processConvoys();
-	processSupports();
-	processAttacks();
+// might need a while loop enclosing processConvoys and processSupports where the while loop ends
+// when there are no more convoys moves that are being attacked with at least one support?
+	processConvoys(); // return boolean which is condition
+	
+	bool newValidAttack = false;
+	do {
+		processSupports();
+		newValidAttack = processConvoysThatMaybeAreDislodgedByDestination();
+	} while(newValidAttack);
+	
+	//processAttacks();
 
 
 	bool mustReprocess;

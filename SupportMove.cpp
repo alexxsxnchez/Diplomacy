@@ -81,7 +81,7 @@ void SupportMove::process(map<string, map<const Move *, float> > & attacks,
 			setOfMoves.insert(this);
 			itS->second.insert(std::make_pair(source_, setOfMoves));
 		} else {
-			auto supportsFromSource = supports.at(source_);
+			//auto supportsFromSource = supports.at(source_); do I need this??? 
 			it2->second.insert(this);
 		}
 	}
