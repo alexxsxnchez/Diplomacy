@@ -2,6 +2,7 @@
 #include "Piece.h"
 
 Move::Move(Piece * piece) : piece_{piece} {}
+
 Move::~Move() {}
 
 Piece * Move::getPiece() const {
