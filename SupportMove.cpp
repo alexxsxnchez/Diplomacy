@@ -21,6 +21,45 @@ bool SupportMove::isLegal(Graph * graph) const {
 	return getPiece()->isSupportValid(this, graph);
 }
 
+bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
+	if(supportGiven_ != DecisionResult.UNDECIDED) {
+		return true;
+	}
+	if(dislodged_) {
+		supportGiven_ = DecisionResult.NO;
+		return true;
+	}
+	std::unordered_set<string> & attacks = processor.getAttacks().at(this->getPiece()->getLocation());
+	bool canStillBeGiven = true;
+	for(const MovementMove * move : attacks) {
+		if(move->getPiece()->getLocation() == destination_) {
+			continue;
+		}
+		if(move->getAttackStrength().min > 0) {
+			supportGiven_ = DecisionResult.NO;
+			return true;
+		}
+		if(move->getAttackStrength().max > 0) {
+			canStillBeGiven = false;
+		}
+	}
+	if(canStillBeGiven) {
+		supportGiven_ = DecisionResult.YES;
+		return true;
+	}
+	return false;
+}
+
+bool SupportMove::process(MovementProcessor & processor) {
+
+	calculateHoldStrength(processor);
+	bool dislodgedDetermined = determineDislodgeDecision(processor);
+	bool supportDetermined = determineSupportDecision(processor);
+	
+	return supportDetermined && dislodgedDetermined;
+}
+
+/*
 void SupportMove::process(map<string, map<const Move *, float> > & attacks, 
 			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
 			map<string, map<string, string> > & convoys) const {
@@ -66,7 +105,7 @@ void SupportMove::process(map<string, map<const Move *, float> > & attacks,
 		}
 	}
 	
-	*/
+	
 	auto itS = supports.find(destination_);
 	if(itS == supports.end()) {
 		std::map<string, std::unordered_set<const SupportMove *> > supportsToDestination;
@@ -97,6 +136,7 @@ void SupportMove::process(map<string, map<const Move *, float> > & attacks,
 		itA->second.insert(pair);
 	}
 }
+*/
 
 string SupportMove::getSource() const {
 	return source_;
@@ -104,4 +144,8 @@ string SupportMove::getSource() const {
 
 string SupportMove::getDestination() const {
 	return destination_;
+}
+
+DecisionResult SupportMove::getSupportGiven() const {
+	return supportGiven_;
 }

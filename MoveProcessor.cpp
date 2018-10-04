@@ -17,8 +17,69 @@ MoveProcessor::~MoveProcessor() {
 	}
 }
 
-void MoveProcessor::addMove(Move * move) {
+void MoveProcessor::addMove(HoldMove * move) {
 	moves_.insert(move);
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
+}
+
+void MoveProcessor::addMove(MovementMove * move) {
+	moves_.insert(move);
+	auto it = attacks_.find(move->getDestination());
+	if(it == attacks_.end()) {
+		std::unordered_set<MovementMove *> moves;
+		moves.insert(move);
+		attacks_.insert(std::make_pair(destination_, moves));
+	} else {
+		(it->second).insert(move);
+	}
+}
+
+void MoveProcessor::addMove(ConvoyMove * move) {
+	moves_.insert(move);
+	auto itC = convoys_.find(move->getDestination());
+	if(itC == convoys_.end()) {
+		std::map<string, std::unordered_set<ConvoyMove *> > convoysToDestination;
+		std::unordered_set<ConvoyMove *> setOfMoves;
+		setOfMoves.insert(move);
+		convoysToDestination.insert(std::make_pair(move->getSource(), setOfMoves));
+		convoys_.insert(std::make_pair(move->getDestination(), convoysToDestination));
+	} else {
+		auto it2 = itC->second.find(move->getSource());
+		if(it2 == itC->second.end()) {
+			std::unordered_set<ConvoyMove *> setOfMoves;
+			setOfMoves.insert(move);
+			itC->second.insert(std::make_pair(move->getSource(), setOfMoves));
+		} else {
+			itC->second.insert(move);
+		}
+	}
+			
+	// act as hold move
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move);
+}
+
+void MoveProcessor::addMove(SupportMove * move) {
+	moves_.insert(move);
+	auto itS = supports_.find(move->getDestination());
+	if(itS == supports_.end()) {
+		std::map<string, std::unordered_set<SupportMove *> > supportsToDestination;
+		std::unordered_set<SupportMove *> setOfMoves;
+		setOfMoves.insert(move);
+		supportsToDestination.insert(std::make_pair(move->getSource(), setOfMoves));
+		supports_.insert(std::make_pair(move->getDestination(), supportsToDestination));
+	} else {
+		auto it2 = itS->second.find(move->getSource());
+		if(it2 == itS->second.end()) {
+			std::unordered_set<SupportMove *> setOfMoves;
+			setOfMoves.insert(move);
+			itS->second.insert(std::make_pair(move->getSource(), setOfMoves));
+		} else {
+			it2->second.insert(move);
+		}
+	}
+	
+	// act as hold move
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move);
 }
 
 // ALGO
@@ -34,11 +95,28 @@ void MoveProcessor::addMove(Move * move) {
 // 6. repeat step 5 until no more standoffs. Return successful movements
 
 // throws out_of_range exception
-float MoveProcessor::calculateSupportStrength(string source, string destination) {
-	auto supportToDestination = supports_.at(destination);
-	auto supportFromSource = supportToDestination.at(source);
-	return (float) supportFromSource.size();
+unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality = Nation.INVALID) const {
+	unsigned int count = 0;
+	try {
+		auto supportToDestination = supports_.at(destination);
+		auto supportFromSource = supportToDestination.at(source);
+		for(const SupportMove * move : supportFromSource) {
+			if(move->getPiece()->getNationality() == nationality) {
+				continue;
+			}
+			if(move->getSupportDecision() != DecisionResult.NO && !onlyGiven) {
+				count++;
+			} else if(move->getSupportDecision() == DecisionResult.YES && onlyGiven) {
+				count++;
+			}
+		}
+	} catch(std::out_of_range) {
+		return 0;
+	}
+	return count;
 }
+
+/*
 
 // convoy does not cut certain supports rule is similar to supporting unit getting attacked
 // by unit from destination
@@ -198,7 +276,7 @@ void MoveProcessor::processAttacks() {
 // make this function return the dislodgelist
 
 }
-
+*/
 
 void MoveProcessor::processMoves() {
 	std::cout << "Processing" << std::endl;
@@ -345,3 +423,21 @@ void MoveProcessor::processMoves() {
 	}
 	std::cout << std::endl;
 }
+
+std::unordered_set<Move *> & MoveProcessor::getMoves() const {
+	return moves_;
+}
+
+NonAttackMap & MoveProcessor::getNonAttacks() const {
+	return nonAttacks_;
+}
+		
+AttackMap & MoveProcessor::getAttacks() const {
+	return attacks_;
+}
+		
+ConvoyMap & MoveProcessor::getConvoys() const {
+	return convoys_;
+}
+
+

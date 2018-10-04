@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <unordered_set>
+#include "MoveProcessor.h"
 
 using std::unordered_set;
 using std::ostream;
@@ -35,27 +36,21 @@ class Move {
 		Piece * piece_;
 		
 	protected:
-		DecisionResult dislodged_ = DecisionResult.UNDECIDED;	
+		DecisionResult dislodged_ = UNDECIDED;	
 		Strength holdStrength_;
+		
 		virtual void calculateHoldStrength(MoveProcessor & processor);
+		virtual bool determineDislodgeDecision(MoveProcessor & processor);
 		virtual void print(ostream & out) const = 0;
-		virtual bool determineDislodgeDecision();
 		
 	public:
 		Move(Piece * piece);
 		virtual ~Move();
 		Piece * getPiece() const;
-		virtual void putIntoSet(unordered_set<HoldMove *> &, unordered_set<MovementMove *> &, unordered_set<SupportMove *> &, unordered_set<ConvoyMove *> &) = 0;
 		virtual bool isLegal(Graph * graph) const = 0;
-		
-		virtual bool process() = 0;
-		
-		
-		
-		
-		virtual void process(map<string, map<const Move *, float> > & attacks, 
-			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
-			map<string, map<string, string> > & convoys) const = 0;
+		virtual bool process(MoveProcessor & processor) = 0;
+		DecisionResult getDislodgeDecision() const;
+		Strength getHoldStrength() const;
 
 		friend ostream & operator<<(ostream & out, const Move & move);
 };

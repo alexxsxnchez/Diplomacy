@@ -17,6 +17,14 @@ bool HoldMove::isLegal(Graph * graph) const {
 	return getPiece()->isHoldValid(this, graph);
 }
 
+
+bool HoldMove::process(MovementProcessor & processor) {
+	calculateHoldStrength(processor);
+	bool dislodgedDetermined = determineDislodgeDecision(processor);
+	return dislodgedDetermined;
+}
+
+/*
 void HoldMove::process(map<string, map<const Move *, float> > & attacks, 
 			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
 			map<string, map<string, string> > & convoys) const {
@@ -31,3 +39,4 @@ void HoldMove::process(map<string, map<const Move *, float> > & attacks,
 		(it->second).insert(pair);
 	}
 }
+*/

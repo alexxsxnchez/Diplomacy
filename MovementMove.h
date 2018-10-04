@@ -18,7 +18,7 @@ class MovementMove : public Move {
 		DecisionResult hasPath_ = DecisionResult.UNDECIDED;
 		string destination_;
 		bool viaConvoy_;
-		bool getViaConvoy() const;
+		
 		void calculateAttackStrength();
 		void calculatePreventStrength();
 		void calculateDefendStrength();
@@ -31,12 +31,17 @@ class MovementMove : public Move {
 		void print(ostream & out) const;
 		
 	public:
-		bool isValid_;
 		MovementMove(Piece * piece, string destination, bool viaConvoy);
-		
 		bool isLegal(Graph * graph) const;
-		bool process();
+		bool process(MoveProcessor & processor);
 		string getDestination() const;
+		bool getViaConvoy() const;
+		DecisionResult getMoveDecision() const;
+		DecisionResult getPathDecision() const;
+		Strength getAttackStrength() const;
+		Strength getPreventStrength() const;
+		Strength getDefendStrength() const;
+		
 };
 
 #endif

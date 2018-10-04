@@ -19,11 +19,8 @@ class ConvoyMove : public Move {
 
 	public:
 		ConvoyMove(Piece * piece, string source, string destination);
-		void putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves);
 		bool isLegal(Graph * graph) const;
-		void process(map<string, map<const Move *, float> > & attacks, 
-			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
-			map<string, map<string, string> > & convoys) const;
+		void process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;
 };

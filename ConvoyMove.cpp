@@ -21,7 +21,14 @@ bool ConvoyMove::isLegal(Graph * graph) const {
 	return getPiece()->isConvoyValid(this, graph);
 }
 
-void ConvoyMove::process(map<string, map<const Move *, float> > & attacks, 
+bool ConvoyMove::process(MovementProcessor & processor) {
+	calculateHoldStrength(processor);
+	bool dislodgedDetermined = determineDislodgeDecision(processor);
+	return dislodgedDetermined;
+}
+
+
+/*void ConvoyMove::process(map<string, map<const Move *, float> > & attacks, 
 			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
 			map<string, map<string, std::unordered_set<const ConvoyMove *> > > & convoys) const {
 			
@@ -55,6 +62,7 @@ void ConvoyMove::process(map<string, map<const Move *, float> > & attacks,
 		itA->second.insert(pair);
 	}
 }
+*/
 
 string ConvoyMove::getSource() const {
 	return source_;

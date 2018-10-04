@@ -15,19 +15,18 @@ class SupportMove : public Move {
 	private:
 		string source_;
 		string destination_;
+		DecisionResult supportGiven_ = DecisionResult.UNDECIDED;
 
 	protected:
 		void print(ostream & out) const;
 
 	public:
 		SupportMove(Piece * piece, string source, string destination);
-		void putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves);
 		bool isLegal(Graph * graph) const;
-		void process(map<string, map<const Move *, float> > & attacks, 
-			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
-			map<string, map<string, string> > & convoys) const;
+		void process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;
+		DecisionResult getSupportGiven() const;
 };
 
 #endif
