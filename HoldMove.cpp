@@ -8,17 +8,12 @@ void HoldMove::print(ostream & out) const {
 
 
 }
-		
-void HoldMove::putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves) {
-	holdMoves.insert(this);
-}
 
 bool HoldMove::isLegal(Graph * graph) const {
 	return getPiece()->isHoldValid(this, graph);
 }
 
-
-bool HoldMove::process(MovementProcessor & processor) {
+bool HoldMove::process(MoveProcessor & processor) {
 	calculateHoldStrength(processor);
 	bool dislodgedDetermined = determineDislodgeDecision(processor);
 	return dislodgedDetermined;

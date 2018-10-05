@@ -1,8 +1,9 @@
 #include "SupportMove.h"
-#include <ostream>
+#include <iostream>
 #include "Piece.h"
 #include "ArmyPiece.h"
 #include "HoldMove.h"
+#include "MovementMove.h"
 
 using std::string;
 
@@ -12,45 +13,45 @@ void SupportMove::print(ostream & out) const {
 
 
 }
-		
-void SupportMove::putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves) {
-	supportMoves.insert(this);
-}
 
 bool SupportMove::isLegal(Graph * graph) const {
 	return getPiece()->isSupportValid(this, graph);
 }
 
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
-	if(supportGiven_ != DecisionResult.UNDECIDED) {
+	std::cout << "about to process support decision" << std::endl;
+	if(supportGiven_ != UNDECIDED) {
 		return true;
 	}
-	if(dislodged_) {
-		supportGiven_ = DecisionResult.NO;
+	if(dislodged_ == YES) {
+		supportGiven_ = NO;
 		return true;
 	}
-	std::unordered_set<string> & attacks = processor.getAttacks().at(this->getPiece()->getLocation());
 	bool canStillBeGiven = true;
-	for(const MovementMove * move : attacks) {
-		if(move->getPiece()->getLocation() == destination_) {
-			continue;
+	try {
+		std::unordered_set<MovementMove *> attacks = processor.getAttacks().at(this->getPiece()->getLocation());
+		for(MovementMove * move : attacks) {
+			std::cout << "Attack on support at " << getPiece()->getLocation() << " from " << move->getPiece()->getLocation() << " while destination is " << destination_ << std::endl;
+			if(move->getPiece()->getLocation() == destination_) {
+				continue;
+			}
+			if(move->getAttackStrength().min > 0) {
+				supportGiven_ = NO;
+				return true;
+			}
+			if(move->getAttackStrength().max > 0) {
+				canStillBeGiven = false;
+			}
 		}
-		if(move->getAttackStrength().min > 0) {
-			supportGiven_ = DecisionResult.NO;
-			return true;
-		}
-		if(move->getAttackStrength().max > 0) {
-			canStillBeGiven = false;
-		}
-	}
-	if(canStillBeGiven) {
-		supportGiven_ = DecisionResult.YES;
+	} catch(std::out_of_range) {}
+	if(canStillBeGiven && dislodged_ == NO) {
+		supportGiven_ = YES;
 		return true;
 	}
 	return false;
 }
 
-bool SupportMove::process(MovementProcessor & processor) {
+bool SupportMove::process(MoveProcessor & processor) {
 
 	calculateHoldStrength(processor);
 	bool dislodgedDetermined = determineDislodgeDecision(processor);
@@ -146,6 +147,6 @@ string SupportMove::getDestination() const {
 	return destination_;
 }
 
-DecisionResult SupportMove::getSupportGiven() const {
+DecisionResult SupportMove::getSupportDecision() const {
 	return supportGiven_;
 }

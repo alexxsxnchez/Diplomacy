@@ -23,7 +23,7 @@ class ConvoyMove;
 struct Strength {
 	unsigned int min = 0;
 	unsigned int max = 100; // large number
-}
+};
 
 enum DecisionResult {
 	YES,

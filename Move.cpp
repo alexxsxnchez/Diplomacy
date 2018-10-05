@@ -1,5 +1,7 @@
 #include "Move.h"
 #include "Piece.h"
+#include "MovementMove.h"
+#include <iostream>
 
 Move::Move(Piece * piece) : piece_{piece} {}
 
@@ -15,31 +17,32 @@ void Move::calculateHoldStrength(MoveProcessor & processor) {
 }
 
 bool Move::determineDislodgeDecision(MoveProcessor & processor) {
-	if(dislodged_ != DecisionResult.UNDECIDED) {
+	if(dislodged_ != UNDECIDED) {
 		return true;
 	}
 	auto it = processor.getAttacks().find(this->getPiece()->getLocation());
 	bool canBecomeSustained = true;
-	if(it != nullptr) {
+	if(it != processor.getAttacks().end()) {
 		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-			const MovementMove * move = *it2;
-			if(move->getMoveDecision() != DecisionResult.NO) {
+			MovementMove * move = *it2;
+			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
-				if(move->getMoveDecision() == Decision.YES) {
-					dislodged_ = DecisionResult.YES;
+				if(move->getMoveDecision() == YES) {
+					dislodged_ = YES;
 					return true;
 				}
 			}
 		}
 	} else {
-		dislodged_ = DecisionResult.NO;
+		dislodged_ = NO;
 		return true;
 	}
 	
 	if(canBecomeSustained) {
-		dislodged_ = DecisionResult.YES;
+		dislodged_ = NO;
 		return true;
-	} 
+	}
+	std::cout << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
 	return false;
 }
 

@@ -15,18 +15,19 @@ class SupportMove : public Move {
 	private:
 		string source_;
 		string destination_;
-		DecisionResult supportGiven_ = DecisionResult.UNDECIDED;
+		DecisionResult supportGiven_ = UNDECIDED;
 
+		bool determineSupportDecision(MoveProcessor & processor);
 	protected:
 		void print(ostream & out) const;
 
 	public:
 		SupportMove(Piece * piece, string source, string destination);
 		bool isLegal(Graph * graph) const;
-		void process(MoveProcessor & processor);
+		bool process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;
-		DecisionResult getSupportGiven() const;
+		DecisionResult getSupportDecision() const;
 };
 
 #endif

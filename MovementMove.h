@@ -14,24 +14,24 @@ class MovementMove : public Move {
 		Strength attackStrength_;
 		Strength preventStrength_;
 		Strength defendStrength_;
-		DecisionResult moved_ = DecisionResult.UNDECIDED;
-		DecisionResult hasPath_ = DecisionResult.UNDECIDED;
+		DecisionResult moved_ = UNDECIDED;
+		DecisionResult hasPath_ = UNDECIDED;
 		string destination_;
 		bool viaConvoy_;
 		
-		void calculateAttackStrength();
-		void calculatePreventStrength();
-		void calculateDefendStrength();
-		void calculateHoldStrength() override;
-		bool determineMoveDecision();
-		bool determinePathDecision();
-		bool determineDislodgeDecision() override;
-
+		void calculateAttackStrength(MoveProcessor & processor);
+		void calculatePreventStrength(MoveProcessor & processor);
+		void calculateDefendStrength(MoveProcessor & processor);
+		void calculateHoldStrength(MoveProcessor & processor) override;
+		bool determineMoveDecision(MoveProcessor & processor);
+		bool determinePathDecision(MoveProcessor & processor);
+		bool determineDislodgeDecision(MoveProcessor & processor) override;
+		DecisionResult reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch = false);
 	protected:
 		void print(ostream & out) const;
 		
 	public:
-		MovementMove(Piece * piece, string destination, bool viaConvoy);
+		MovementMove(Piece * piece, string destination, bool viaConvoy = false);
 		bool isLegal(Graph * graph) const;
 		bool process(MoveProcessor & processor);
 		string getDestination() const;

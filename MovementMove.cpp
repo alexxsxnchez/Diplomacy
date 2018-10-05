@@ -1,6 +1,10 @@
 #include "MovementMove.h"
+#include "ConvoyMove.h"
 #include <ostream>
 #include "Piece.h"
+#include <unordered_set>
+#include "Graph.h"
+#include <iostream>
 
 using std::string;
 
@@ -9,10 +13,6 @@ MovementMove::MovementMove(Piece * piece, string destination, bool viaConvoy) : 
 void MovementMove::print(ostream & out) const {
 
 
-}
-
-void MovementMove::putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves) {
-	movementMoves.insert(this);
 }
 
 bool MovementMove::isLegal(Graph * graph) const {
@@ -47,38 +47,50 @@ void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 	}
 }
 */
-void MovementMove::calculateAttackStrength(MovementProcessor & processor) {
-
+void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
+	std::cout << "ok" << std::endl;
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
-	Piece * leavingDefender = nullptr;
-	auto it = processor.getHolds().find(destination_);
-	if(it != nullptr) {
-		defender = (*it)->getPiece();
+	MovementMove * leavingDefender = nullptr;
+	auto it = processor.getNonAttacks().find(destination_);
+	if(it != processor.getNonAttacks().end()) {
+		defender = it->second->getPiece();
 	} else {
-		auto it2 = processor.getAttacks().find(std::make_pair(destination_, source));
-		if(it2 != nullptr) {
-			defender = (*it2)->getPiece();
+		auto it2 = processor.getAttacks().find(source);
+		if(it2 != processor.getAttacks().end()) {
+			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+				if((*it3)->getPiece()->getLocation() == destination_) {
+					defender = (*it3)->getPiece();
+					break;
+				}
+			}
 		} else {
-			auto it3 = processor.getMoves().find(destination_);
-			if(it3 != nullptr && (*it3)->getPiece()->getMoveDecision() != DecisionResult.YES) {
-				leavingDefender = (*it3)->getPiece();
+			for(auto it3 = processor.getAttacks().begin(); it3 != processor.getAttacks().end(); it3++) {
+				for(auto it4 = it3->second.begin(); it4 != it3->second.end(); it4++) { 
+					if((*it4)->getPiece()->getLocation() == destination_ && (*it4)->getMoveDecision() != YES) {
+						std::cout << "YESSS" << std::endl;
+						leavingDefender = *it4;
+						break;
+					}
+				}
 			}
 		}
 	}
+	
+	std::cout << "NOOO" << std::endl;
 
 	// first min
-	if(hasPath_ != DecisionResult.YES) {
+	if(hasPath_ != YES) {
 		attackStrength_.min = 0;
 	} else {
 		if(defender != nullptr || leavingDefender != nullptr) {
 			Piece * same;
 			if(defender == nullptr) {
-				same = leavingDefender;
+				same = leavingDefender->getPiece();
 			} else {
 				same = defender;
 			}
-			if(same->getNationality() == this->getNationality()) {
+			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.min = 0;
 			} else {
 				attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true, same->getNationality());			
@@ -90,21 +102,21 @@ void MovementMove::calculateAttackStrength(MovementProcessor & processor) {
 	}
 
 	// now max
-	if(hasPath_ == DecisionResult.NO) {
+	if(hasPath_ == NO) {
 			attackStrength_.max = 0;
 	} else {
-		if(leavingDefender != nullptr && leavingDefender->getMoveDecision() != DecisionResult.NO) {
+		if(leavingDefender != nullptr && leavingDefender->getMoveDecision() != NO) {
 			leavingDefender = nullptr;
 		}
 		
 		if(defender != nullptr || leavingDefender != nullptr) {
 			Piece * same;
 			if(defender == nullptr) {
-				same = leavingDefender;
+				same = leavingDefender->getPiece();
 			} else {
 				same = defender;
 			}
-			if(same->getNationality() == this->getNationality()) {
+			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.max = 0;
 			} else {
 				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());			
@@ -115,20 +127,22 @@ void MovementMove::calculateAttackStrength(MovementProcessor & processor) {
 	}
 }
 
-void MovementMove::calculatePreventStrength(MovementProcessor & processor) {
+void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 
 	// first min
-	if(hasPath_ != DecisionResult.YES) {
+	if(hasPath_ != YES) {
 		preventStrength_.min = 0;
 	} else {
 		string source = getPiece()->getLocation();
-		auto it = processor.getAttacks().find(std::make_pair(destination_, source);
+		auto it = processor.getAttacks().find(source);
 		bool headOnWon = false;
-		if(it != nullptr) {
-			Piece * headOnDefender = (*it)->getPiece();
-			if(headOnDefender->getMoveDecision() != DecisionResult.NO) {
-				preventStrength_.min = 0;
-				headOnWon = true;
+		if(it != processor.getAttacks().end()) {
+			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() != NO) {
+					preventStrength_.min = 0;
+					headOnWon = true;
+					break;
+				}
 			}
 		}
 		if(!headOnWon) {
@@ -137,17 +151,20 @@ void MovementMove::calculatePreventStrength(MovementProcessor & processor) {
 	}
 	
 	// now max
-	if(hasPath_ == DecisionResult.NO) {
+	if(hasPath_ == NO) {
 		preventStrength_.max = 0;
 	} else {
 		string source = getPiece()->getLocation();
-		auto it = processor.getAttacks().find(std::make_pair(destination_, source);
+		auto it = processor.getAttacks().find(source);
 		bool headOnWon = false;
-		if(it != nullptr) {
-			Piece * headOnDefender = (*it)->getPiece();
-			if(headOnDefender->getMoveDecision() == DecisionResult.YES) {
-				preventStrength_.max = 0;
-				headOnWon = true;
+
+		if(it != processor.getAttacks().end()) {
+			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() == YES) {
+					preventStrength_.max = 0;
+					headOnWon = true;
+					break;
+				}
 			}
 		}
 		if(!headOnWon) {
@@ -156,22 +173,22 @@ void MovementMove::calculatePreventStrength(MovementProcessor & processor) {
 	}
 }
 
-void MovementMove::calculateDefendStrength(MovementProcessor & processor) {
+void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
 	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true);
 	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false);
 }
 
-void MovementMove::calculateHoldStrength(MovementProcessor & processor) override {
+void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
 	switch(moved_) {
-		case(DecisionResult.YES):
+		case(YES):
 			holdStrength_.max = 0;
 			holdStrength_.min = 0;
 			break;
-		case(DecisionResult.UNDECIDED):
+		case(UNDECIDED):
 			holdStrength_.min = 0;
 			holdStrength_.max = 1;
 			break;
-		case(DecisionResult.NO):
+		case(NO):
 			holdStrength_.min = 1;
 			holdStrength_.max = 1;
 			break;
@@ -179,7 +196,7 @@ void MovementMove::calculateHoldStrength(MovementProcessor & processor) override
 }
 
 bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
-	if(moved_ != DecisionResult.UNDECIDED) {
+	if(moved_ != UNDECIDED) {
 		return true;
 	}
 	auto it = processor.getAttacks().find(destination_);
@@ -197,7 +214,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	}
 	
 	if(attackStrength_.max <= highestPreventStrengthMin) {
-		moved_ = DecisionResult.NO;
+		moved_ = NO;
 		return true;
 	}
 	
@@ -205,81 +222,83 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 
 	MovementMove * headOnDefenderMove = nullptr;
 	it = processor.getAttacks().find(getPiece()->getLocation());
-	if(it != nullptr) {
-		auto it2 = it->second.find(destination_);
-		if(it2 != nullptr) {
-			headOnDefenderMove = *it2;
+	if(it != processor.getAttacks().end()) {
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			if((*it2)->getPiece()->getLocation() == destination_) {
+				headOnDefenderMove = *it2;
+				break;
+			}
 		}
 	}
 	if(headOnDefenderMove != nullptr) {
 		couldBeMoved = couldBeMoved && attackStrength_.min > headOnDefenderMove->getDefendStrength().max;
 		if(couldBeMoved) {
-			moved_ = DecisionResult.YES;
+			moved_ = YES;
 			return true;
-		} else if(attackStrength_.max <= headOnDefenderMove->getDefendStrength.min) {
-			moved_ = DecisionResult.NO;
+		} else if(attackStrength_.max <= headOnDefenderMove->getDefendStrength().min) {
+			moved_ = NO;
 			return true;
 		}
 		return false;
 	} else {
-		auto holdIt = processor.getHolds().find(destination_);
-		if(holdIt != nullptr) {
-			couldBeMoved = couldBeMoved && attackStrength_.min > (*holdIt)->getHoldStrength().max;
-			if(couldBeMoved) {
-				moved_ = DecisionResult.YES;
-				return true;
-			} else if(attackStrength_.max <= (*holdIt)->getHoldStrength().min) {
-				moved_ = DecisionResult.NO;
-				return true;
+		for(auto holdIt = processor.getMoves().begin(); holdIt != processor.getMoves().end(); holdIt++) {
+			if((*holdIt)->getPiece()->getLocation() == destination_) {
+				couldBeMoved = couldBeMoved && attackStrength_.min > (*holdIt)->getHoldStrength().max;
+				if(couldBeMoved) {
+					moved_ = YES;
+					return true;
+				} else if(attackStrength_.max <= (*holdIt)->getHoldStrength().min) {
+					moved_ = NO;
+					return true;
+				}
+				return false;
 			}
-			return false;
-		} else {
-			if(couldBeMoved) {
-				moved_ = DecisionResult.YES;
-				return true;
-			}
-			return false;
 		}
+		if(couldBeMoved) {
+			moved_ = YES;
+			return true;
+		}
+		return false;
 	}
 }
 
 bool MovementMove::determinePathDecision(MoveProcessor & processor) {
-	if(hasPath_ != DecisionResult.UNDECIDED) {
+	if(hasPath_ != UNDECIDED) {
 		return true;
 	}
 	if(!viaConvoy_) {
-		hasPath_ = DecisionResult.YES;
+		hasPath_ = YES;
 		return true;
 	}
 	std::unordered_set<string> alreadySearched;
 	hasPath_ = reachesPath(processor, this->getPiece()->getLocation(), alreadySearched, true);
-	return hasPath_ != DecisionResult.UNDECIDED;
+	return hasPath_ != UNDECIDED;
 }
 
-DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch = false) {
-	DecisionResult currentBest = DecisionResult.NO;
+DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch) {
+	DecisionResult currentBest = NO;
 	try {
-		std::unordered_set<const ConvoyMove *> & convoys = processor.getConvoys().at(destination_).at(this->getPiece()->getLocation());
-		const std::unordered_set<string> neighbours = processor.getMap().getFleetNeighbours(currentSource);
+		std::unordered_set<ConvoyMove *> & convoys = processor.getConvoys().at(destination_).at(this->getPiece()->getLocation());
+		const std::unordered_set<string> neighbours = processor.getMap()->getFleetNeighbours(currentSource);
 		for(string neighbour : neighbours) {
 			if(neighbour == destination_) {
 				if(firstSearch) {
 					continue;
 				}
-				return DecisionResult.YES;
+				return YES;
 			}
 		
 			if(alreadySearched.count(neighbour) != 0) {
 				continue;
 			}
 			bool found = false;
-			for(const ConvoyMove * move : convoys) {
+			for(ConvoyMove * move : convoys) {
 				if(move->getPiece()->getLocation() == neighbour) {
-				 	if(move->getDislodgeDecision() != DecisionResult.YES) {
+				 	if(move->getDislodgeDecision() != YES) {
 						found = true;
 						//currentBest = DecisionResult.UNDECIDED;
-						if(move->getDislodgeDecision() == DecisionResult.UNDECIDED) {
-							currentBest = DecisionResult.UNDECIDED;
+						if(move->getDislodgeDecision() == UNDECIDED) {
+							currentBest = UNDECIDED;
 						}
 					}
 					alreadySearched.insert(neighbour);
@@ -291,50 +310,51 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 			}
 			
 			DecisionResult futurePath = reachesPath(processor, neighbour, alreadySearched);
-			if(futurePath == DecisionResult.UNDECIDED) {
-				currentBest = DecisionResult.UNDECIDED);
-			} else if(futurePath == DecisionResult.YES && move->getDislodgeDecision() == DecisionResult.NO) {
-				return DecisionResult.YES;
+			if(futurePath == UNDECIDED) {
+				currentBest = UNDECIDED;
+			} else if(futurePath == YES && this->getDislodgeDecision() == NO) {
+				return YES;
 			}
 		}
 	} catch(std::out_of_range) {}
 	return currentBest;
 }
 
-bool MovmementMove::determineDislodgeDecision(MoveProcessor & processor) override {
-	if(dislodged_ != DecisionResult.UNDECIDED) {
+bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
+	if(dislodged_ != UNDECIDED) {
 		return true;
 	}
-	if(moved_ == DecisionResult.YES) {
-		dislodged_ = DecisionResult.NO;
+	if(moved_ == YES) {
+		dislodged_ = NO;
 		return true;
 	}
 	auto it = processor.getAttacks().find(this->getPiece()->getLocation());
 	bool canBecomeSustained = true;
-	if(it != nullptr) {
+	if(it != processor.getAttacks().end()) {
 		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-			const MovementMove * move = *it2;
-			if(move->getMoveDecision() != DecisionResult.NO) {
+			MovementMove * move = *it2;
+			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
-				if(move->getMoveDecision() == DecisionResult.YES && moved_ == DecisionResult.NO) {
-					dislodged_ = DecisionResult.YES;
+				if(move->getMoveDecision() == YES && moved_ == NO) {
+					dislodged_ = YES;
 					return true;
 				}
 			}
 		}
 	} else {
-		dislodged_ = DecisionResult.NO;
+		dislodged_ = NO;
 		return true;
 	}
 	
 	if(canBecomeSustained) {
-		dislodged_ = DecisionResult.YES;
+		dislodged_ = NO;
 		return true;
 	} 
 	return false;
 }
 
-bool MovementMove::process(MovementProcessor & processor) {
+bool MovementMove::process(MoveProcessor & processor) {
+	std::cout << "movementmove processing started" << std::endl;
 	bool pathDetermined = determinePathDecision(processor);
 	calculateAttackStrength(processor);
 	calculatePreventStrength(processor);

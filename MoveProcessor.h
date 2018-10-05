@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 #include <map>
+#include "Nation.h"
 
 using std::string;
 
@@ -11,6 +12,7 @@ class HoldMove;
 class MovementMove;
 class SupportMove;
 class ConvoyMove;
+class Graph;
 
 class MoveProcessor {
 	public:
@@ -31,13 +33,14 @@ class MoveProcessor {
 		//map<string, map<const MovementMove *, float> > attacksViaConvoy_;
 		SupportMap supports_;
 		ConvoyMap convoys_;
+		Graph * map_;
 		//		map<string, std::pair<std::unordered_set<const SupportMove *>, float> > supports_;
 		/*void processMovesByConvoys();
 		void processConvoys();
 		void processSupports();
 		void processAttacks();*/
 	public:
-		MoveProcessor();
+		MoveProcessor(Graph * map);
 		virtual ~MoveProcessor();
 		
 		void addMove(MovementMove * move);
@@ -46,13 +49,13 @@ class MoveProcessor {
 		void addMove(ConvoyMove * move);
 		void processMoves();
 		
-		std::unordered_set<Move *> & getMoves() const;
-		NonAttackMap & getNonAttacks() const;
-		AttackMap & getAttacks() const;
+		std::unordered_set<Move *> & getMoves();
+		NonAttackMap & getNonAttacks();
+		AttackMap & getAttacks();
 		//SupportMap & getSupports() const;
-		ConvoyMap & getConvoys() const;
+		ConvoyMap & getConvoys();
 		Graph * getMap() const;
-		unsigned int calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality = Nation.INVALID) const;
+		unsigned int calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality = INVALID) const;
 };
 
 #endif
