@@ -289,9 +289,12 @@ void MoveProcessor::processMoves() {
 	int count = 10;
 	while(count > 0) {
 		bool allDone = true;
+		bool allFail = false;
 		for(Move * move : moves_) {
 			std::cout << "About to process " << move->getPiece()->getLocation() << std::endl;
-			allDone = move->process(*this) && allDone;
+			bool decisionsFinal = move->process(*this);
+			allDone = decisionsFinal && allDone;
+			//allFail = allFail || decisionsUpdated; --> doesn't work like this
 		}
 		if(allDone) {
 			break;

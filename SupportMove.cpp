@@ -18,6 +18,8 @@ bool SupportMove::isLegal(Graph * graph) const {
 	return getPiece()->isSupportValid(this, graph);
 }
 
+// not critical TODO: currently says support is successful when there is no unit to receive the support
+
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 	std::cout << "about to process support decision" << std::endl;
 	if(supportGiven_ != UNDECIDED) {

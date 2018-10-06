@@ -125,6 +125,8 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given
 		}
 	}
+	
+	std::cout << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
 }
 
 void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
@@ -203,6 +205,9 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	unsigned int highestPreventStrengthMax = 0;
 	unsigned int highestPreventStrengthMin = 0;
 	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+		if((*it2) == this) {
+			continue;
+		}
 		unsigned int preventStrengthMax = (*it2)->getPreventStrength().max;
 		unsigned int preventStrengthMin = (*it2)->getPreventStrength().min;
 		if(preventStrengthMax > highestPreventStrengthMax) {
@@ -214,6 +219,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	}
 	
 	if(attackStrength_.max <= highestPreventStrengthMin) {
+		std::cout << "FUCK" << std::endl;
 		moved_ = NO;
 		return true;
 	}
@@ -237,6 +243,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 			return true;
 		} else if(attackStrength_.max <= headOnDefenderMove->getDefendStrength().min) {
 			moved_ = NO;
+			std::cout << "FUCK2" << std::endl;
 			return true;
 		}
 		return false;
@@ -249,6 +256,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 					return true;
 				} else if(attackStrength_.max <= (*holdIt)->getHoldStrength().min) {
 					moved_ = NO;
+					std::cout << "FUCK3" << std::endl;
 					return true;
 				}
 				return false;
