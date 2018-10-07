@@ -304,6 +304,21 @@ void MoveProcessor::processMoves() {
 	
 	// display results:
 	// output results
+	std::cout << "Paths for convoys: " << std::endl;
+	for(auto it : attacks_) {
+		for(auto it2 : it.second) {
+			if(it2->getViaConvoy()) {
+				std::cout << it2->getPiece()->getLocation() << " path to " << it.first << " ";
+				if(it2->getPathDecision() == YES) {
+					std::cout << "SUCCEEDED" << std::endl;
+				} else if(it2->getPathDecision() == NO) {
+					std::cout << "FAILED" << std::endl;
+				}
+			}
+		}	
+	}
+	std::cout << std::endl;
+
 	std::cout << "Attacks: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {

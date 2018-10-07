@@ -231,7 +231,9 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	if(it != processor.getAttacks().end()) {
 		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 			if((*it2)->getPiece()->getLocation() == destination_) {
-				headOnDefenderMove = *it2;
+				if(!viaConvoy_ && !(*it2)->getViaConvoy()) {
+					headOnDefenderMove = *it2;
+				}
 				break;
 			}
 		}
@@ -301,12 +303,16 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 			}
 			bool found = false;
 			for(ConvoyMove * move : convoys) {
+				std::cout << "convoy move location: " << move->getPiece()->getLocation() << " neighbour: " << neighbour << std::endl;
 				if(move->getPiece()->getLocation() == neighbour) {
+					std::cout << "HEEELLO" << std::endl;
 				 	if(move->getDislodgeDecision() != YES) {
+				 		std::cout << "hello 2" << std::endl;
 						found = true;
-						//currentBest = DecisionResult.UNDECIDED;
 						if(move->getDislodgeDecision() == UNDECIDED) {
 							currentBest = UNDECIDED;
+						} else {
+							currentBest = YES;
 						}
 					}
 					alreadySearched.insert(neighbour);
@@ -314,17 +320,22 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 				}
 			}
 			if(!found) {
+				std::cout << "LOL2" << std::endl;
 				continue;
 			}
 			
 			DecisionResult futurePath = reachesPath(processor, neighbour, alreadySearched);
 			if(futurePath == UNDECIDED) {
 				currentBest = UNDECIDED;
-			} else if(futurePath == YES && this->getDislodgeDecision() == NO) {
+			} else if(futurePath == YES && currentBest == YES) {
 				return YES;
 			}
 		}
-	} catch(std::out_of_range) {}
+	} catch(std::out_of_range) {
+		std::cout << "LOL" << std::endl;
+	}
+	
+	std::cout << "LOL3\n\n" << std::endl;
 	return currentBest;
 }
 
