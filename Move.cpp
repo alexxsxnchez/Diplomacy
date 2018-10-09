@@ -18,7 +18,7 @@ void Move::calculateHoldStrength(MoveProcessor & processor) {
 
 bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 	if(dislodged_ != UNDECIDED) {
-		return true;
+		return false;
 	}
 	auto it = processor.getAttacks().find(this->getPiece()->getLocation());
 	bool canBecomeSustained = true;

@@ -23,7 +23,7 @@ bool SupportMove::isLegal(Graph * graph) const {
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 	std::cout << "about to process support decision" << std::endl;
 	if(supportGiven_ != UNDECIDED) {
-		return true;
+		return false;
 	}
 	if(dislodged_ == YES) {
 		supportGiven_ = NO;
@@ -56,10 +56,10 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 bool SupportMove::process(MoveProcessor & processor) {
 
 	calculateHoldStrength(processor);
-	bool dislodgedDetermined = determineDislodgeDecision(processor);
-	bool supportDetermined = determineSupportDecision(processor);
+	bool dislodgedUpdated = determineDislodgeDecision(processor);
+	bool supportUpdated = determineSupportDecision(processor);
 	
-	return supportDetermined && dislodgedDetermined;
+	return supportUpdated || dislodgedUpdated;
 }
 
 /*
@@ -151,4 +151,8 @@ string SupportMove::getDestination() const {
 
 DecisionResult SupportMove::getSupportDecision() const {
 	return supportGiven_;
+}
+
+bool SupportMove::isCompletelyDecided() const {
+	return dislodged_ != UNDECIDED && supportGiven_ != UNDECIDED;
 }

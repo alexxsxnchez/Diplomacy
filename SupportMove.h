@@ -28,6 +28,7 @@ class SupportMove : public Move {
 		string getSource() const;
 		string getDestination() const;
 		DecisionResult getSupportDecision() const;
+		bool isCompletelyDecided() const;
 };
 
 #endif

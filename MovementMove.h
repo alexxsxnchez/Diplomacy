@@ -41,6 +41,7 @@ class MovementMove : public Move {
 		Strength getAttackStrength() const;
 		Strength getPreventStrength() const;
 		Strength getDefendStrength() const;
+		bool isCompletelyDecided() const;
 		
 };
 

@@ -19,8 +19,8 @@ bool ConvoyMove::isLegal(Graph * graph) const {
 
 bool ConvoyMove::process(MoveProcessor & processor) {
 	calculateHoldStrength(processor);
-	bool dislodgedDetermined = determineDislodgeDecision(processor);
-	return dislodgedDetermined;
+	bool dislodgedUpdated = determineDislodgeDecision(processor);
+	return dislodgedUpdated;
 }
 
 
@@ -66,4 +66,8 @@ string ConvoyMove::getSource() const {
 
 string ConvoyMove::getDestination() const {
 	return destination_;
+}
+
+bool ConvoyMove::isCompletelyDecided() const {
+	return dislodged_ != UNDECIDED;
 }

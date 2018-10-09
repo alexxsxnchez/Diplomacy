@@ -23,6 +23,7 @@ class ConvoyMove : public Move {
 		bool process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;
+		bool isCompletelyDecided() const;
 };
 
 #endif

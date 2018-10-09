@@ -51,6 +51,7 @@ class Move {
 		virtual bool process(MoveProcessor & processor) = 0;
 		DecisionResult getDislodgeDecision() const;
 		Strength getHoldStrength() const;
+		virtual bool isCompletelyDecided() const = 0;
 
 		friend ostream & operator<<(ostream & out, const Move & move);
 };

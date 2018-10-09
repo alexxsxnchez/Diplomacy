@@ -285,19 +285,33 @@ void MoveProcessor::processAttacks() {
 }
 */
 
+void fixParadox() {
+
+}
+
 void MoveProcessor::processMoves() {
-	int count = 10;
+	int count = 15;
 	while(count > 0) {
 		bool allDone = true;
-		bool allFail = false;
+		bool isParadox = true;
 		for(Move * move : moves_) {
 			std::cout << "About to process " << move->getPiece()->getLocation() << std::endl;
-			bool decisionsFinal = move->process(*this);
-			allDone = decisionsFinal && allDone;
-			//allFail = allFail || decisionsUpdated; --> doesn't work like this
+			if(move->isCompletelyDecided()) {
+				continue;
+			}
+			bool decisionsUpdated = move->process(*this);
+			isParadox = isParadox && !decisionsUpdated;
+			if(!move->isCompletelyDecided()) {
+				allDone = false;
+			}
 		}
+		
 		if(allDone) {
 			break;
+		}
+		if(isParadox) {
+			std::cout << "\nPARADOX!!!!\n" << std::endl;
+			fixParadox();
 		}
 		count--;
 	}

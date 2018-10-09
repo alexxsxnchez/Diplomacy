@@ -199,7 +199,7 @@ void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
 
 bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	if(moved_ != UNDECIDED) {
-		return true;
+		return false;
 	}
 	auto it = processor.getAttacks().find(destination_);
 	unsigned int highestPreventStrengthMax = 0;
@@ -274,7 +274,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 
 bool MovementMove::determinePathDecision(MoveProcessor & processor) {
 	if(hasPath_ != UNDECIDED) {
-		return true;
+		return false;
 	}
 	if(!viaConvoy_) {
 		hasPath_ = YES;
@@ -310,7 +310,7 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 				 		std::cout << "hello 2" << std::endl;
 						found = true;
 						if(move->getDislodgeDecision() == UNDECIDED) {
-							currentBest = UNDECIDED;
+							currentBest = UNDECIDED; // dependency
 						} else {
 							currentBest = YES;
 						}
@@ -326,7 +326,7 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 			
 			DecisionResult futurePath = reachesPath(processor, neighbour, alreadySearched);
 			if(futurePath == UNDECIDED) {
-				currentBest = UNDECIDED;
+				currentBest = UNDECIDED; // dependency ??
 			} else if(futurePath == YES && currentBest == YES) {
 				return YES;
 			}
@@ -341,7 +341,7 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 
 bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 	if(dislodged_ != UNDECIDED) {
-		return true;
+		return false;
 	}
 	if(moved_ == YES) {
 		dislodged_ = NO;
@@ -374,15 +374,15 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 
 bool MovementMove::process(MoveProcessor & processor) {
 	std::cout << "movementmove processing started" << std::endl;
-	bool pathDetermined = determinePathDecision(processor);
+	bool pathUpdated = determinePathDecision(processor);
 	calculateAttackStrength(processor);
 	calculatePreventStrength(processor);
 	calculateDefendStrength(processor);
-	bool moveDetermined = determineMoveDecision(processor);
+	bool moveUpdated = determineMoveDecision(processor);
 	calculateHoldStrength(processor);
-	bool dislodgedDetermined = determineDislodgeDecision(processor);
+	bool dislodgedUpdated = determineDislodgeDecision(processor);
 	
-	return pathDetermined && moveDetermined && dislodgedDetermined;
+	return pathUpdated || moveUpdated || dislodgedUpdated;
 }
 
 string MovementMove::getDestination() const {
@@ -411,4 +411,8 @@ Strength MovementMove::getPreventStrength() const {
 
 Strength MovementMove::getDefendStrength() const {
 	return defendStrength_;
+}
+
+bool MovementMove::isCompletelyDecided() const {
+	return dislodged_ != UNDECIDED && moved_ != UNDECIDED && hasPath_ != UNDECIDED;
 }

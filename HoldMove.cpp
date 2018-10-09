@@ -15,8 +15,8 @@ bool HoldMove::isLegal(Graph * graph) const {
 
 bool HoldMove::process(MoveProcessor & processor) {
 	calculateHoldStrength(processor);
-	bool dislodgedDetermined = determineDislodgeDecision(processor);
-	return dislodgedDetermined;
+	bool dislodgedUpdated = determineDislodgeDecision(processor);
+	return dislodgedUpdated;
 }
 
 /*
@@ -35,3 +35,7 @@ void HoldMove::process(map<string, map<const Move *, float> > & attacks,
 	}
 }
 */
+
+bool HoldMove::isCompletelyDecided() const {
+	return dislodged_ != UNDECIDED;
+}
