@@ -14,7 +14,8 @@ enum Nation {
 	RUSSIA,
 	ITALY,
 	AUSTRIA,
-	TURKEY
+	TURKEY,
+	INVALID
 };
 
 static Nation getNation(string s) {

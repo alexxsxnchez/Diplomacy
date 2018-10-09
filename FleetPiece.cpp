@@ -25,6 +25,9 @@ FleetPiece::FleetPiece(Nation nationality, string startingLocation, string coast
 }*/
 
 bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const {
+	if(move->getViaConvoy()) {
+		return false;
+	}
 	string destinationString = move->getDestination();
 	Territory * destination = graph->getTerritory(destinationString);
 	string currentLocation = coast_ == "" ? getLocation() : coast_;

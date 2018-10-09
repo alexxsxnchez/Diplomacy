@@ -9,25 +9,77 @@
 #include <string>
 #include <iostream>
 
-MoveProcessor::MoveProcessor() {}
+MoveProcessor::MoveProcessor(Graph * map) : map_{map} {}
 
 MoveProcessor::~MoveProcessor() {
-	for(HoldMove * move : holdMoves_) {
-		delete move;
-	}
-	for(MovementMove * move : movementMoves_) {
-		delete move;
-	}
-	for(SupportMove * move : supportMoves_) {
-		delete move;
-	}
-	for(ConvoyMove * move : convoyMoves_) {
+	for(Move * move : moves_) {
 		delete move;
 	}
 }
 
-void MoveProcessor::addMove(Move * move) {
-	move->putIntoSet(holdMoves_, movementMoves_, supportMoves_, convoyMoves_);
+void MoveProcessor::addMove(HoldMove * move) {
+	moves_.insert(move);
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
+}
+
+void MoveProcessor::addMove(MovementMove * move) {
+	moves_.insert(move);
+	auto it = attacks_.find(move->getDestination());
+	if(it == attacks_.end()) {
+		std::unordered_set<MovementMove *> moves;
+		moves.insert(move);
+		attacks_.insert(std::make_pair(move->getDestination(), moves));
+	} else {
+		(it->second).insert(move);
+	}
+}
+
+void MoveProcessor::addMove(ConvoyMove * move) {
+	moves_.insert(move);
+	auto itC = convoys_.find(move->getDestination());
+	if(itC == convoys_.end()) {
+		std::map<string, std::unordered_set<ConvoyMove *> > convoysToDestination;
+		std::unordered_set<ConvoyMove *> setOfMoves;
+		setOfMoves.insert(move);
+		convoysToDestination.insert(std::make_pair(move->getSource(), setOfMoves));
+		convoys_.insert(std::make_pair(move->getDestination(), convoysToDestination));
+	} else {
+		auto it2 = itC->second.find(move->getSource());
+		if(it2 == itC->second.end()) {
+			std::unordered_set<ConvoyMove *> setOfMoves;
+			setOfMoves.insert(move);
+			itC->second.insert(std::make_pair(move->getSource(), setOfMoves));
+		} else {
+			it2->second.insert(move);
+		}
+	}
+			
+	// act as hold move
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
+}
+
+void MoveProcessor::addMove(SupportMove * move) {
+	moves_.insert(move);
+	auto itS = supports_.find(move->getDestination());
+	if(itS == supports_.end()) {
+		std::map<string, std::unordered_set<SupportMove *> > supportsToDestination;
+		std::unordered_set<SupportMove *> setOfMoves;
+		setOfMoves.insert(move);
+		supportsToDestination.insert(std::make_pair(move->getSource(), setOfMoves));
+		supports_.insert(std::make_pair(move->getDestination(), supportsToDestination));
+	} else {
+		auto it2 = itS->second.find(move->getSource());
+		if(it2 == itS->second.end()) {
+			std::unordered_set<SupportMove *> setOfMoves;
+			setOfMoves.insert(move);
+			itS->second.insert(std::make_pair(move->getSource(), setOfMoves));
+		} else {
+			it2->second.insert(move);
+		}
+	}
+	
+	// act as hold move
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
 }
 
 // ALGO
@@ -42,22 +94,301 @@ void MoveProcessor::addMove(Move * move) {
 
 // 6. repeat step 5 until no more standoffs. Return successful movements
 
+// throws out_of_range exception
+unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality) const {
+	unsigned int count = 0;
+	try {
+		auto supportToDestination = supports_.at(destination);
+		auto supportFromSource = supportToDestination.at(source);
+		for(const SupportMove * move : supportFromSource) {
+			if(move->getPiece()->getNationality() == nationality) {
+				continue;
+			}
+			if(move->getSupportDecision() != NO && !onlyGiven) {
+				count++;
+			} else if(move->getSupportDecision() == YES && onlyGiven) {
+				count++;
+			}
+		}
+	} catch(std::out_of_range) {
+		return 0;
+	}
+	std::string trueOrFalse;
+	if(onlyGiven) {
+		trueOrFalse = "true";
+	} else {
+		trueOrFalse = "false";
+	}
+	std::cout << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
+	return count;
+}
 
+/*
+
+// convoy does not cut certain supports rule is similar to supporting unit getting attacked
+// by unit from destination
+// for when convoy does cut via alternate route, the way it should be handled is any convoy
+// that is "dislodged" by rule above, cannot participate in convoy. Whether or not that fleet does
+// actually get dislodged will be handled with the support logic (already taken care of). 
+
+void MoveProcessor::processMovesByConvoys() {
+// remove convoys that do not match any moves
+// nvm don't need to do the above
+}
+
+// ALGO
+// 1. check if convoy is attacked with support greater than itself.
+// if so remove itself from convoy map -> except we don't know if that support is cut by 
+// something else entirely, can't just check attack map, since attack could be another convoy,
+// that could also be disrupted
+// 2.
+
+bool MoveProcessor::checkPaths(const Move * move, std::unordered_set<const ConvoyMove *> convoys) {
+// TODO
+}
+
+void MoveProcessor::processConvoys() {
+// find at least a single pathway for the move to reach its destination thru use of convoys
+	for(auto itA = attacksViaConvoy_.begin(); itA != attacksViaConvoy_.end(); it++) {
+		for(auto it2A = itA->second.begin(); it2A != itA->second.end(); ) {
+			if(!it2A->first->getViaConvoy()) {
+				continue;
+			}
+			
+			try {
+				auto convoysToDestination = convoys_.at(itA->first);
+				auto correctConvoys = convoysToDestination.at(it2A->first->getPiece()->getLocation());
+				bool isAPath = checkPaths(itA2->first, correctConvoys);
+				if(isAPath) {
+					
+					it2A++;
+				} else {
+					it2A = itA->second.erase(it2A);
+				}
+			} catch(std::out_of_range) {
+				it2A = itA->second.erase(it2A);
+			}
+		}
+	}
+}
+
+//		map<string, map<string, std::unordered_set<const SupportMove *> > > supports_;
+
+void MoveProcessor::processSupports() {
+	bool needToCheckForDislodgement = false;
+	for(auto it = supports_.begin(); it != supports_.end(); it++) {
+		string destination = it->first;
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			string source = it2->first;
+			
+			// first check if there even exists an attack that matches support
+			bool isAttackThatMatches = false;
+			try {
+				auto attacks = attacks_.at(destination);
+				for(auto it3 : attacks) {
+					if(it3.first->getPiece()->getLocation() == source && it3.first->isValid()) {
+						isAttackThatMatches = true;
+						break;
+					}
+				}
+			} catch(std::out_of_range) {}
+	
+			if(!isAttackThatMatches) {
+				// erase all moves that had this source and destination
+				it2 = it->second.erase(it2);
+				continue;
+			}
+			// for each support that supports an attack from source to destination
+			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); ) {
+				// next check if an attacker has attacked this unit && check if the attacker is from destination -> if it is must reprocess after
+				string location = (*it3)->getPiece()->getLocation();
+				try {
+					auto attacks = attacks_.at(location);
+					bool isAttackedFromNotDestination = false;
+					for(auto it4 : attacks) {
+						if(it4.first->getPiece()->getLocation() != location) { // if isn't a hold move
+							if (it4.first->getPiece()->getLocation() == destination) {
+								needToCheckForDislodgement = true;
+							} else {
+								isAttackedFromNotDestination = true;
+								it3 = it2->second.erase(it3);
+								break;
+							}
+						}
+					}
+					if(!isAttackedFromNotDestination) {
+						it3++;
+					}
+				} catch(std::out_of_range) {}
+			}
+		}
+	}
+	if(!needToCheckForDislodgement) {
+		return;
+	}
+
+	// if at this point, then there is at least one attacker attacking a support from that support's destination
+	for(auto it = supports_.begin(); it != supports_.end(); it++) {
+		string destination = it->first;
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+				const SupportMove * move = *it3;
+				string location = move->getPiece()->getLocation();
+				float valueOfHold = 0;
+				float valueOfAttack = 0;
+				try {
+					auto attacks = attacks_.at(location);
+					for(auto it4 : attacks) {
+						if(it4.first->getPiece()->getLocation() == destination && it4.first->isValid()) {
+							valueOfAttack = it4.second;
+						} else if(it4.first->getPiece()->getLocation() == location) {
+							valueOfHold = it4.second;
+						}
+						if(valueOfHold > 0 && valueOfAttack > 0) {
+							break;
+						}
+					}
+					if(valueOfAttack > 0) {
+						try {
+							valueOfHold += calculateSupportStrength(location, location);
+						} catch(std::out_of_range) {}
+						try {
+							valueOfAttack += calculateSupportStrength(destination, location);
+						} catch(std::out_of_range) {}
+
+						if(valueOfAttack > valueOfHold) {
+							it2->second.erase(it3); // make sure second.first still gives correct reference and does not make a copy like error from other day
+						}
+						break;
+					}
+				} catch(std::out_of_range) {}
+			}
+		}
+	}
+}
+
+// for all invalid convoy attacks, check to see if the attack strength on convoy is equal to
+// or less than hold strength for every convoy in all chains. If true for any, invalid attack
+// is now valid, and must return true at end of function.
+bool processConvoysThatMaybeAreDislodgedByDestination() {
+	for(auto itA = attacks_.begin(); itA != attacks_.end(); itA++) {
+		for(auto it2A = itA->second.begin(); it2A != itA->second.end(); it2A++) {
+			if(it2A->first->get
+		}
+	}
+
+}
+
+void MoveProcessor::processAttacks() {
+// make this function return the dislodgelist
+
+}
+*/
+
+void fixParadox() {
+
+}
 
 void MoveProcessor::processMoves() {
-	std::cout << "Processing" << std::endl;
-	for(HoldMove * move : holdMoves_) {
-		move->process(attacks_);
+	int count = 15;
+	while(count > 0) {
+		bool allDone = true;
+		bool isParadox = true;
+		for(Move * move : moves_) {
+			std::cout << "About to process " << move->getPiece()->getLocation() << std::endl;
+			if(move->isCompletelyDecided()) {
+				continue;
+			}
+			bool decisionsUpdated = move->process(*this);
+			isParadox = isParadox && !decisionsUpdated;
+			if(!move->isCompletelyDecided()) {
+				allDone = false;
+			}
+		}
+		
+		if(allDone) {
+			break;
+		}
+		if(isParadox) {
+			std::cout << "\nPARADOX!!!!\n" << std::endl;
+			fixParadox();
+		}
+		count--;
 	}
-	for(MovementMove * move : movementMoves_) {
-		move->process(attacks_);
+	
+	// display results:
+	// output results
+	std::cout << "Paths for convoys: " << std::endl;
+	for(auto it : attacks_) {
+		for(auto it2 : it.second) {
+			if(it2->getViaConvoy()) {
+				std::cout << it2->getPiece()->getLocation() << " path to " << it.first << " ";
+				if(it2->getPathDecision() == YES) {
+					std::cout << "SUCCEEDED" << std::endl;
+				} else if(it2->getPathDecision() == NO) {
+					std::cout << "FAILED" << std::endl;
+				}
+			}
+		}	
 	}
-	for(ConvoyMove * move : convoyMoves_) {
-		move->process(attacks_);
+	std::cout << std::endl;
+
+	std::cout << "Attacks: " << std::endl;
+	for(auto it : attacks_) {
+		for(auto it2 : it.second) {
+			std::cout << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
+			if(it2->getMoveDecision() == YES) {
+				std::cout << "SUCCEEDED" << std::endl;
+			} else if(it2->getMoveDecision() == NO) {
+				std::cout << "FAILED" << std::endl;
+			}
+		}
+		std::cout << std::endl;
 	}
-	for(SupportMove * move : supportMoves_) {
-		move->process(attacks_);
+	
+	std::cout << "Supports: " << std::endl;
+	for(auto it : supports_) {
+		for(auto it2 : it.second) {
+			for(auto it3 : it2.second) {
+				std::cout << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
+				if(it3->getSupportDecision() == YES) {
+					std::cout << "SUCCEEDED" << std::endl;
+				} else if(it3->getSupportDecision() == NO) {
+					std::cout << "FAILED" << std::endl;
+				}
+			}
+		}
+		std::cout << std::endl;
 	}
+	
+	std::cout << "Dislodged pieces: " << std::endl;
+	for(Move * move : moves_) {
+		std::cout << move->getPiece()->getLocation() << " dislodged decision? : ";
+		if(move->getDislodgeDecision() == YES) {
+			std::cout << "DISLODGED" << std::endl;
+		} else if(move->getDislodgeDecision() == NO) {
+			std::cout << "SUSTAINED" << std::endl;
+		}
+	}
+	std::cout << std::endl;
+
+/*	std::cout << "Processing" << std::endl;
+
+	for(Move * move : moves_) {
+		move->process(attacks_, supports_, convoys_);
+	}
+// might need a while loop enclosing processConvoys and processSupports where the while loop ends
+// when there are no more convoys moves that are being attacked with at least one support?
+	//processConvoys(); // return boolean which is condition
+	
+	bool newValidAttack = false;
+	do {
+		processSupports();
+		newValidAttack = processConvoysThatMaybeAreDislodgedByDestination();
+	} while(newValidAttack);
+	
+	//processAttacks();
+
 
 	bool mustReprocess;
 	int j = 0;
@@ -69,60 +400,89 @@ void MoveProcessor::processMoves() {
 
 		// for each attacked location
 		for(auto it = attacks_.begin(); it != attacks_.end(); it++) {
-			const Move * winningAttackMove = NULL;
+
+			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+				bool isHoldMove = it2->first->getPiece()->getLocation() == it->first;
+				if(!isHoldMove) {
+					auto it3 = attacks_.find(it2->first->getPiece()->getLocation());
+					if(it3 != attacks_.end()) {
+						bool found = false;
+						for(auto it4 : it3->second) {
+							float attack = it2->second;
+							float otherAttack = it4.second;
+							try {
+								attack += calculateSupportStrength(it2->first->getPiece()->getLocation(), it->first);
+							} catch (std::out_of_range) {}
+							try {
+								otherAttack += calculateSupportStrength(it4.first->getPiece()->getLocation(), it3->first);
+							} catch (std::out_of_range) {}
+							if(it4.first->getPiece()->getLocation() == it->first && otherAttack >= attack) {
+								// turn into hold move BEFORE calculating winningattack move
+								std::cout << "\n\nadding " << it2->first->getPiece()->getLocation() << " to hold moves to be added" << std::endl;
+								HoldMove * newHoldMove = new HoldMove((it2->first)->getPiece());
+								holdMovesToBeAdded.push_back(newHoldMove);
+								mustReprocess = true;
+								it2 = (it->second).erase(it2);
+								found = true;
+								break;
+							}
+						}
+						if(found) {
+							break;
+						}
+					}
+				}
+			}
+
+			const Move * winningAttackMove = nullptr;
 			float largestValue = 0;
 
 			// for each attack on this location
 			for(auto it2 : it->second) {
-				if(it2.second == largestValue) {
+				float attackValue = it2->second;
+				try {
+					attackValue += calculateSupportStrength(it2->first->getPiece()->getLocation(), it->first);
+				} catch (std::out_of_range) {}
+				if(attackValue == largestValue) {
 					winningAttackMove = NULL;
-				} else if(it2.second > largestValue) {
-					largestValue = it2.second;
-					winningAttackMove = it2.first;
+				} else if(attackValue > largestValue) {
+					largestValue = attackValue;
+					winningAttackMove = it2->first;
 				}
 			}
 			std::cout << "largest value for " << it->first << " is " << largestValue << std::endl;
 			std::cout << "size is " << it->second.size() << " for attack on " << it->first << std::endl;
 
-//			if(it->second.size() > 1) {
-				// means there is a standoff
-				int i = 0;
+			// means there is a standoff
+			int i = 0;
 
-				// for each attack on this location
-				for(auto it2 = it->second.begin(); it2 != it->second.end(); i++) {
-					std::cout << "i: " << i << std::endl;
-					// need to remove all attacks that is not the winner and replace it with a hold move
-					bool isHoldMove = it2->first->getPiece()->getLocation() == it->first;
-					bool isStrongerOrEqualAttackFromDestination = false;
-					if(!isHoldMove) {
-						auto it3 = attacks_.find(it2->first->getPiece()->getLocation());
-						if(it3 != attacks_.end()) {
-							for(auto it4 : it3->second) {
-								if(it4.first->getPiece()->getLocation() == it->first && it4.second >= it2->second) {
-									isStrongerOrEqualAttackFromDestination = true;
-									break;
-								}
-							}
-						}
-					}
-					if(it2->second != largestValue || winningAttackMove == NULL || isStrongerOrEqualAttackFromDestination) {
-						if(!isHoldMove) {
-							std::cout << "removing: " << it2->first->getPiece()->getLocation() << " moving to " << it->first << std::endl;
-							HoldMove * newHoldMove = new HoldMove((it2->first)->getPiece());
-							holdMovesToBeAdded.push_back(newHoldMove);
-							mustReprocess = true;
-						} else {
-							dislodgeList.push_back(it2->first->getPiece());
-						}
-						it2 = (it->second).erase(it2);
-						std::cout << "size: " << it->second.size() << std::endl;
+			// for each attack on this location
+			for(auto it2 = it->second.begin(); it2 != it->second.end(); i++) {
+				std::cout << "i: " << i << std::endl;
+				bool isHoldMove = it2->first->getPiece()->getLocation() == it->first;
+				// need to remove all attacks that is not the winner and replace it with a hold move
+				float attackValue = it2->second;
+				try {
+					attackValue += calculateSupportStrength(it2->first->getPiece()->getLocation(), it->first);
+				} catch(std::out_of_range) {}
+				
+				if(attackValue != largestValue || winningAttackMove == NULL) {
+				// have to correct for self-dislodgement
+					if(!isHoldMove /*&& not same nation as unit stationed there*) {
+						std::cout << "removing: " << it2->first->getPiece()->getLocation() << " moving to " << it->first << std::endl;
+						HoldMove * newHoldMove = new HoldMove((it2->first)->getPiece());
+						holdMovesToBeAdded.push_back(newHoldMove);
+						mustReprocess = true;
 					} else {
-						it2++;
+						dislodgeList.push_back(it2->first->getPiece());
 					}
+					it2 = (it->second).erase(it2);
+					std::cout << "size: " << it->second.size() << std::endl;
+				} else {
+					it2++;
 				}
-				std::cout << "size after deletion is " << attacks_.find(it->first)->second.size() << " for attack on " << it->first << std::endl;
-
-//			}
+			}
+			std::cout << "size after deletion is " << attacks_.find(it->first)->second.size() << " for attack on " << it->first << std::endl;
 		
 			std::cout << "Winning attack for " << it->first << " is ";
 			if(winningAttackMove == NULL) {
@@ -134,12 +494,14 @@ void MoveProcessor::processMoves() {
 		}
 		while(!holdMovesToBeAdded.empty()) {
 			HoldMove * holdMove = holdMovesToBeAdded.back(); // need to be deleted
-			holdMove->process(attacks_);
+			holdMove->process(attacks_, supports_, convoys_);
 			holdMovesToBeAdded.pop_back();
 		}
 		j++;
 	} while(mustReprocess && j < 5);
 	
+	
+	// output results
 	for(auto it : attacks_) {
 		std::cout << "Winning attacks on " << it.first << ":" << std::endl;
 		for(auto it2 : it.second) {
@@ -153,4 +515,27 @@ void MoveProcessor::processMoves() {
 		std::cout << it->getLocation() << ", ";	
 	}
 	std::cout << std::endl;
+	*/
 }
+
+std::unordered_set<Move *> & MoveProcessor::getMoves() {
+	return moves_;
+}
+
+Graph * MoveProcessor::getMap() const {
+	return map_;
+}
+
+MoveProcessor::NonAttackMap & MoveProcessor::getNonAttacks() {
+	return nonAttacks_;
+}
+		
+MoveProcessor::AttackMap & MoveProcessor::getAttacks() {
+	return attacks_;
+}
+		
+MoveProcessor::ConvoyMap & MoveProcessor::getConvoys() {
+	return convoys_;
+}
+
+
