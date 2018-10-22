@@ -263,6 +263,7 @@ var Bohemia = rsr.path("M100.75 93.75 L94 91.891 L92.25 92.5 L86.75 90.5 L81.5 8
 var Trieste = rsr.path("M0.5 46.859 L4.5 47.859 L5.5 49.609 L7 49.609 L8 47.859 L9.25 46.609 L12.5 46.609 L13.5 50.609 L13.75 53.359 L13 55 L8.25 56.609 L7 57.609 L7.25 59.859 L8.25 70.609 L9.5 77.859 L12 78.609 L15.75 85.609 L16.75 86.359 L19 85 L19.25 79.359 L19.75 76.859 L23 79.359 L23.75 76.109 L24.25 72.109 L27.75 70.859 L28.5 67.859 L31.5 67.609 L37 68.609 L40 69.859 L41.75 74.109 L43.25 75.859 L43.75 86.859 L45.25 89.609 L45.25 93.109 L45.25 96.359 L48.75 97.359 L51.5 103.859 L55 106.359 L58.25 110.859 L57.5 112.109 L53.5 112.109 L51 113.109 L49.75 115.859 L53 118.359 L60 127.359 L62.25 130.609 L64.25 132.609 L68.25 133.359 L68.25 137.109 L74.75 144.859 L77.5 142.109 L79.5 142.109 L81.75 144.609 L86.75 144.109 L86.75 146.359 L91.75 147.109 L93.75 148.359 L96 150.359 L98 152.109 L99 154.109 L99.5 156.609 L101.75 157.109 L101.5 159.609 L94.25 158.859 L81.5 158.109 L83.25 160.859 L86 161.859 L90.5 161.109 L102 160.859 L107.25 160.359 L110.5 161.359 L113.25 163.609 L114.75 165.609 L116.25 170.609 L113.75 169.609 L110.75 167.859 L107.25 166.109 L101.25 165.609 L98 166.109 L95 167.109 L89.25 168.359 L95.75 169.359 L103.75 170.609 L106 169.359 L108.5 170.359 L112 172.109 L117.25 175.359 L119.75 176.359 L122.75 176.609 L125 176.109 L127.25 176.859 L129 178.859 L130.5 181.859 L136.75 185.359 L142.75 189.359 L143.75 189.109 L145 186.609 L148.5 186.609 L151 187.859 L151.75 189.359 L148.5 189.859 L147.25 190.859 L146.75 192.359 L151 194.359 L151 196.609 L156 197.359 L156.25 201.859 L158.75 201.859 L162 204.609 L162.25 207.859 L165.5 211.109 L167.5 214.109 L168.5 211.859 L170.75 211.859 L171.5 208.859 L170 207.109 L170.25 203.609 L171.75 197.109 L173.5 192.109 L175 189.359 L178.5 187.859 L181 182.109 L182.75 180.609 L184.5 179.859 L189.25 179.609 L191 177.609 L194.5 176.609 L194.5 174.859 L196.75 173.109 L201.25 170.359 L204 167.359 L205.5 165.359 L205.25 161.859 L204.5 158.359 L204 154.859 L201.5 154.609 L195 148.859 L193 148.109 L190 147.109 L180.75 143.859 L175.75 140.859 L172.25 138.359 L170 135.359 L169.75 131.359 L164.75 129.859 L165 125.859 L167.75 125.859 L174.5 128.359 L175.25 126.609 L174.75 122.609 L172.5 118.359 L169.25 118.109 L166.5 113.859 L163.5 113.859 L162.75 109.359 L163.75 105 L168 100.359 L169.5 97.609 L170.25 94.109 L170.5 91.359 L165.75 90.359 L162.75 89.109 L157.25 88.859 L156 85.359 L153 83.609 L149 83.359 L147.5 81.109 L149.25 78.859 L151 77.359 L150.5 73.109 L146.75 71.859 L144.5 70.359 L141.25 71.609 L137.75 71.609 L136.5 69.359 L133 68.109 L132.75 64.609 L135.5 61.359 L137.25 60 L136.75 56.609 L133 55 L130.25 54.359 L129 48.359 L123.5 47.859 L118.25 46.359 L109.25 43.109 L106.5 41.859 L105 40.859 L102.5 40.859 L101.75 38.609 L96 32.859 L96 30.609 L92.75 30 L91.25 23.359 L87.25 17.609 L83.5 9.85897 L83.25 5 L70.75 4.35897 L65 2.35897 L64.25 0 L60 0 L53.75 1.85897 L52.25 3.60897 L44.5 5.35897 L35.75 7.35897 L31.5 10 L32.75 12.859 L34.25 19.359 L28.25 21.359 L23.25 21.609 L18 17.609 L2.5 18.359 L1.75 23.609 L0.5 25 L2 28.109 L5.5 29.609 L5.25 33.359 L0 41.859 L0.5 46.859 Z").attr({id: 'Polyline170171',parent: 'New Layer 1',fill: '#ef6448'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'round'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t767, 990").data('id', 'Polyline170171');
 // island off trieste
 var path_cy = rsr.path("M2.5 0 L0 0 L0 3.5 L1 6.14103 L4 6.75 L4.25 10 L4 13.25 L3.75 17.5 L5.5 20.25 L5 22.5 L8.75 27.75 L10.25 30 L11.25 32.5 L16.75 34.5 L13.5 30 L11.5 27 L7 23.25 L6 20.25 L6 16 L5.75 10 L5.25 6 L4 1.75 L2.5 0 Z").attr({parent: 'New Layer 1',fill: '#ef6448'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'round'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t801.25, 1063.86").data('id', 'path_cy');
+NotInteractable.push(path_cy);
 var Vienna = rsr.path("M61.25 0 L65 2 L69.5 2.75 L80.5 3.25 L89 0 L91.5 2.14103 L100.25 3 L118.75 2 L131.25 0 L122 9.25 L121.75 11.75 L115.5 19 L115.5 22 L111 24.5 L104 31.5 L92.25 44 L87.25 50.25 L85.75 56 L84.75 61.5 L84 67.75 L83.5 80 L82.5 83.75 L80.75 84.75 L77.25 85.25 L74.25 87.5 L71.75 89.25 L70.75 92 L68.25 93.75 L67.25 96.5 L65.5 101 L63.5 104.25 L63.75 110 L61 114 L56 121.25 L50.25 130 L46.5 130 L39 128.5 L32.25 125.25 L27 122.5 L24.75 122.141 L22.75 119.75 L18 115.25 L17.75 111.75 L15.25 111.5 L13.25 105.75 L8.75 99 L5.75 92.141 L5.25 87 L6 84 L6.25 82 L6 77.141 L4.25 74.5 L1.75 71.5 L0 60 L3.5 43.5 L2.75 41.25 L5.25 37.75 L5.75 32 L6.75 25 L7.5 22.141 L9.75 19.25 L12.25 17 L12.5 13.5 L16.75 12.5 L19.25 9.75 L22.75 9.5 L27 9 L34.25 7 L39 4.75 L44 2.5 L51.5 1.75 L61.25 0 Z").attr({id: 'Polyline189190',parent: 'New Layer 1',fill: '#ef6448'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'round'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t845, 907.859").data('id', 'Polyline189190');
 var Budapest = rsr.path("M80.5 5.75 L84.75 4.25 L90 2.75 L98.25 1.25 L105.25 0.75 L112 0 L120.5 0 L126.25 0 L130.25 1.5 L133 2.75 L135.75 5.25 L135.5 6.5 L140.75 9.75 L146.5 9.5 L147 13.5 L150.25 16.5 L153.75 18.75 L159.5 21.75 L168.5 26 L174 29.25 L178.75 32.75 L183.75 36.5 L189.5 42.891 L193.75 48.75 L198.5 55.25 L202.75 62 L207.5 69 L213.5 75.75 L213.5 77.5 L215.75 79 L223.5 87.25 L226.75 90 L228.75 93.25 L230 97.5 L232.5 102.25 L234.5 106 L236.5 106.25 L238.25 113.75 L241.5 114.25 L242.5 122.75 L243.75 123.5 L244.5 128.5 L244.75 134.75 L244.5 139.25 L242.75 142.25 L240 142.75 L239.5 145 L227.75 146 L220.75 146.5 L216 146 L210.5 145.5 L202.75 145.25 L195.25 146.5 L190.5 147.5 L186 148.75 L178.75 151 L174 152 L173.75 153.5 L166 154.25 L160 155.5 L153.25 156.75 L148.25 157.5 L140.5 159.5 L139.5 162.75 L136 169.5 L134 173.75 L133.75 179.75 L130.75 180.5 L128 182.75 L126 184.75 L125.5 187.891 L120.75 188.5 L120 186.25 L116.5 183.75 L114 183.75 L113.5 184.75 L108 182.5 L105.75 179.75 L103.5 179 L97.25 180 L93.25 180.25 L91.5 181.5 L88.75 182.25 L85.75 182.25 L80.75 179.75 L79.75 177.75 L74.5 177.5 L70 178.5 L66.75 180.5 L63.75 182.75 L61.25 183.25 L58.25 182.25 L54 181.5 L49.25 174 L45.75 174.75 L43.5 175.5 L41.25 178.5 L38.5 178.5 L34.25 176.75 L28.75 176.75 L28 174 L24.5 171.5 L20 171.25 L18.75 168.75 L21.25 166.25 L22.5 165.5 L21.75 160.5 L19.25 160.25 L17.25 159.5 L16.25 157.75 L12.75 159 L8 159.25 L8 156.5 L4.5 155.5 L4.5 152.25 L8.5 148.25 L8.25 144.5 L1.75 142.25 L0 135.75 L1 133.25 L3.25 129.5 L13 116.5 L13 109.75 L14.5 107.5 L16.5 102.5 L17.25 99.5 L20.25 97.5 L20.75 95 L26.5 91.25 L28.25 90.75 L31.25 90 L32.5 88.5 L33.25 85.5 L33.5 65 L35 59.5 L36.75 56.25 L42 49.5 L46.75 44.75 L55.25 34.75 L60.25 30 L63 28.5 L64.75 27.75 L64.75 24 L68.5 20.5 L70.75 17 L70.75 15 L76 10.75 L80.5 5.75 Z").attr({id: 'Polyline191192',parent: 'New Layer 1',fill: '#ef6448'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'round'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t896, 902.109").data('id', 'Polyline191192');
 var Galicia = rsr.path("M35.875 25.25 L44.875 26.5 L52.125 27 L58.875 27.25 L61.375 29.25 L64.375 29.75 L67.875 28.25 L73.625 25.891 L84.875 19.75 L95.625 12 L105.125 4.5 L106.625 3 L112.375 4.25 L111.875 9.25 L115.875 12.25 L116.125 14.25 L117.625 15 L119.125 14.75 L119.875 13.5 L128.375 13.5 L130.375 12 L133.875 11.75 L138.125 9.25 L141.625 8.5 L142.875 6.75 L152.5 1.89103 L152.875 0.75 L155.625 0.125 L159.25 0 L159.5 1.75 L162.125 2.375 L163.125 4.625 L165.375 4.89103 L170.125 3.89103 L172.125 4.125 L175.25 4.625 L180.25 6.5 L184.25 8 L185.125 11.625 L188.5 12.891 L193.125 17.75 L193.625 19.75 L202.125 26.75 L205.25 28.625 L211.125 29.125 L213.875 29.625 L215.5 31.625 L216.125 34.375 L216.75 39.5 L217.375 47.75 L218.875 67.625 L220.625 78.25 L221.125 81 L220.25 81.75 L218.25 82.25 L217.25 83.25 L220.25 91.125 L221.25 91 L221.25 93.125 L218.75 93.375 L217.375 94.5 L216 95.891 L216.625 97 L218.25 97.375 L219.125 104.375 L221.125 106.891 L221.25 108.25 L221.375 112.25 L222.25 113.625 L224.125 114.75 L225 118.125 L225.25 121.625 L224.125 125.25 L219.75 126.891 L214 132.891 L212.625 132.5 L210.125 131.5 L208 131.5 L207 132.625 L205.25 134 L203.5 132.75 L197.75 127 L193.625 120.625 L188.875 113.375 L181.5 102.625 L178.875 99.625 L174.375 94.125 L169.125 90.625 L163.75 86.625 L159.125 84.125 L156.25 82.75 L146.625 77.891 L137.5 71.625 L136.875 67.25 L131 67.5 L125.875 64.625 L126.5 63.625 L123.375 60.5 L116.375 57.891 L101.625 57.891 L94.5 58.375 L88.25 59.125 L82.125 60.25 L79.5 60.75 L69.625 63.891 L58 65.75 L47.875 66.25 L39.5 66.5 L31.5 65.891 L29.5 64.375 L27.75 63.625 L19.625 66.891 L8.875 66.375 L4.25 65.375 L0 63.125 L1 61.25 L5.375 54.75 L9.625 46.25 L15.625 38.625 L15.875 36.625 L25 36.891 L31 35.625 L36.375 32.891 L35.875 25.25 Z").attr({id: 'Polyline195196',parent: 'New Layer 1',fill: '#ef6448'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'round'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t905.625, 844.109").data('id', 'Polyline195196');
@@ -796,113 +797,136 @@ for(var i = 0; i < NotInteractable.length; i++) {
 }
 
 // HOVER ---
-var prevColour;
+function LightenDarkenColor(col,amt) {
+    var usePound = false;
+    if ( col[0] == "#" ) {
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    var num = parseInt(col,16);
+
+    var r = (num >> 16) + amt;
+
+    if ( r > 255 ) r = 255;
+    else if  (r < 0) r = 0;
+
+    var b = ((num >> 8) & 0x00FF) + amt;
+
+    if ( b > 255 ) b = 255;
+    else if  (b < 0) b = 0;
+
+    var g = (num & 0x0000FF) + amt;
+
+    if ( g > 255 ) g = 255;
+    else if  ( g < 0 ) g = 0;
+
+    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+}
+
 for(var i = 0; i < Interactable.length; i++) {
-	console.log(i);
+	Interactable[i].attr({'cursor':'pointer'});
     Interactable[i].mouseover(function(e) {
-    	prevColour = this.node.style.fill;
-    	
     	switch(this.data('id')) {
     		case 'Liverpool':
     			Liverpool.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
     		case 'Clyde':
     			Clyde.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
     		case 'Denmark':
     			Denmark.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			case 'Sweden':
 				Sweden.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			case 'Kiel':
 				Kiel.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			case 'Norway':
 				Norway.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			case 'Constantinople':
 				Constantinople.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+					e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);				
 				});
 				break;
 			case 'Smyrna':
 				Smyrna.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			case 'Greece':
 				Greece.forEach(function(e) {
-    				e.node.style.fill = 'aliceblue';
+    				e.node.style.fill = LightenDarkenColor(e.attr('fill'), -40);
 				});
 				break;
 			default:
-    			this.node.style.fill = 'aliceblue';
+    			this.node.style.fill = LightenDarkenColor(this.attr('fill'), -40);
     	}
     });
 
     Interactable[i].mouseout(function(e) {
-    	this.node.style.fill = prevColour;
    		switch(this.data('id')) {
    			case 'Liverpool':
     			Liverpool.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
     		case 'Clyde':
     			Clyde.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
     		case 'Denmark':
     			Denmark.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Sweden':
 				Sweden.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Kiel':
 				Kiel.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Norway':
 				Norway.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Constantinople':
 				Constantinople.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Smyrna':
 				Smyrna.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			case 'Greece':
 				Greece.forEach(function(e) {
-    				e.node.style.fill = prevColour;
+    				e.node.style.fill = e.attr('fill');
 				});
 				break;
 			default:
-    			this.node.style.fill = prevColour;
+    			this.node.style.fill = this.attr('fill');
     	}
     });
 }
