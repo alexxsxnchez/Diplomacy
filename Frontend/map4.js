@@ -995,7 +995,10 @@ function LightenDarkenColor(col,amt) {
 }
 
 for(var i = 0; i < Interactable.length; i++) {
-	Interactable[i].attr({'cursor':'pointer'});
+
+	// if has unit on territory {
+		Interactable[i].attr({'cursor':'pointer'});
+	// }
     Interactable[i].mouseover(function(e) {
     	switch(this.data('id')) {
     		case 'Liverpool':
