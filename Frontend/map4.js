@@ -1,5 +1,25 @@
-var rsr = Raphael('map', '1700', '1496');
-
+//var rsr = Raphael('map', '1700', '1496');
+var w = 1700;
+var h = 1496;
+var rsr = Raphael("map");
+rsr.setViewBox(0,0,w,h,true);
+var ratio = w / h;
+var desiredWidth = window.innerHeight * ratio - 9;
+var desiredHeight = window.innerWidth / ratio;
+var width = desiredWidth / window.innerWidth * 100;
+var widthPercentage = width.toString() + "%";
+var height = desiredHeight / window.innerHeight * 100;
+var heightPercentage = height.toString() + "%";
+rsr.setSize(widthPercentage, heightPercentage);
+/*    // trying to center map
+    var mapDiv = document.getElementById("wrapper");
+    mapDiv.style.position = "absolute";
+    mapDiv.style.margin = 'auto';
+    mapDiv.style.left = ((window.innerWidth - desiredWidth) / 2) + "px";
+//    rsr.setSize('90%', '0%');
+ //   */
+ 
+ 
 var NotInteractable = [];
 
 var BackgroundWater = rsr.path("M0 0 L1700 0 L1700 1496 L0 1496 L0 0 Z").attr({parent: 'Background',fill: '#abddf7'," fill-rule": 'evenodd',stroke: 'none','stroke-width':'1','stroke-opacity':'1'}).transform("t1, 1").data('id', 'path_bx');
@@ -598,7 +618,7 @@ var MarseillesText = rsr.text(510, 1065, "MARSEILLES").attr({fill: 'black', stro
 NotInteractable.push(MarseillesText);
 var GasconyText = rsr.text(384, 1035, "GASCONY").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
 NotInteractable.push(GasconyText);
-var BurgundyText = rsr.text(520, 960, "BURGUNDY").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'}).transform("r-30");
+var BurgundyText = rsr.text(520, 960, "BURGUNDY").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '19', 'font-family': 'Calibri'}).transform("r-30");
 NotInteractable.push(BurgundyText);
 var ParisText = rsr.text(460, 906, "PARIS").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
 NotInteractable.push(ParisText);
@@ -644,243 +664,7 @@ var GulfOfBothniaText = rsr.text(971, 497, "GULF\nOF\nBOTHNIA").attr({fill: 'bla
 NotInteractable.push(GulfOfBothniaText);
 
 
-
-
-
-
-
-
-
-
-
-/*
-var path_hi = rsr.path("M0 0 L57 0 L57 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1', 'text': 'hii'}).transform("t762.5, 734.109").data('id', 'path_hi');
-group_a.attr({'parent': 'New Layer 1','name': 'group_a'});group_a.transform("t762.5, 734.109");
-var group_b = rsr.set();
-var path_hj = rsr.path("M0 0 L57 0 L57 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1', 'text': 'hii'}).transform("t675.5, 729.109").data('id', 'path_hj');
-group_b.attr({'parent': 'New Layer 1','name': 'group_b'});group_b.transform("t675.5, 729.109");
-var group_c = rsr.set();
-var path_hk = rsr.path("M0 0 L109.5 0 L109.5 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1', 'text': 'hii'}).transform("t666, 906.109").data('id', 'path_hk');
-group_c.attr({'parent': 'New Layer 1','name': 'group_c'});group_c.transform("t666, 906.109");
-var group_d = rsr.set();
-var path_hl = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1', 'text': 'hii'}).transform("t826.5, 800.109").data('id', 'path_hl');
-//rsr.text(30, 30, "hiii");
-group_d.attr({'parent': 'New Layer 1','name': 'group_d'});group_d.transform("t826.5, 800.109");
-var group_e = rsr.set();
-var path_hm = rsr.path("M0 0 L57 0 L57 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t610.5, 818.109").data('id', 'path_hm');
-group_e.attr({'parent': 'New Layer 1','name': 'group_e'});group_e.transform("t610.5, 818.109");
-var group_f = rsr.set();
-var path_hn = rsr.path("M0 0 L57 0 L57 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t534.5, 798.109").data('id', 'path_hn');
-group_f.attr({'parent': 'New Layer 1','name': 'group_f'});group_f.transform("t534.5, 798.109");
-var group_g = rsr.set();
-var path_ho = rsr.path("M0 0 L57 0 L57 22.5 L0 22.5 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t568.5, 752.109").data('id', 'path_ho');
-group_g.attr({'parent': 'New Layer 1','name': 'group_g'});group_g.transform("t568.5, 752.109");
-var group_h = rsr.set();
-var path_hp = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t866.5, 712.109").data('id', 'path_hp');
-group_h.attr({'parent': 'New Layer 1','name': 'group_h'});group_h.transform("t866.5, 712.109");
-var group_i = rsr.set();
-var path_hq = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t977.5, 797.109").data('id', 'path_hq');
-group_i.attr({'parent': 'New Layer 1','name': 'group_i'});group_i.transform("t977.5, 797.109");
-var group_j = rsr.set();
-var path_hr = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1346.5, 588.109").data('id', 'path_hr');
-group_j.attr({'parent': 'New Layer 1','name': 'group_j'});group_j.transform("t1346.5, 588.109");
-var group_k = rsr.set();
-var path_hs = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1318.5, 886.109").data('id', 'path_hs');
-group_k.attr({'parent': 'New Layer 1','name': 'group_k'});group_k.transform("t1318.5, 886.109");
-var group_l = rsr.set();
-var path_ht = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1192.5, 424.109").data('id', 'path_ht');
-group_l.attr({'parent': 'New Layer 1','name': 'group_l'});group_l.transform("t1192.5, 424.109");
-var group_m = rsr.set();
-var path_hu = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1056.5, 314.109").data('id', 'path_hu');
-group_m.attr({'parent': 'New Layer 1','name': 'group_m'});group_m.transform("t1056.5, 314.109");
-var group_n = rsr.set();
-var path_hv = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t838.5, 452.109").data('id', 'path_hv');
-group_n.attr({'parent': 'New Layer 1','name': 'group_n'});group_n.transform("t838.5, 452.109");
-var group_o = rsr.set();
-var path_hw = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t725.5, 419.109").data('id', 'path_hw');
-group_o.attr({'parent': 'New Layer 1','name': 'group_o'});group_o.transform("t725.5, 419.109");
-var group_p = rsr.set();
-var path_hx = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t698.5, 592.109").data('id', 'path_hx');
-group_p.attr({'parent': 'New Layer 1','name': 'group_p'});group_p.transform("t698.5, 592.109");
-var group_q = rsr.set();
-var path_hy = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t440.5, 620.109").data('id', 'path_hy');
-group_q.attr({'parent': 'New Layer 1','name': 'group_q'});group_q.transform("t440.5, 620.109");
-var group_r = rsr.set();
-var path_hz = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t422.5, 496.109").data('id', 'path_hz');
-group_r.attr({'parent': 'New Layer 1','name': 'group_r'});group_r.transform("t422.5, 496.109");
-var group_s = rsr.set();
-var path_ia = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t354.5, 480.109").data('id', 'path_ia');
-group_s.attr({'parent': 'New Layer 1','name': 'group_s'});group_s.transform("t354.5, 480.109");
-var group_t = rsr.set();
-var path_ib = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t340.5, 618.109").data('id', 'path_ib');
-group_t.attr({'parent': 'New Layer 1','name': 'group_t'});group_t.transform("t340.5, 618.109");
-var group_u = rsr.set();
-var path_ic = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t360.5, 684.109").data('id', 'path_ic');
-group_u.attr({'parent': 'New Layer 1','name': 'group_u'});group_u.transform("t360.5, 684.109");
-var group_v = rsr.set();
-var path_id = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t434.5, 892.109").data('id', 'path_id');
-group_v.attr({'parent': 'New Layer 1','name': 'group_v'});group_v.transform("t434.5, 892.109");
-var group_w = rsr.set();
-var path_ie = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t342.5, 852.109").data('id', 'path_ie');
-group_w.attr({'parent': 'New Layer 1','name': 'group_w'});group_w.transform("t342.5, 852.109");
-var group_x = rsr.set();
-var path_if = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t342.5, 1024.11").data('id', 'path_if');
-group_x.attr({'parent': 'New Layer 1','name': 'group_x'});group_x.transform("t342.5, 1024.11");
-var group_y = rsr.set();
-var path_ig = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t484.5, 1065.11").data('id', 'path_ig');
-group_y.attr({'parent': 'New Layer 1','name': 'group_y'});group_y.transform("t484.5, 1065.11");
-var group_z = rsr.set();
-var path_ih = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t594.5, 1037.11").data('id', 'path_ih');
-group_z.attr({'parent': 'New Layer 1','name': 'group_z'});group_z.transform("t594.5, 1037.11");
-//var group_aa = rsr.set();
-var path_ii = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_ii');
-//group_aa.attr({'parent': 'New Layer 1','name': 'group_aa'});group_aa.;
-//var group_ab = rsr.set();
-var path_ij = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t685.5, 1128.11").data('id', 'path_ij');
-//group_ab.attr({'parent': 'New Layer 1','name': 'group_ab'});group_ab.transform("t685.5, 1128.11");
-//var group_ac = rsr.set();
-var path_ik = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_ik');
-//group_ac.attr({'parent': 'New Layer 1','name': 'group_ac'});group_ac.;
-//var group_ad = rsr.set();
-var path_il = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_il');
-//group_ad.attr({'parent': 'New Layer 1','name': 'group_ad'});group_ad.;
-//var group_ae = rsr.set();
-var path_im = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_im');
-//group_ae.attr({'parent': 'New Layer 1','name': 'group_ae'});group_ae.;
-//var group_af = rsr.set();
-var path_in = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t217.5, 1133.11").data('id', 'path_in');
-//group_af.attr({'parent': 'New Layer 1','name': 'group_af'});group_af.transform("t217.5, 1133.11");
-//var group_ag = rsr.set();
-var path_io = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_io');
-//group_ag.attr({'parent': 'New Layer 1','name': 'group_ag'});group_ag.;
-//var group_ah = rsr.set();
-var path_ip = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t177.5, 1394.11").data('id', 'path_ip');
-//group_ah.attr({'parent': 'New Layer 1','name': 'group_ah'});group_ah.transform("t177.5, 1394.11");
-//var group_ai = rsr.set();
-var path_iq = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t571.5, 1407.11").data('id', 'path_iq');
-//group_ai.attr({'parent': 'New Layer 1','name': 'group_ai'});group_ai.transform("t571.5, 1407.11");
-//var group_aj = rsr.set();
-var path_ir = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t297, 1298.11").data('id', 'path_ir');
-//group_aj.attr({'parent': 'New Layer 1','name': 'group_aj'});group_aj.transform("t297, 1298.11");
-//var group_ak = rsr.set();
-var path_is = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1175, 1463.11").data('id', 'path_is');
-//group_ak.attr({'parent': 'New Layer 1','name': 'group_ak'});group_ak.transform("t1175, 1463.11");
-//var group_al = rsr.set();
-var path_it = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1074, 1392.11").data('id', 'path_it');
-//group_al.attr({'parent': 'New Layer 1','name': 'group_al'});group_al.transform("t1074, 1392.11");
-//var group_am = rsr.set();
-var path_iu = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t812, 1422.11").data('id', 'path_iu');
-//group_am.attr({'parent': 'New Layer 1','name': 'group_am'});group_am.transform("t812, 1422.11");
-//var group_an = rsr.set();
-var path_iv = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t573, 1271.11").data('id', 'path_iv');
-//group_an.attr({'parent': 'New Layer 1','name': 'group_an'});group_an.transform("t573, 1271.11");
-//var group_ao = rsr.set();
-var path_iw = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1328, 1099.11").data('id', 'path_iw');
-//group_ao.attr({'parent': 'New Layer 1','name': 'group_ao'});group_ao.transform("t1328, 1099.11");
-//var group_ap = rsr.set();
-var path_ix = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1166, 1264.11").data('id', 'path_ix');
-//group_ap.attr({'parent': 'New Layer 1','name': 'group_ap'});group_ap.transform("t1166, 1264.11");
-//var group_aq = rsr.set();
-var path_iy = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1233, 1344.11").data('id', 'path_iy');
-//group_aq.attr({'parent': 'New Layer 1','name': 'group_aq'});group_aq.transform("t1233, 1344.11");
-//var group_ar = rsr.set();
-var path_iz = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1537, 1428.11").data('id', 'path_iz');
-//group_ar.attr({'parent': 'New Layer 1','name': 'group_ar'});group_ar.transform("t1537, 1428.11");
-//var group_as = rsr.set();
-var path_ja = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1602, 1205.11").data('id', 'path_ja');
-//group_as.attr({'parent': 'New Layer 1','name': 'group_as'});group_as.transform("t1602, 1205.11");
-//var group_at = rsr.set();
-var path_jb = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1383, 1208.11").data('id', 'path_jb');
-//group_at.attr({'parent': 'New Layer 1','name': 'group_at'});group_at.transform("t1383, 1208.11");
-//var group_au = rsr.set();
-var path_jc = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1086, 1146.11").data('id', 'path_jc');
-//group_au.attr({'parent': 'New Layer 1','name': 'group_au'});group_au.transform("t1086, 1146.11");
-//var group_av = rsr.set();
-var path_jd = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1083, 1067.11").data('id', 'path_jd');
-//group_av.attr({'parent': 'New Layer 1','name': 'group_av'});group_av.transform("t1083, 1067.11");
-//var group_aw = rsr.set();
-var path_je = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t962, 998.109").data('id', 'path_je');
-//group_aw.attr({'parent': 'New Layer 1','name': 'group_aw'});group_aw.transform("t962, 998.109");
-//var group_ax = rsr.set();
-var path_jf = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t968, 1116.11").data('id', 'path_jf');
-//group_ax.attr({'parent': 'New Layer 1','name': 'group_ax'});group_ax.transform("t968, 1116.11");
-//var group_ay = rsr.set();
-var path_jg = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t949, 1229.11").data('id', 'path_jg');
-//group_ay.attr({'parent': 'New Layer 1','name': 'group_ay'});group_ay.transform("t949, 1229.11");
-//var group_az = rsr.set();
-var path_jh = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t977, 1288.11").data('id', 'path_jh');
-//group_az.attr({'parent': 'New Layer 1','name': 'group_az'});group_az.transform("t977, 1288.11");
-//var group_ba = rsr.set();
-var path_ji = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t817, 1041.11").data('id', 'path_ji');
-//group_ba.attr({'parent': 'New Layer 1','name': 'group_ba'});group_ba.transform("t817, 1041.11");
-//var group_bb = rsr.set();
-var path_jj = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t853, 961.109").data('id', 'path_jj');
-//group_bb.attr({'parent': 'New Layer 1','name': 'group_bb'});group_bb.transform("t853, 961.109");
-//var group_bc = rsr.set();
-var path_jk = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t733, 970.109").data('id', 'path_jk');
-//group_bc.attr({'parent': 'New Layer 1','name': 'group_bc'});group_bc.transform("t733, 970.109");
-//var group_bd = rsr.set();
-var path_jl = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t796, 872.109").data('id', 'path_jl');
-//group_bd.attr({'parent': 'New Layer 1','name': 'group_bd'});group_bd.transform("t796, 872.109");
-//var group_be = rsr.set();
-var path_jm = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1007, 871.109").data('id', 'path_jm');
-//group_be.attr({'parent': 'New Layer 1','name': 'group_be'});group_be.transform("t1007, 871.109");
-//var group_bf = rsr.set();
-var path_jn = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_jn');
-//group_bf.attr({'parent': 'New Layer 1','name': 'group_bf'});group_bf.;
-//ar group_bg = rsr.set();
-var path_jo = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1166.5, 853.109").data('id', 'path_jo');
-//group_bg.attr({'parent': 'New Layer 1','name': 'group_bg'});group_bg.transform("t1166.5, 853.109");
-//var group_bh = rsr.set();
-var path_jp = rsr.path("M0 0 L127.5 0 L127.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1023.5, 616.109").data('id', 'path_jp');
-//group_bh.attr({'parent': 'New Layer 1','name': 'group_bh'});group_bh.transform("t1023.5, 616.109");
-//var group_bi = rsr.set();
-var path_jq = rsr.path("M0 0 L281 0 L281 78 L0 78 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t829, 439.109").data('id', 'path_jq');
-//group_bi.attr({'parent': 'New Layer 1','name': 'group_bi'});group_bi.transform("t829, 439.109");
-//var group_bj = rsr.set();
-var path_jr = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t848, 646.109").data('id', 'path_jr');
-//group_bj.attr({'parent': 'New Layer 1','name': 'group_bj'});group_bj.transform("t848, 646.109");
-//var group_bk = rsr.set();
-var path_js = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t524, 582.109").data('id', 'path_js');
-//group_bk.attr({'parent': 'New Layer 1','name': 'group_bk'});group_bk.transform("t524, 582.109");
-//var group_bl = rsr.set();
-var path_jt = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t517, 646.109").data('id', 'path_jt');
-//group_bl.attr({'parent': 'New Layer 1','name': 'group_bl'});group_bl.transform("t517, 646.109");
-//var group_bm = rsr.set();
-var path_ju = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t715, 522.109").data('id', 'path_ju');
-//group_bm.attr({'parent': 'New Layer 1','name': 'group_bm'});group_bm.transform("t715, 522.109");
-//var group_bn = rsr.set();
-var path_jv = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t556, 188.109").data('id', 'path_jv');
-//group_bn.attr({'parent': 'New Layer 1','name': 'group_bn'});group_bn.transform("t556, 188.109");
-//var group_bo = rsr.set();
-var path_jw = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t1175, 26.109").data('id', 'path_jw');
-//group_bo.attr({'parent': 'New Layer 1','name': 'group_bo'});group_bo.transform("t1175, 26.109");
-//var group_bp = rsr.set();
-var path_jx = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t119, 333.109").data('id', 'path_jx');
-//group_bp.attr({'parent': 'New Layer 1','name': 'group_bp'});group_bp.transform("t119, 333.109");
-//var group_bq = rsr.set();
-var path_jy = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t55, 903.109").data('id', 'path_jy');
-//group_bq.attr({'parent': 'New Layer 1','name': 'group_bq'});group_bq.transform("t55, 903.109");
-//var group_br = rsr.set();
-var path_jz = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t230, 719.109").data('id', 'path_jz');
-//group_br.attr({'parent': 'New Layer 1','name': 'group_br'});group_br.transform("t230, 719.109");
-//var group_bs = rsr.set();
-var path_ka = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t303, 781.109").data('id', 'path_ka');
-//group_bs.attr({'parent': 'New Layer 1','name': 'group_bs'});group_bs.transform("t303, 781.109");
-//var group_bt = rsr.set();
-var path_kb = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t453.5, 819.109").data('id', 'path_kb');
-//group_bt.attr({'parent': 'New Layer 1','name': 'group_bt'});group_bt.transform("t453.5, 819.109");
-//var group_bu = rsr.set();
-var path_kc = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t422.5, 711.109").data('id', 'path_kc');
-//group_bu.attr({'parent': 'New Layer 1','name': 'group_bu'});group_bu.transform("t422.5, 711.109");
-//var group_bv = rsr.set();
-var path_kd = rsr.path("M0 0 L173.5 0 L173.5 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("").data('id', 'path_kd');
-//group_bv.attr({'parent': 'New Layer 1','name': 'group_bv'});group_bv.;
-//var group_bw = rsr.set();
-var path_ke = rsr.path("M0 0 L281 0 L281 62 L0 62 L0 0 Z").attr({parent: 'New Layer 1',fill: 'none', stroke: 'none','stroke-width': '0','stroke-opacity': '1'}).transform("t432, 1167.11").data('id', 'path_ke');
-//group_bw.attr({'parent': 'New Layer 1','name': 'group_bw'});group_bw.transform("t432, 1167.11");
-*/
-
+// outside frame ---
 var Frame = rsr.path("M0 0 L1700 0 L1700 1496 L0 1496 L0 0 Z").attr({fill: 'none',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t0, 0").data('id', 'path_kf');
 
 var Interactable = [
@@ -999,6 +783,7 @@ for(var i = 0; i < Interactable.length; i++) {
 	// if has unit on territory {
 		Interactable[i].attr({'cursor':'pointer'});
 	// }
+	
     Interactable[i].mouseover(function(e) {
     	switch(this.data('id')) {
     		case 'Liverpool':
