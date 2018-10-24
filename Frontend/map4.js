@@ -495,7 +495,7 @@ NotInteractable.push(ParisStar);
 Colourable["Paris"].push(ParisStar);
 var BrestStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#2072b5'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t311, 834.109").data('id', 'Star');
 NotInteractable.push(BrestStar);
-Colourable["Paris"].push(ParisStar);
+Colourable["Brest"].push(BrestStar);
 var LondonStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#522788'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t445, 736.109").data('id', 'Star');
 NotInteractable.push(LondonStar);
 Colourable["London"].push(LondonStar);
@@ -1081,8 +1081,9 @@ recolour({
 	'Serbia': '',
 	'Rumania': '',
 	'Bulgaria': '',
-	'Spain': Nation.AUSTRIA,
+	'Spain': '',
 	'Portugal': '',
 	'NorthAfrica': '',
 	'Tunis': ''
+	
 });
