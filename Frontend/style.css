@@ -5,13 +5,22 @@
     padding: 10px 24px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
     /*width: 50%; /* Set a width if needed */
-    display: block; /* Make the buttons appear below each other */
+    display: 'block'; /* Make the buttons appear below each other*/
 }
 
 #movemenu {
 	position: absolute;
-	display:'none';
+	//animation-name: animation;
+	//animation-duration: 0s;
 }
+
+/*@keyframes animation {
+	0% {left: '51%'}
+	25% {left: '49%'}
+	50% {left: '51%'}
+	75% {left: '49%'}
+	100% {left: '50%'}
+}*/
 
 #id1 {
 	position: absolute;

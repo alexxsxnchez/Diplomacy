@@ -54,7 +54,7 @@ MapModel.prototype.loadGameState = function() {
 			type: 'fleet',
 			nation: Nation.ITALY
 		},
-		'Triest': {
+		'Trieste': {
 			type: 'fleet',
 			nation: Nation.AUSTRIA
 		},
@@ -90,9 +90,10 @@ MapModel.prototype.loadGameState = function() {
 			type: 'army',
 			nation: Nation.RUSSIA
 		},
-		'StPetersburgSC': {
+		'StPetersburg': {
 			type: 'fleet',
-			nation: Nation.RUSSIA
+			nation: Nation.RUSSIA,
+			coast: 'SC'
 		}
 	}
 	this.territories = {

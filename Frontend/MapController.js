@@ -18,6 +18,7 @@ MapController.prototype.onTerritorySelected = function(territory) {
 		console.log("selectedMoveType is null");
 		if(this.firstLocation !== null) {
 			console.log("firstLocation is not null thought BAD");
+			this.view.onFailureToClickMoveMenu();
 			return;
 		}
 		this.selectedUnit = this.model.getUnitAt(territory);
