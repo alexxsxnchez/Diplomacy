@@ -1,9 +1,16 @@
 function MapModel(presenter) {
 	this.presenter = presenter;
-	this.loadGameState();
+	this.interactor = interactor;
+	//this.loadGameState();
+	//this.interactor.addLoadGameStateHandler(this.loadGameState.bind(this));
+}
+
+MapModel.prototype.addMoveCreatedHandler = function(handler) {
+	this.moveCreatedHandler = handler;
 }
 
 MapModel.prototype.loadGameState = function() {
+	console.log('game state loading');
 	// get from server
 	this.territories = {
 		'Kiel': Nation.GERMANY,
@@ -292,5 +299,7 @@ MapModel.prototype.getUnitAt = function(territory) {
 
 MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation) {
 	// send to server
-	console.log('move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation);
+	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation;
+	console.log(s);
+	this.moveCreatedHandler(s);
 }
