@@ -1,0 +1,113 @@
+#movemenu, button {
+    background-color: #4CAF50; /* Green background */
+    border: 1px solid green; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    /*width: 50%; /* Set a width if needed */
+    display: 'block'; /* Make the buttons appear below each other*/
+}
+
+#movemenu {
+	position: absolute;
+	//animation-name: animation;
+	//animation-duration: 0s;
+}
+
+/*@keyframes animation {
+	0% {left: '51%'}
+	25% {left: '49%'}
+	50% {left: '51%'}
+	75% {left: '49%'}
+	100% {left: '50%'}
+}*/
+
+#id1 {
+	position: absolute;
+	width: 55px;
+	height: 28px;
+	top:640px;
+	left: 465px;
+}
+
+#id2 {
+	position: absolute;
+	width: 75px;
+	height: 24px;
+	top: 540px;
+	left: 525px;
+
+}
+
+#id3 {
+	position: absolute;
+	width: 66px;
+	height: 30px;
+	top: 540px;
+	left: 980px;
+
+}
+
+#id4 {
+	position: absolute;
+	width: 75px;
+	height: 45px;
+	top: 520px;
+	left: 610px;
+}
+
+#id5 {
+	position: absolute;
+	width: 66px;
+	height: 29px;
+	top: 520px;
+	left: 410px;
+}
+
+#id6 {
+	position: absolute;
+	width: 75px;
+	height: 19px;
+	top: 510px;
+	left: 480px;
+}
+
+#id7 {
+	position: absolute;
+	width: 75px;
+	height: 26px;
+	top: 430px;
+	left: 390px;
+}
+
+#id8 {
+	position: absolute;
+	width: 60px;
+	height: 30px;
+	top: 200px;
+	left: 130px;
+}
+
+#id9 {
+	position: absolute;
+	width: 60px;
+	height: 14px;
+	top: 200px;
+	left: 410px;
+}
+
+#id10 {
+	position: absolute;
+	width: 70px;
+	height: 26px;
+	top: 250px;
+	left: 410px;
+}
+
+#id11 {
+	position: absolute;
+	width: 60px;
+	height: 22px;
+	top: 750px;
+	left: 410px;
+}

@@ -3,29 +3,26 @@
     <head>
         <meta charset="UTF-8">
         <title>Raphaël JS Map</title>
-        <!--<style type="text/css">
-            /*.united-kingdom {
-                background-image: url(img/MyDiplomacyMap2.png);
-                background-repeat: no-repeat;
-            }*/
-            .united-kindom {
-           		path:hover {
-					cursor: pointer;
-					fill: #505050;
-				}	
-			}
-        </style>-->
-        
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-    	<div id="wrapper">
         <div id="map">
             <!-- Raphaël JS Map Here -->
+            <div id="movemenu">
+				<button id="holdbutton">Hold</button>
+				<button id="movebutton">Move</button>
+				<button id="supportbutton">Support</button>
+				<button id="convoybutton">Convoy</button>
+        	</div>
         </div>
-        </div>
+        <script src="/socket.io/socket.io.js"></script>
         <script src="Nation.js"></script>
         <script src="raphael-min.js"></script>
         <script src="map4.js"></script>
+        <script src="MapModel.js"></script>
+        <script src="Interactor.js"></script>
+        <script src="MapController.js"></script>
+        <script src="app.js"></script>
         
     </body>
 </html>
