@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alexxsxnchez/Diplomacy.git"
+  },
+  "author": "Alex Sanchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexxsxnchez/Diplomacy/issues"
+  },
+  "homepage": "https://github.com/alexxsxnchez/Diplomacy#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

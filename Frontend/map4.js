@@ -1259,6 +1259,8 @@ function MapView() {
 	Object.keys(Interactable).forEach((id) => {
 		var territory = Interactable[id];
 		territory.forEach((region) => {
+			// register pointer cursor
+			region.attr({'cursor':'pointer'});
 		
 			// register click event
 			var self = this;
@@ -1377,9 +1379,6 @@ function drawUnits(units) {
 							console.log('ERROR: nation name not correct');
 					} 
 					Units[i].attr('fill', colour);
-					Interactable[key].forEach((territoryPart) => {
-						territoryPart.attr({'cursor':'pointer'});
-					});
 				} else if(Units[i].data('type') != 'lace' || type != 'army') {
 					continue;
 				} else {
