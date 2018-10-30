@@ -1,9 +1,13 @@
+"use strict";
+
 var express = require('express');
 var socket = require('socket.io');
 
 var app = express();
-var server = app.listen(4000, function() {
-	console.log('listening for requests on port ' + app.port);
+var port = 4000;
+
+var server = app.listen(port, function() {
+	console.log('listening for requests on port ' + port);
 });
 
 app.use(express.static('../Frontend'));
