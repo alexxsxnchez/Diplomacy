@@ -465,7 +465,7 @@ Colourable["Berlin"].push(BerlinStar);
 var MunichStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#4c4d4d'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t739, 930.109").data('id', 'Star');
 NotInteractable.push(MunichStar);
 Colourable["Munich"].push(MunichStar);
-var HollandStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#d99057'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t575, 740.109").data('id', 'Star');
+var HollandStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#d99057'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t575, 739").data('id', 'Star');
 NotInteractable.push(HollandStar);
 Colourable["Holland"].push(HollandStar);
 var BelgiumStar = rsr.path("M15 7.5 C15 11.6423 11.6423 15 7.5 15 C3.35786 15 0 11.6423 0 7.5 C0 3.35786 3.35786 0 7.5 0 C11.6423 0 15 3.35786 15 7.5 Z").attr({parent: 'New Layer 1',fill: '#d99057'," fill-rule": 'evenodd',stroke: '#161413'," stroke-width": '1'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t538, 784.109").data('id', 'Star');
@@ -797,7 +797,7 @@ var PicardyText = rsr.text(490, 830, "PICARDY").attr({fill: 'black', stroke: 'wh
 NotInteractable.push(PicardyText);
 var BelgiumText = rsr.text(570, 812, "BEL.").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
 NotInteractable.push(BelgiumText);
-var HollandText = rsr.text(606, 761, "HOL.").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
+var HollandText = rsr.text(605, 761, "HOL.").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
 NotInteractable.push(HollandText);
 var EnglishChannelText = rsr.text(383, 790, "ENGLISH CHANNEL").attr({fill: 'black', stroke: 'white', 'stroke-width': 0.0, 'font-size': '18', 'font-family': 'Calibri'});
 NotInteractable.push(EnglishChannelText);
