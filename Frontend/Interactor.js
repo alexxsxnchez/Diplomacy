@@ -1,5 +1,3 @@
-//var io = require('socket.io-client');
-
 function Interactor(model) {
 	this.model = model;
 	this.setupServerConnection();
@@ -12,7 +10,7 @@ Interactor.prototype.onMoveCreated = function(move) {
 }
 
 Interactor.prototype.setupServerConnection = function() {
-	this.socket = io.connect('localhost:4000');
+	this.socket = io.connect();
 	var self = this;
 	this.socket.on('join', function(data) {
 		console.log('I have joined room');
