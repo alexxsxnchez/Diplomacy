@@ -28,6 +28,7 @@ io.on('connection', function(socket) {
 	});*/
 	
 	socket.on('joinroom', function() {
+		console.log('creating room');
 		room = new Room(io, socket, 0);
 	});
 });

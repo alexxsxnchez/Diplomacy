@@ -11,7 +11,6 @@ GameModel.prototype.loadFakeDB = function() {
 }
 
 GameModel.prototype.loadInitialConditions = function() {
-	
 	this.gameState.territories = initialConditions.territories;
 	this.gameState.units = initialConditions.units;
 	this.gameState.moves = [];
@@ -28,7 +27,7 @@ GameModel.prototype.addMove = function(move) {
 }
 
 GameModel.prototype.getGameState = function() {
-	console.log(this.gameState.territories);
+	//console.log(this.gameState.territories);
 	return this.gameState;
 }
 

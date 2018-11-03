@@ -5,19 +5,20 @@ function Game(io, socket) {
 	this.socket = socket;
 	this.model = new GameModel();
 	console.log("hello");
-//	this.setupEvents();
+	this.setupEvents();
 }
 
 Game.prototype.setupEvents = function() {
+	var self = this;
 	this.socket.on('move', function(moveData) {
 		console.log('move received: ' + moveData); 
-		this.addMove(moveData);
+		self.addMove(moveData);
 	});
 	this.socket.on('finalize', function(finalizeData) {
-		this.playerFinalized(finalizeData);
+		self.playerFinalized(finalizeData);
 	});
 	this.socket.on('unfinalize', function(finalizeData) {
-		this.playerUnfinalized(finalizeData);
+		self.playerUnfinalized(finalizeData);
 	});
 }
 

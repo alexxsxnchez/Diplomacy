@@ -12,8 +12,8 @@ Room.prototype.loadGame = function(id) {
 	// get game from database
 	var isNewGame = true;
 	if(isNewGame) {
-		var game = new Game(this.io, this.socket);
-		game.start();
+		this.game = new Game(this.io, this.socket);
+		this.game.start();
 	}
 };
 
