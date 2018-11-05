@@ -6,7 +6,6 @@ function GameModel() {
 
 GameModel.prototype.loadFakeDB = function() {
 	// get from database
-	this.finalized = [];
 	this.gameState = {};
 }
 
@@ -14,11 +13,14 @@ GameModel.prototype.loadInitialConditions = function() {
 	this.gameState.territories = initialConditions.territories;
 	this.gameState.units = initialConditions.units;
 	this.gameState.moves = [];
+	this.gameState.finalized = [];
 }
 
 GameModel.prototype.updateNewTurn = function(territories, units) {
 	this.gameState.territories = territories;
 	this.gameState.units = units;
+	this.gameState.moves = [];
+	this.gameState.finalized = [];
 	//updateDb
 }
 
@@ -32,13 +34,13 @@ GameModel.prototype.getGameState = function() {
 }
 
 GameModel.prototype.playerFinalized = function(nation) {
-	finalized.push(nation);
+	this.gameState.finalized.push(nation);
 }
 
 GameModel.prototype.playerUnfinalized = function(nation) {
-	for(var i = 0; i < this.finalized.length - 1; i++){ 
-	   if ( this.finalized[i] === nation) {
-		 this.finalized.splice(i, 1); 
+	for(var i = 0; i < this.gameState.finalized.length - 1; i++){ 
+	   if(this.gameState.finalized[i] === nation) {
+		 this.gameState.finalized.splice(i, 1); 
 		 break;
 	   }
 	}
@@ -46,7 +48,7 @@ GameModel.prototype.playerUnfinalized = function(nation) {
 
 // TODO
 GameModel.prototype.getIsAllFinalized = function() {
-	return this.finalized.length > 0;
+	return this.gameState.finalized.length > 0;
 }
 
 module.exports = GameModel;

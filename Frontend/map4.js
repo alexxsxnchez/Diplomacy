@@ -1275,9 +1275,18 @@ function MapView() {
 	});
 }
 
-MapView.prototype.update = function(territories, units) {
+MapView.prototype.update = function(territories, units, isFinalized) {
 	colourTerritories(territories);
 	drawUnits(units);
+	this.updateIsFinalized(isFinalized);
+}
+
+MapView.prototype.updateIsFinalized = function(isFinalized) {
+	var text = 'Finalize';
+	if(isFinalized) {
+		text = 'Unfinalize';
+	}
+	document.getElementById('finalizebutton').innerHTML = text;
 }
 
 function colourTerritories(territoryOwnership) {
@@ -1397,6 +1406,12 @@ MapView.prototype.addMoveTypeSelectedHandler = function(moveClickHandler) {
 	});
 	document.getElementById('convoybutton').addEventListener("click", function() {
 		moveClickHandler('CONVOY');
+	});
+}
+
+MapView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
+	document.getElementById('finalizebutton').addEventListener("click", function() {
+		finalizeClickHandler();
 	});
 }
 

@@ -9,143 +9,21 @@ MapModel.prototype.addMoveCreatedHandler = function(handler) {
 	this.moveCreatedHandler = handler;
 }
 
-MapModel.prototype.loadGameState = function() {
+MapModel.prototype.addFinalizeHandler = function(handler) {
+	this.finalizeHandler = handler;
+}
+
+MapModel.prototype.dataReceived = function(gameState) {
+	this.units = gameState.units;
+	this.territories = gameState.territories;
+	this.moves = gameState.moves;
+	this.isFinalized = gameState.finalized.length > 0;
+	this.presenter.update(this.territories, this.units, this.isFinalized);
+}
+
+/*MapModel.prototype.loadGameState = function() {
 	console.log('game state loading');
-	// get from server
-	this.territories = {
-		'Kiel': Nation.GERMANY,
-		'Berlin': Nation.GERMANY,
-		'Munich': Nation.GERMANY,
-		'Prussia': Nation.GERMANY,
-		'Silesia': Nation.GERMANY,
-		'Ruhr': Nation.GERMANY,
-		'Warsaw': Nation.RUSSIA,
-		'Livonia': Nation.RUSSIA,
-		'Moscow': Nation.RUSSIA,
-		'StPetersburg': Nation.RUSSIA,
-		'Sevastopol': Nation.RUSSIA,
-		'Ukraine': Nation.RUSSIA,
-		'Ankara': Nation.TURKEY,
-		'Smyrna': Nation.TURKEY,
-		'Syria': Nation.TURKEY,
-		'Armenia': Nation.TURKEY,
-		'Constantinople': Nation.TURKEY,
-		'Tyrolia': Nation.AUSTRIA,
-		'Budapest': Nation.AUSTRIA,
-		'Galicia': Nation.AUSTRIA,
-		'Bohemia': Nation.AUSTRIA,
-		'Vienna': Nation.AUSTRIA,
-		'Trieste': Nation.AUSTRIA,
-		'Venice': Nation.ITALY,
-		'Apulia': Nation.ITALY,
-		'Piedmont': Nation.ITALY,
-		'Tuscany': Nation.ITALY,
-		'Rome': Nation.ITALY,
-		'Naples': Nation.ITALY,
-		'Marseilles': Nation.FRANCE,
-		'Burgundy': Nation.FRANCE,
-		'Paris': Nation.FRANCE,
-		'Gascony': Nation.FRANCE,
-		'Picardy': Nation.FRANCE,
-		'Brest': Nation.FRANCE,
-		'London': Nation.ENGLAND,
-		'Yorkshire': Nation.ENGLAND,
-		'Wales': Nation.ENGLAND,
-		'Liverpool': Nation.ENGLAND,
-		'Clyde': Nation.ENGLAND,
-		'Edinburgh': Nation.ENGLAND
-	}
 	
-	this.units = {
-		'Kiel': {
-			type: 'fleet',
-			nation: Nation.GERMANY
-		},
-		'Berlin': {
-			type: 'army',
-			nation: Nation.GERMANY
-		},
-		'Munich': {
-			type: 'army',
-			nation: Nation.GERMANY
-		},
-		'London': {
-			type: 'fleet',
-			nation: Nation.ENGLAND
-		},
-		'Liverpool': {
-			type: 'army',
-			nation: Nation.ENGLAND
-		},
-		'Edinburgh': {
-			type: 'fleet',
-			nation: Nation.ENGLAND
-		},
-		'Paris': {
-			type: 'army',
-			nation: Nation.FRANCE
-		},
-		'Marseilles': {
-			type: 'army',
-			nation: Nation.FRANCE
-		},
-		'Brest': {
-			type: 'fleet',
-			nation: Nation.FRANCE
-		},
-		'Venice': {
-			type: 'army',
-			nation: Nation.ITALY
-		},
-		'Rome': {
-			type: 'army',
-			nation: Nation.ITALY
-		},
-		'Naples': {
-			type: 'fleet',
-			nation: Nation.ITALY
-		},
-		'Trieste': {
-			type: 'fleet',
-			nation: Nation.AUSTRIA
-		},
-		'Vienna': {
-			type: 'army',
-			nation: Nation.AUSTRIA
-		},
-		'Budapest': {
-			type: 'army',
-			nation: Nation.AUSTRIA
-		},
-		'Constantinople': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'Smyrna': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'Ankara': {
-			type: 'fleet',
-			nation: Nation.TURKEY
-		},
-		'Sevastopol': {
-			type: 'fleet',
-			nation: Nation.RUSSIA
-		},
-		'Moscow': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Warsaw': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'StPetersburg': {
-			type: 'fleet',
-			nation: Nation.RUSSIA,
-			coast: 'SC'
-		}
 		/*,
 		'Prussia': {
 			type: 'army',
@@ -282,12 +160,12 @@ MapModel.prototype.loadGameState = function() {
 		'Denmark': {
 			type: 'army',
 			nation: Nation.RUSSIA
-		}*/
+		}
 	}
 	
 	this.moves = [];
 	this.presenter.update(this.territories, this.units);
-}
+}*/
 
 MapModel.prototype.getUnitAt = function(territory) {
 	if(territory in this.units) {
@@ -301,5 +179,16 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	// send to server
 	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation;
 	console.log(s);
+	
 	this.moveCreatedHandler(s);
+}
+
+MapModel.prototype.toggleIsFinalized = function() {
+	this.isFinalized = !this.isFinalized;
+	this.presenter.updateIsFinalized(this.isFinalized);
+	this.finalizeHandler(this.isFinalized);
+}
+
+MapModel.prototype.getIsFinalized = function() {
+	return this.isFinalized;
 }

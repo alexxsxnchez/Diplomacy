@@ -1,4 +1,5 @@
-var GameModel = require('./GameModel');
+var Nation = require('./Nation.js');
+var GameModel = require('./GameModel.js');
 
 function Game(io, socket) {
 	this.io = io;
@@ -15,9 +16,11 @@ Game.prototype.setupEvents = function() {
 		self.addMove(moveData);
 	});
 	this.socket.on('finalize', function(finalizeData) {
+		console.log('player finalized: ' + finalizeData);
 		self.playerFinalized(finalizeData);
 	});
 	this.socket.on('unfinalize', function(finalizeData) {
+		console.log('player unfinalized: ' + finalizeData);
 		self.playerUnfinalized(finalizeData);
 	});
 }
@@ -32,20 +35,26 @@ Game.prototype.addMove = function(move) {
 }
 
 Game.prototype.playerFinalized = function(player) {
-	this.model.addFinalized(player);
+	this.model.playerFinalized(player);
 	this.socket.emit('finalize');
 	if(this.model.getIsAllFinalized()) {
-		this.processMoves();
+		var gameState = this.model.getGameState();
+		this.processMoves(gameState, null);
+		this.model.updateNewTurn(gameState.territories, gameState.units);
 		this.io.emit('update', this.model.getGameState());
 	}
 }
 
 Game.prototype.playerUnfinalized = function(player) {
-	this.model.removeFinalized(player);
+	this.model.playerUnfinalized(player);
 }
 
-Game.prototype.processMoves = function(callback) {
+Game.prototype.processMoves = function(gameState, callback) {
 	console.log('about to process moves');
+	this.model.getGameState().units["Tuscany"] = {
+		type: 'fleet',
+		nation: Nation.ITALY
+	}
 }
 
 module.exports = Game;

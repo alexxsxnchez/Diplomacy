@@ -10,6 +10,7 @@ function MapController(view, model) {
 	/////
 	this.view.addTerritorySelectedHandler(this.onTerritorySelected.bind(this));
 	this.view.addMoveTypeSelectedHandler(this.onMoveTypeSelected.bind(this));
+	this.view.addFinalizeSelectedHandler(this.onFinalizeSelected.bind(this));
 }
 
 MapController.prototype.onTerritorySelected = function(territory) {
@@ -60,4 +61,11 @@ MapController.prototype.moveSelectionComplete = function() {
 	this.firstLocation = null;
 	this.secondLocation = null;
 	this.thirdLocation = null;
+	if(this.model.getIsFinalized()) {
+		this.model.toggleIsFinalized();
+	}
+}
+
+MapController.prototype.onFinalizeSelected = function() {
+	this.model.toggleIsFinalized();
 }
