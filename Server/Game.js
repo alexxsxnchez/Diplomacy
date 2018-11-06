@@ -42,7 +42,7 @@ Game.prototype.playerFinalized = function(player) {
 		var gameState = this.model.getGameState();
 		var self = this;
 		this.processMoves(gameState, function(output) {
-			console.log(output);
+			console.log('stdout:' + output);
 			console.log('-- done outputting');
 			self.model.updateNewTurn(gameState.territories, gameState.units);
 			self.io.emit('update', self.model.getGameState());
@@ -62,7 +62,8 @@ Game.prototype.processMoves = function(gameState, callback) {
 	}*/
 	var execFile = ChildProcess.execFile;
 	var program = "Adjudicator/build/Release/standalone";
-	var child = execFile(program, [gameState.moves], function(error, stdout, stderr) {
+	var inputFile = "Adjudicator/input.txt";
+	var child = execFile(program, [inputFile, gameState.moves], function(error, stdout, stderr) {
 		console.log('done processing');
 		console.log('error:' + error);
 		console.log('stderr:' + stderr); 

@@ -16,15 +16,21 @@
 #include <map>
 #include <vector>
 #include "MoveProcessor.h"
+#include "ChildProcess.h"
 #include <cstdio>
+#include <stdio.h>
+#include <errno.h>
 
+using namespace std;
 using std::cin;
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::istringstream;
 using std::ifstream;
 using std::map;
 using std::vector;
+using std::fgets;
 
 static map<Nation, vector<Piece *> > readInPieces() {
 	ifstream file;
@@ -76,21 +82,25 @@ static map<Nation, vector<Piece *> > readInPieces() {
 			(it->second).push_back(piece);
 		}
 	}
+	file.close();
 	return pieces;
 }
 
 
-static void readInNodes(Graph & graph) {
+static void readInNodes(Graph & graph, string fileName) {
 	ifstream file;
 	try {
-		file.open("input.txt");
-	} catch(...) {
+		file.open(fileName);
+	} catch (...) {
 		assert(false);
 	}
-	
-	string in;
-	while(getline(file, in)) {
-		istringstream s(in);
+	if(!file) {
+		cerr << "file not opening" << endl;
+	}
+	string line;
+	map<Nation, vector<Piece *> > pieces;
+	while(getline(file, line)) {
+		istringstream s(line);
 		string first, second, third;
 		s >> first;
 		if(first == "//" || first == "") {
@@ -109,23 +119,24 @@ static void readInNodes(Graph & graph) {
 			} else if(third == "false") {
 				boolean = false;
 			} else {
-				cout << "ERROR: " << third << endl;
+				cerr << "ERROR: " << third << endl;
 				assert(false);
 			}
 			Territory::Type type;
 			try {
 				type = getTerritoryType(first);
 			} catch(string incorrectString) {
-				cout << "ERROR: " << incorrectString << endl;
+				cerr << "ERROR: " << incorrectString << endl;
 				assert(false);
 			}
 			Territory * territory = new Territory(second, boolean, type);
 			graph.addNode(second, territory);
 		} else {
-			cout << "ERROR: " << first << endl;
+			cerr << "ERROR: " << first << endl;
 			assert(false);
 		}
 	}
+	file.close();
 }
 
 static void tc1(Graph * g) {
@@ -443,35 +454,23 @@ static void tc29(Graph * g) {
 	p.processMoves();
 	std::cout << "----" << std::endl;
 }
-		
-int main() {
-	Graph * g = new Graph;
-	printf("ok here we go");
-	readInNodes(*g);
-	printf("read in nodes");
+	
+void runTests(Graph * g) {
 	cout << endl << *g << endl;
 	cout << endl << endl;
 	map<Nation, vector<Piece *> > pieces = readInPieces();
-	printf("read in pieces");
 	for(auto pair : pieces) {
-		printf("hahah");
 		for(Piece * piece : pair.second) {
-			printf("%s\n", piece->getLocation().c_str());
 			cout << *piece << endl;
 		}
 	}
-
-	printf("does it make it next");
 	auto it = pieces.find(Nation::GERMANY);
-	printf("prob here");
 	int i = 0;
 	Piece * piece = (it->second).at(i);
-	printf("okkk...");
 	while(piece->getLocation() != "Kiel") {
 		i++;
 		piece = (it->second).at(i);
 	}
-	printf("here?");
 	piece = new FleetPiece(Nation::ENGLAND, "Bulgaria", "Bulgaria_SC");
 	MovementMove * move = new MovementMove(piece, "Constantinople");
 	if(move->isLegal(g)) {
@@ -479,7 +478,8 @@ int main() {
 	} else {
 		cout << "move is not valid" << endl;
 	}
-	printf("about to start real tests");
+	
+	cout << "about to start real tests" << endl;
 	tc1(g);
 	tc2(g);
 	tc3(g);
@@ -517,9 +517,22 @@ int main() {
 	for(string s : path) {
 		cout << s << endl;
 	}
-	// still need to delete pieces
-//	delete g;
-	return 0;
 }
 
-
+int main(int argc, char ** argv) {
+	if(argc == 1 || argc > 3) {
+		assert(false);
+	}
+	string fileName(argv[1]);
+	Graph * g = new Graph;
+	//readInNodes(*g, fileName);
+	if(argc == 2) {
+		// normal testing
+		runTests(g);
+	} else if(argc == 3) {
+		string data(argv[2]);
+		// called as child process
+		ChildProcess(g, data);
+	}
+	delete g;
+}	

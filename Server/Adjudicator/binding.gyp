@@ -3,8 +3,9 @@
 		{
 			"target_name": "standalone",
 			"type": "executable",
-			"sources": [ "main.cpp", "MoveProcessor.cpp", "MovementMove.cpp", "Piece.cpp", "ArmyPiece.cpp", "FleetPiece.cpp", "ConvoyMove.cpp", "Graph.cpp", "HoldMove.cpp", "Move.cpp", "SupportMove.cpp", "Territory.cpp", "pieces.txt" ],
+			"sources": [ "main.cpp", "MoveProcessor.cpp", "MovementMove.cpp", "Piece.cpp", "ArmyPiece.cpp", "FleetPiece.cpp", "ConvoyMove.cpp", "Graph.cpp", "HoldMove.cpp", "Move.cpp", "SupportMove.cpp", "Territory.cpp", "ChildProcess.cpp", "input.txt" ],
 			"cflags": ["-Wall", "-std=c++14"],
+			"include_dirs": [ "." ],
 			"conditions": [
 				[ "OS=='mac'", {
 						"xcode_settings": {

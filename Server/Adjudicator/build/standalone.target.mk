@@ -11,7 +11,8 @@ DEFS_Debug := \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DDEBUG' \
-	'-D_DEBUG'
+	'-D_DEBUG' \
+	'-DV8_ENABLE_CHECKS'
 
 # Flags passed to all source files.
 CFLAGS_Debug := \
@@ -31,6 +32,7 @@ CFLAGS_C_Debug := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-threadsafe-statics \
 	-std=c++14 \
@@ -43,13 +45,14 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/include/node \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/src \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/openssl/config \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/openssl/openssl/include \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/uv/include \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/zlib \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/v8/include
+	-I/Users/alexsanchez/.node-gyp/8.12.0/include/node \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/src \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/openssl/config \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/openssl/openssl/include \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/uv/include \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/zlib \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/v8/include \
+	-I$(srcdir)/.
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=standalone' \
@@ -78,6 +81,7 @@ CFLAGS_C_Release := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-threadsafe-statics \
 	-std=c++14 \
@@ -90,13 +94,14 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/include/node \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/src \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/openssl/config \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/openssl/openssl/include \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/uv/include \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/zlib \
-	-I/Users/alexsanchez/.node-gyp/6.10.0/deps/v8/include
+	-I/Users/alexsanchez/.node-gyp/8.12.0/include/node \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/src \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/openssl/config \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/openssl/openssl/include \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/uv/include \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/zlib \
+	-I/Users/alexsanchez/.node-gyp/8.12.0/deps/v8/include \
+	-I$(srcdir)/.
 
 OBJS := \
 	$(obj).target/$(TARGET)/main.o \
@@ -110,7 +115,8 @@ OBJS := \
 	$(obj).target/$(TARGET)/HoldMove.o \
 	$(obj).target/$(TARGET)/Move.o \
 	$(obj).target/$(TARGET)/SupportMove.o \
-	$(obj).target/$(TARGET)/Territory.o
+	$(obj).target/$(TARGET)/Territory.o \
+	$(obj).target/$(TARGET)/ChildProcess.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)
@@ -144,7 +150,8 @@ LDFLAGS_Debug := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Debug := \
 	-stdlib=libc++ \
@@ -157,7 +164,8 @@ LDFLAGS_Release := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Release := \
 	-stdlib=libc++ \
