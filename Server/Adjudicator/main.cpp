@@ -16,6 +16,7 @@
 #include <map>
 #include <vector>
 #include "MoveProcessor.h"
+#include <cstdio>
 
 using std::cin;
 using std::cout;
@@ -35,6 +36,7 @@ static map<Nation, vector<Piece *> > readInPieces() {
 	string line;
 	map<Nation, vector<Piece *> > pieces;
 	while(getline(file, line)) {
+		printf("line by line...");
 		istringstream s(line);
 		string first, second, third, fourth;
 		s >> first;
@@ -79,8 +81,15 @@ static map<Nation, vector<Piece *> > readInPieces() {
 
 
 static void readInNodes(Graph & graph) {
+	ifstream file;
+	try {
+		file.open("input.txt");
+	} catch(...) {
+		assert(false);
+	}
+	
 	string in;
-	while(getline(cin, in)) {
+	while(getline(file, in)) {
 		istringstream s(in);
 		string first, second, third;
 		s >> first;
@@ -437,25 +446,32 @@ static void tc29(Graph * g) {
 		
 int main() {
 	Graph * g = new Graph;
+	printf("ok here we go");
 	readInNodes(*g);
+	printf("read in nodes");
 	cout << endl << *g << endl;
 	cout << endl << endl;
-
 	map<Nation, vector<Piece *> > pieces = readInPieces();
+	printf("read in pieces");
 	for(auto pair : pieces) {
+		printf("hahah");
 		for(Piece * piece : pair.second) {
+			printf("%s\n", piece->getLocation().c_str());
 			cout << *piece << endl;
 		}
 	}
 
-	
+	printf("does it make it next");
 	auto it = pieces.find(Nation::GERMANY);
+	printf("prob here");
 	int i = 0;
 	Piece * piece = (it->second).at(i);
+	printf("okkk...");
 	while(piece->getLocation() != "Kiel") {
 		i++;
 		piece = (it->second).at(i);
 	}
+	printf("here?");
 	piece = new FleetPiece(Nation::ENGLAND, "Bulgaria", "Bulgaria_SC");
 	MovementMove * move = new MovementMove(piece, "Constantinople");
 	if(move->isLegal(g)) {
@@ -463,7 +479,7 @@ int main() {
 	} else {
 		cout << "move is not valid" << endl;
 	}
-
+	printf("about to start real tests");
 	tc1(g);
 	tc2(g);
 	tc3(g);

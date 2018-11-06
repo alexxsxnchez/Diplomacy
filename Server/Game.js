@@ -1,5 +1,6 @@
 var Nation = require('./Nation.js');
 var GameModel = require('./GameModel.js');
+var ChildProcess = require('child_process');
 
 function Game(io, socket) {
 	this.io = io;
@@ -39,9 +40,13 @@ Game.prototype.playerFinalized = function(player) {
 	this.socket.emit('finalize');
 	if(this.model.getIsAllFinalized()) {
 		var gameState = this.model.getGameState();
-		this.processMoves(gameState, null);
-		this.model.updateNewTurn(gameState.territories, gameState.units);
-		this.io.emit('update', this.model.getGameState());
+		var self = this;
+		this.processMoves(gameState, function(output) {
+			console.log(output);
+			console.log('-- done outputting');
+			self.model.updateNewTurn(gameState.territories, gameState.units);
+			self.io.emit('update', self.model.getGameState());
+		});
 	}
 }
 
@@ -51,10 +56,18 @@ Game.prototype.playerUnfinalized = function(player) {
 
 Game.prototype.processMoves = function(gameState, callback) {
 	console.log('about to process moves');
-	this.model.getGameState().units["Tuscany"] = {
+	/*this.model.getGameState().units["Tuscany"] = {
 		type: 'fleet',
 		nation: Nation.ITALY
-	}
+	}*/
+	var execFile = ChildProcess.execFile;
+	var program = "Adjudicator/build/Release/standalone";
+	var child = execFile(program, [gameState.moves], function(error, stdout, stderr) {
+		console.log('done processing');
+		console.log('error:' + error);
+		console.log('stderr:' + stderr); 
+		callback(stdout);
+	});
 }
 
 module.exports = Game;
