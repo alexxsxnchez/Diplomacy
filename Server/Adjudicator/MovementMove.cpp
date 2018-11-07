@@ -11,8 +11,7 @@ using std::string;
 MovementMove::MovementMove(Piece * piece, string destination, bool viaConvoy) : Move{piece}, destination_{destination}, viaConvoy_{viaConvoy} {}
 
 void MovementMove::print(ostream & out) const {
-
-
+	out << *getPiece() << " MOVES to " << destination_ << std::endl;
 }
 
 bool MovementMove::isLegal(Graph * graph) const {

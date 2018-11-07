@@ -180,11 +180,11 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation;
 	console.log(s);
 	var move = {};
-	move[firstLocation] = {};
-	move[firstLocation].unit = unit;
-	move[firstLocation].moveType = moveType;
-	move[firstLocation].secondLoc = secondLocation;
-	move[firstLocation].thirdLoc = thirdLocation; 
+	move.unit = unit;
+	move.moveType = moveType;
+	move.firstLoc = firstLocation;
+	move.secondLoc = secondLocation;
+	move.thirdLoc = thirdLocation; 
 	
 	this.moveCreatedHandler(move);
 }

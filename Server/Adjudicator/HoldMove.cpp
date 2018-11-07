@@ -5,8 +5,7 @@
 HoldMove::HoldMove(Piece * piece) : Move{piece} {}
 
 void HoldMove::print(ostream & out) const {
-
-
+	out << *getPiece() << " HOLDS" << std::endl;
 }
 
 bool HoldMove::isLegal(Graph * graph) const {

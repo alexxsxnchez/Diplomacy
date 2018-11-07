@@ -9,8 +9,7 @@ using std::pair;
 ConvoyMove::ConvoyMove(Piece * piece, string source, string destination) : Move{piece}, source_{source}, destination_{destination} {}
 
 void ConvoyMove::print(ostream & out) const {
-
-
+	out << *getPiece() << " CONVOYS " << source_ << " to " << destination_ << std::endl;
 }
 
 bool ConvoyMove::isLegal(Graph * graph) const {

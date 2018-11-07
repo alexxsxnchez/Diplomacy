@@ -10,8 +10,7 @@ using std::string;
 SupportMove::SupportMove(Piece * piece, string source, string destination) : Move{piece}, source_{source}, destination_{destination} {}
 
 void SupportMove::print(ostream & out) const {
-
-
+	out << *getPiece() << " SUPPORTS " << source_ << " to " << destination_ << std::endl;
 }
 
 bool SupportMove::isLegal(Graph * graph) const {

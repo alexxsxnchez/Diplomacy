@@ -12,20 +12,22 @@ GameModel.prototype.loadFakeDB = function() {
 GameModel.prototype.loadInitialConditions = function() {
 	this.gameState.territories = initialConditions.territories;
 	this.gameState.units = initialConditions.units;
-	this.gameState.moves = [];
+	this.gameState.moves = {};
 	this.gameState.finalized = [];
 }
 
 GameModel.prototype.updateNewTurn = function(territories, units) {
 	this.gameState.territories = territories;
 	this.gameState.units = units;
-	this.gameState.moves = [];
+	this.gameState.moves = {};
 	this.gameState.finalized = [];
 	//updateDb
 }
 
 GameModel.prototype.addMove = function(move) {
-	this.gameState.moves.push(move);
+	var firstLocation = move.firstLoc;
+	delete move.firstLoc;
+	this.gameState.moves[firstLocation] = move;
 }
 
 GameModel.prototype.getGameState = function() {
