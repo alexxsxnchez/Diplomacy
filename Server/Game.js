@@ -63,7 +63,7 @@ Game.prototype.processMoves = function(gameState, callback) {
 	var execFile = ChildProcess.execFile;
 	var program = "Adjudicator/build/Release/standalone";
 	var inputFile = "Adjudicator/input.txt";
-	var child = execFile(program, [inputFile, gameState.moves], function(error, stdout, stderr) {
+	var child = execFile(program, [inputFile, JSON.stringify(gameState.moves)], function(error, stdout, stderr) {
 		console.log('done processing');
 		console.log('error:' + error);
 		console.log('stderr:' + stderr); 
