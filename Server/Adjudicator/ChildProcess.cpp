@@ -84,7 +84,7 @@ void ChildProcess::outputResults(MoveProcessor::Results results) {
 			cout << "false";
 		}
 		cout << "," << endl;
-		cout << "\t\t\"retreatOptions\": [";
+		cout << "\t\t\"retreatOptions\": [" << endl;
 		bool first2 = true;
 		for(auto it2 : it.second.second.second.second) {
 			if(!first2) {

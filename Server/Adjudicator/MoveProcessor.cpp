@@ -331,6 +331,10 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	for(auto it : nonAttacks_) {
 		contestedAreas.insert(it.first);
 	}
+	std::cerr << "--======----" << std::endl;
+	for(auto it : contestedAreas) {
+		std::cerr << it << std::endl;
+	}
 	
 	// display results:
 	// output results

@@ -49,6 +49,10 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 
 std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
 	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
+	std::cerr << "neighbours" << std::endl;
+	for(string s : retreatOptions) {
+		std::cerr << s << std::endl;
+	}
 	for(string contestedArea : contestedAreas) {
 		retreatOptions.erase(contestedArea);
 	}

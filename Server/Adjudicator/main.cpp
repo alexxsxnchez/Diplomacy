@@ -525,7 +525,7 @@ int main(int argc, char ** argv) {
 	}
 	string fileName(argv[1]);
 	Graph * g = new Graph;
-	//readInNodes(*g, fileName);
+	readInNodes(*g, fileName);
 	if(argc == 2) {
 		// normal testing
 		runTests(g);
