@@ -1,4 +1,5 @@
-var initialConditions = require('./initialConditions');
+var initialConditions = require('./InitialConditions.js');
+var Phase = require('./Phase.js');
 
 function GameModel() {
 	this.loadFakeDB();
@@ -10,35 +11,53 @@ GameModel.prototype.loadFakeDB = function() {
 }
 
 GameModel.prototype.loadInitialConditions = function() {
+	this.gameState.year = initialConditions.year;
+	this.gameState.phase = initialConditions.phase;
 	this.gameState.territories = initialConditions.territories;
 	this.gameState.units = initialConditions.units;
 	this.gameState.dislodgedUnits = {};
-	this.gameState.moves = this.generateDefaultMoves(this.gameState.units);
+	this.gameState.moves = this.generateDefaultMoves(this.gameState.units, this.gameState.dislodgedUnits);
 	console.log(this.gameState.moves);
 	this.gameState.moveDescriptions = {};
 	this.gameState.finalized = [];
 }
 
-GameModel.prototype.updateNewTurn = function(territories, units, dislodgedUnits, moveDescriptions) {
+GameModel.prototype.updateNewTurn = function(year, phase, territories, units, dislodgedUnits, moveDescriptions, next) {
+	this.gameState.year = year;
+	this.gameState.phase = phase;
 	this.gameState.territories = territories;
 	this.gameState.units = units;
 	this.gameState.dislodgedUnits = dislodgedUnits;
-	this.gameState.moves = this.generateDefaultMoves(units);
+	this.gameState.moves = this.generateDefaultMoves(units, dislodgedUnits);
 	this.gameState.moveDescriptions = moveDescriptions;
 	this.gameState.finalized = [];
-	//updateDb
+	//updateDb as well
+	next();
 }
 
-GameModel.prototype.generateDefaultMoves = function(units) {
+GameModel.prototype.generateDefaultMoves = function(units, dislodgedUnits) {
+	var phase = this.gameState.phase;
 	var defaultMoves = {};
-	Object.keys(units).forEach((key) => {
-		var holdMove = {};
-		holdMove.unit = units[key];
-		holdMove.moveType = 'HOLD';
-		holdMove.secondLoc = null;
-		holdMove.thirdLoc = null; 
-		defaultMoves[key] = holdMove;
-	});
+	if(phase === Phase.SPRING_RETREAT || phase === Phase.FALL_RETREAT) {
+		Object.keys(dislodgedUnits).forEach((key) => {
+			var disbandMove = {};
+			disbandMove.unit = dislodgedUnits[key];
+			disbandMove.moveType = 'DISBAND';
+			disbandMove.secondLoc = null;
+			defaultMoves[key] = disbandMove;
+		});
+	} else if(phase === Phase.WINTER) { // TODO
+	
+	} else {
+		Object.keys(units).forEach((key) => {
+			var holdMove = {};
+			holdMove.unit = units[key];
+			holdMove.moveType = 'HOLD';
+			holdMove.secondLoc = null;
+			holdMove.thirdLoc = null; 
+			defaultMoves[key] = holdMove;
+		});
+	}
 	return defaultMoves;
 }
 
@@ -49,7 +68,6 @@ GameModel.prototype.addMove = function(move) {
 }
 
 GameModel.prototype.getGameState = function() {
-	//console.log(this.gameState.territories);
 	return this.gameState;
 }
 

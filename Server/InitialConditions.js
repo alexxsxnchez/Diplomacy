@@ -1,6 +1,9 @@
 var Nation = require('./Nation.js');
+var Phase = require('./Phase.js');
 
 var initialConditions = {
+	year: 1901,
+	phase: Phase.SPRING,
 	territories: {
 		'Kiel': Nation.GERMANY,
 		'Berlin': Nation.GERMANY,
