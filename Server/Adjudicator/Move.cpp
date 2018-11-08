@@ -42,7 +42,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 		dislodged_ = NO;
 		return true;
 	}
-	std::cout << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
+	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
 	return false;
 }
 

@@ -20,7 +20,7 @@ bool SupportMove::isLegal(Graph * graph) const {
 // not critical TODO: currently says support is successful when there is no unit to receive the support
 
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
-	std::cout << "about to process support decision" << std::endl;
+	std::cerr << "about to process support decision" << std::endl;
 	if(supportGiven_ != UNDECIDED) {
 		return false;
 	}
@@ -32,7 +32,7 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 	try {
 		std::unordered_set<MovementMove *> attacks = processor.getAttacks().at(this->getPiece()->getLocation());
 		for(MovementMove * move : attacks) {
-			std::cout << "Attack on support at " << getPiece()->getLocation() << " from " << move->getPiece()->getLocation() << " while destination is " << destination_ << std::endl;
+			std::cerr << "Attack on support at " << getPiece()->getLocation() << " from " << move->getPiece()->getLocation() << " while destination is " << destination_ << std::endl;
 			if(move->getPiece()->getLocation() == destination_) {
 				continue;
 			}

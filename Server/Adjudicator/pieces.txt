@@ -22,7 +22,7 @@ a g Berlin
 a r Moscow
 a r Warsaw
 f r Sevastopol
-f r St._Petersburg St._Petersburg_SC
+f r StPetersburg StPetersburg_SC
 
 // Austria
 a a Vienna

@@ -5,6 +5,8 @@
 
 using json = nlohmann::json;
 using std::string;
+using std::cout;
+using std::endl;
 
 ChildProcess::ChildProcess(Graph * g, string data) {
 	MoveProcessor p(g);
@@ -31,27 +33,48 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 		string moveType = it.value()["moveType"];
 		if(moveType == "HOLD") {
 			HoldMove * move = new HoldMove(piece);
-			std::cout << *move << std::endl;
+			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "MOVE") {
 			string secondLoc = it.value()["secondLoc"];
 			MovementMove * move = new MovementMove(piece, secondLoc); // need to add convoy specifier
-			std::cout << *move << std::endl;
+			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "SUPPORT") {
 			string secondLoc = it.value()["secondLoc"];
 			string thirdLoc = it.value()["thirdLoc"];
 			SupportMove * move = new SupportMove(piece, secondLoc, thirdLoc);
-			std::cout << *move << std::endl;
+			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "CONVOY") {
 			string secondLoc = it.value()["secondLoc"];
 			string thirdLoc = it.value()["thirdLoc"];
 			ConvoyMove * move = new ConvoyMove(piece, secondLoc, thirdLoc);
-			std::cout << *move << std::endl;
+			std::cerr << *move << std::endl;
 			p.addMove(move);
 		}
 	}
 	
-	//p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	outputResults(results);
+}
+
+void ChildProcess::outputResults(MoveProcessor::Results results) {
+	cout << "{";
+	bool first = true;
+	for(auto it : results) {
+		if(!first) {
+			cout << ", ";
+		} else {
+			first = false;
+		}
+		cout << "\"" << it.first << "\": {\"success\": ";
+		if(it.second.first) {
+			cout << "true";
+		} else {
+			cout << "false";
+		}
+		cout << ", \"description\": \"" << it.second.second << "\"}";
+	}
+	cout << "}" << endl;
 }
