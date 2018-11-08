@@ -38,6 +38,8 @@ class Move {
 	protected:
 		DecisionResult dislodged_ = UNDECIDED;	
 		Strength holdStrength_;
+		string description_ = "";
+		string dislodgedFrom_ = "";
 		
 		virtual void calculateHoldStrength(MoveProcessor & processor);
 		virtual bool determineDislodgeDecision(MoveProcessor & processor);
@@ -51,6 +53,8 @@ class Move {
 		virtual bool process(MoveProcessor & processor) = 0;
 		DecisionResult getDislodgeDecision() const;
 		Strength getHoldStrength() const;
+		string getDescription() const;
+		std::unordered_set<string> calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const;
 		virtual bool isCompletelyDecided() const = 0;
 
 		friend ostream & operator<<(ostream & out, const Move & move);

@@ -28,6 +28,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES) {
+					dislodgedFrom_ = move->getPiece()->getLocation();
 					dislodged_ = YES;
 					return true;
 				}
@@ -42,8 +43,21 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 		dislodged_ = NO;
 		return true;
 	}
-	std::cout << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
+	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
 	return false;
+}
+
+std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
+	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
+	std::cerr << "neighbours" << std::endl;
+	for(string s : retreatOptions) {
+		std::cerr << s << std::endl;
+	}
+	for(string contestedArea : contestedAreas) {
+		retreatOptions.erase(contestedArea);
+	}
+	retreatOptions.erase(dislodgedFrom_);
+	return retreatOptions;
 }
 
 DecisionResult Move::getDislodgeDecision() const {
@@ -52,6 +66,10 @@ DecisionResult Move::getDislodgeDecision() const {
 
 Strength Move::getHoldStrength() const {
 	return holdStrength_;
+}
+
+string Move::getDescription() const {
+	return description_;
 }
 
 ostream & operator<<(ostream & out, const Move & move) {

@@ -119,7 +119,7 @@ unsigned int MoveProcessor::calculateSupportStrength(string source, string desti
 	} else {
 		trueOrFalse = "false";
 	}
-	std::cout << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
+	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
 	return count;
 }
 
@@ -289,13 +289,13 @@ void fixParadox() {
 
 }
 
-void MoveProcessor::processMoves() {
+MoveProcessor::Results MoveProcessor::processMoves() {
 	int count = 15;
 	while(count > 0) {
 		bool allDone = true;
 		bool isParadox = true;
 		for(Move * move : moves_) {
-			std::cout << "About to process " << move->getPiece()->getLocation() << std::endl;
+			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
 			if(move->isCompletelyDecided()) {
 				continue;
 			}
@@ -310,68 +310,160 @@ void MoveProcessor::processMoves() {
 			break;
 		}
 		if(isParadox) {
-			std::cout << "\nPARADOX!!!!\n" << std::endl;
+			std::cerr << "\nPARADOX!!!!\n" << std::endl;
 			fixParadox();
 		}
 		count--;
 	}
 	
+	// determine contested areas
+	std::unordered_set<string> contestedAreas;
+	for(auto it : attacks_) {
+		for(auto it2 : it.second) {
+			if(it2->getDislodgeDecision() == NO) {
+				contestedAreas.insert(it.first);
+			}
+			if(it2->getMoveDecision() == NO) {
+				contestedAreas.insert(it2->getPiece()->getLocation());
+			}
+		}
+	}
+	for(auto it : nonAttacks_) {
+		contestedAreas.insert(it.first);
+	}
+	std::cerr << "--======----" << std::endl;
+	for(auto it : contestedAreas) {
+		std::cerr << it << std::endl;
+	}
+	
 	// display results:
 	// output results
-	std::cout << "Paths for convoys: " << std::endl;
+	
+	MoveProcessor::Results results;
+	
+	for(Move * move : moves_) {
+		string location = move->getPiece()->getLocation();
+		// get success decision -> only matters for attacks
+		bool success = false;
+		bool path = false;
+		for(auto it : attacks_) {
+			for(auto it2 : it.second) {
+				if(it2->getPiece()->getLocation() == location) {
+					if(it2->getMoveDecision() == YES) {
+						success = true;
+					}
+					if(it2->getPathDecision() == YES) {
+						path = true;
+					}
+				}
+			}
+		}	
+		// get description
+		string description = move->getDescription();
+		// get dislodge decision
+		bool dislodge = false;
+		if(move->getDislodgeDecision() == YES) {
+			dislodge = true;
+		}
+		
+		results.insert(std::make_pair(location, 
+						std::make_pair(success,
+						std::make_pair(description,
+						std::make_pair(dislodge, move->calculateRetreatOptions(contestedAreas, map_))))));
+	}
+	
+	return results;
+	
+	
+	
+	
+	/*
+	std::cerr << "Paths for convoys: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
 			if(it2->getViaConvoy()) {
-				std::cout << it2->getPiece()->getLocation() << " path to " << it.first << " ";
+				std::cerr << it2->getPiece()->getLocation() << " path to " << it.first << " ";
 				if(it2->getPathDecision() == YES) {
-					std::cout << "SUCCEEDED" << std::endl;
+					std::cerr << "SUCCEEDED" << std::endl;
 				} else if(it2->getPathDecision() == NO) {
-					std::cout << "FAILED" << std::endl;
+					std::cerr << "FAILED" << std::endl;
 				}
 			}
 		}	
 	}
-	std::cout << std::endl;
+	std::cerr << std::endl;
 
-	std::cout << "Attacks: " << std::endl;
+	std::cerr << "Attacks: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
-			std::cout << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
+			std::cerr << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
 			if(it2->getMoveDecision() == YES) {
-				std::cout << "SUCCEEDED" << std::endl;
+				std::cerr << "SUCCEEDED" << std::endl;
+				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(true,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 			} else if(it2->getMoveDecision() == NO) {
-				std::cout << "FAILED" << std::endl;
+				std::cerr << "FAILED" << std::endl;
+				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 			}
 		}
-		std::cout << std::endl;
+		std::cerr << std::endl;
 	}
 	
-	std::cout << "Supports: " << std::endl;
+	std::cerr << "Supports: " << std::endl;
 	for(auto it : supports_) {
 		for(auto it2 : it.second) {
 			for(auto it3 : it2.second) {
-				std::cout << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
+				std::cerr << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
 				if(it3->getSupportDecision() == YES) {
-					std::cout << "SUCCEEDED" << std::endl;
+					std::cerr << "SUCCEEDED" << std::endl;
+					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(true,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 				} else if(it3->getSupportDecision() == NO) {
-					std::cout << "FAILED" << std::endl;
+					std::cerr << "FAILED" << std::endl;
+					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 				}
 			}
 		}
-		std::cout << std::endl;
+		std::cerr << std::endl;
 	}
 	
-	std::cout << "Dislodged pieces: " << std::endl;
+	std::cerr << "Dislodged pieces: " << std::endl;
 	for(Move * move : moves_) {
-		std::cout << move->getPiece()->getLocation() << " dislodged decision? : ";
+		std::cerr << move->getPiece()->getLocation() << " dislodged decision? : ";
 		if(move->getDislodgeDecision() == YES) {
-			std::cout << "DISLODGED" << std::endl;
+			std::cerr << "DISLODGED" << std::endl;
+			results.find(
+			
+			
+			results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(true, std::unordered_set<string>)))));
 		} else if(move->getDislodgeDecision() == NO) {
-			std::cout << "SUSTAINED" << std::endl;
+			std::cerr << "SUSTAINED" << std::endl;
 		}
 	}
-	std::cout << std::endl;
-
+	std::cerr << std::endl;
+	return results;
+	
+	*/
+	
+	
+	
+	
+	
+	
+	
 /*	std::cout << "Processing" << std::endl;
 
 	for(Move * move : moves_) {
@@ -516,6 +608,10 @@ void MoveProcessor::processMoves() {
 	}
 	std::cout << std::endl;
 	*/
+}
+
+void MoveProcessor::addContestedLocation(string location) {
+	contestedLocations_.insert(location);
 }
 
 std::unordered_set<Move *> & MoveProcessor::getMoves() {

@@ -20,19 +20,19 @@ enum Nation {
 
 static Nation getNation(string s) {
 	Nation nation;
-	if(s == "f") {
+	if(s == "f" || s == "FRANCE") {
 		nation = Nation::FRANCE;
-	} else if(s == "e") {
+	} else if(s == "e" || s == "ENGLAND") {
 		nation = Nation::ENGLAND;
-	} else if(s == "g") {
+	} else if(s == "g" || s == "GERMANY") {
 		nation = Nation::GERMANY;
-	} else if(s == "r") {
+	} else if(s == "r" || s == "RUSSIA") {
 		nation = Nation::RUSSIA;
-	} else if(s == "i") {
+	} else if(s == "i" || s == "ITALY") {
 		nation = Nation::ITALY;
-	} else if(s == "a") {
+	} else if(s == "a" || s == "AUSTRIA") {
 		nation = Nation::AUSTRIA;
-	} else if(s == "t") {
+	} else if(s == "t" || s == "TURKEY") {
 		nation = Nation::TURKEY;
 	} else {
 		throw s;

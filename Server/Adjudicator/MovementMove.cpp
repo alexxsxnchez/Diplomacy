@@ -11,8 +11,7 @@ using std::string;
 MovementMove::MovementMove(Piece * piece, string destination, bool viaConvoy) : Move{piece}, destination_{destination}, viaConvoy_{viaConvoy} {}
 
 void MovementMove::print(ostream & out) const {
-
-
+	out << *getPiece() << " MOVES to " << destination_ << std::endl;
 }
 
 bool MovementMove::isLegal(Graph * graph) const {
@@ -48,7 +47,7 @@ void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 }
 */
 void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
-	std::cout << "ok" << std::endl;
+	std::cerr << "ok" << std::endl;
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
 	MovementMove * leavingDefender = nullptr;
@@ -68,7 +67,7 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			for(auto it3 = processor.getAttacks().begin(); it3 != processor.getAttacks().end(); it3++) {
 				for(auto it4 = it3->second.begin(); it4 != it3->second.end(); it4++) { 
 					if((*it4)->getPiece()->getLocation() == destination_ && (*it4)->getMoveDecision() != YES) {
-						std::cout << "YESSS" << std::endl;
+						std::cerr << "YESSS" << std::endl;
 						leavingDefender = *it4;
 						break;
 					}
@@ -77,7 +76,7 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 		}
 	}
 	
-	std::cout << "NOOO" << std::endl;
+	std::cerr << "NOOO" << std::endl;
 
 	// first min
 	if(hasPath_ != YES) {
@@ -126,7 +125,7 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 		}
 	}
 	
-	std::cout << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
+	std::cerr << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
 }
 
 void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
@@ -219,7 +218,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	}
 	
 	if(attackStrength_.max <= highestPreventStrengthMin) {
-		std::cout << "FUCK" << std::endl;
+		std::cerr << "FUCK" << std::endl;
 		moved_ = NO;
 		return true;
 	}
@@ -245,7 +244,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 			return true;
 		} else if(attackStrength_.max <= headOnDefenderMove->getDefendStrength().min) {
 			moved_ = NO;
-			std::cout << "FUCK2" << std::endl;
+			std::cerr << "FUCK2" << std::endl;
 			return true;
 		}
 		return false;
@@ -258,7 +257,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 					return true;
 				} else if(attackStrength_.max <= (*holdIt)->getHoldStrength().min) {
 					moved_ = NO;
-					std::cout << "FUCK3" << std::endl;
+					std::cerr << "FUCK3" << std::endl;
 					return true;
 				}
 				return false;
@@ -303,11 +302,11 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 			}
 			bool found = false;
 			for(ConvoyMove * move : convoys) {
-				std::cout << "convoy move location: " << move->getPiece()->getLocation() << " neighbour: " << neighbour << std::endl;
+				std::cerr << "convoy move location: " << move->getPiece()->getLocation() << " neighbour: " << neighbour << std::endl;
 				if(move->getPiece()->getLocation() == neighbour) {
-					std::cout << "HEEELLO" << std::endl;
+					std::cerr << "HEEELLO" << std::endl;
 				 	if(move->getDislodgeDecision() != YES) {
-				 		std::cout << "hello 2" << std::endl;
+				 		std::cerr << "hello 2" << std::endl;
 						found = true;
 						if(move->getDislodgeDecision() == UNDECIDED) {
 							currentBest = UNDECIDED; // dependency
@@ -320,7 +319,7 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 				}
 			}
 			if(!found) {
-				std::cout << "LOL2" << std::endl;
+				std::cerr << "LOL2" << std::endl;
 				continue;
 			}
 			
@@ -332,10 +331,10 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 			}
 		}
 	} catch(std::out_of_range) {
-		std::cout << "LOL" << std::endl;
+		std::cerr << "LOL" << std::endl;
 	}
 	
-	std::cout << "LOL3\n\n" << std::endl;
+	std::cerr << "LOL3\n\n" << std::endl;
 	return currentBest;
 }
 
@@ -355,6 +354,7 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES && moved_ == NO) {
+					dislodgedFrom_ = move->getPiece()->getLocation();
 					dislodged_ = YES; // dependency
 					return true;
 				}
@@ -373,7 +373,7 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 }
 
 bool MovementMove::process(MoveProcessor & processor) {
-	std::cout << "movementmove processing started" << std::endl;
+	std::cerr << "movementmove processing started" << std::endl;
 	bool pathUpdated = determinePathDecision(processor);
 	calculateAttackStrength(processor);
 	calculatePreventStrength(processor);

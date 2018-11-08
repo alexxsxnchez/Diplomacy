@@ -179,8 +179,14 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	// send to server
 	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation;
 	console.log(s);
+	var move = {};
+	move.unit = unit;
+	move.moveType = moveType;
+	move.firstLoc = firstLocation;
+	move.secondLoc = secondLocation;
+	move.thirdLoc = thirdLocation; 
 	
-	this.moveCreatedHandler(s);
+	this.moveCreatedHandler(move);
 }
 
 MapModel.prototype.toggleIsFinalized = function() {

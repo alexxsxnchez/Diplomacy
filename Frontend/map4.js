@@ -1291,6 +1291,9 @@ MapView.prototype.updateIsFinalized = function(isFinalized) {
 
 function colourTerritories(territoryOwnership) {
 	Object.keys(territoryOwnership).forEach((territory) => {
+		if(!(territory in Colourable)) {
+			return;
+		}
 		var nation = territoryOwnership[territory];
 		var terrColour;
 		var starColour;
@@ -1330,8 +1333,10 @@ function colourTerritories(territoryOwnership) {
 		Colourable[territory].forEach((elem) => {
 			if(elem.data('id') === 'Star') {
 				elem.attr('fill', starColour);
+				elem.node.style.fill = starColour;
 			} else {
 				elem.attr('fill', terrColour);
+				elem.node.style.fill = terrColour;
 			}
 		});
 	});

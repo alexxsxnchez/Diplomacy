@@ -4,6 +4,7 @@
 #include "Nation.h"
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 class Graph;
 class Move;
@@ -31,6 +32,7 @@ class Piece {
 		virtual bool isMovementValid(const MovementMove * move, Graph * graph) const = 0;
 		virtual bool isSupportValid(const SupportMove * move, Graph * graph) const = 0;
 		virtual bool isConvoyValid(const ConvoyMove * move, Graph * graph) const = 0;
+		virtual std::unordered_set<string> getNeighbours(Graph * graph) const = 0;
 	
 	friend ostream & operator<<(ostream & out, const Piece & piece);
 };

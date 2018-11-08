@@ -20,6 +20,7 @@ class MoveProcessor {
 		typedef std::map<string, std::unordered_set<MovementMove *> > AttackMap;
 		typedef std::map<string, std::map<string, std::unordered_set<SupportMove *> > > SupportMap;
 		typedef std::map<string, std::map<string, std::unordered_set<ConvoyMove *> > > ConvoyMap;
+		typedef std::map<string, std::pair<bool, std::pair<string, std::pair<bool, std::unordered_set<string> > > > > Results;
 		
 	private:
 //		std::unordered_set<HoldMove *> holdMoves_;
@@ -34,6 +35,7 @@ class MoveProcessor {
 		SupportMap supports_;
 		ConvoyMap convoys_;
 		Graph * map_;
+		std::unordered_set<string> contestedLocations_;
 		//		map<string, std::pair<std::unordered_set<const SupportMove *>, float> > supports_;
 		/*void processMovesByConvoys();
 		void processConvoys();
@@ -47,11 +49,13 @@ class MoveProcessor {
 		void addMove(HoldMove * move);
 		void addMove(SupportMove * move);
 		void addMove(ConvoyMove * move);
-		void processMoves();
+		Results processMoves();
 		
 		std::unordered_set<Move *> & getMoves();
 		NonAttackMap & getNonAttacks();
 		AttackMap & getAttacks();
+		void addContestedLocation(string location);
+		
 		//SupportMap & getSupports() const;
 		ConvoyMap & getConvoys();
 		Graph * getMap() const;
