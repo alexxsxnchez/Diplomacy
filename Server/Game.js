@@ -41,8 +41,8 @@ Game.prototype.playerFinalized = function(player) {
 	if(this.model.getIsAllFinalized()) {
 		var gameState = this.model.getGameState();
 		var self = this;
-		this.processMoves(gameState, function(territories, units) {
-			self.model.updateNewTurn(territories, units);
+		this.processMoves(gameState, function(territories, units, dislodgedUnits, moveDescriptions) {
+			self.model.updateNewTurn(territories, units, dislodgedUnits, moveDescriptions);
 			self.io.emit('update', self.model.getGameState());
 		});
 	}
@@ -74,8 +74,8 @@ Game.prototype.processMoves = function(gameState, callback) {
 		} catch(error) {
 			console.log(error);
 		}
-		self.prepareNewGameState(gameState, results, function(territories, units) {
-			callback(territories, units);
+		self.prepareNewGameState(gameState, results, function(territories, units, dislodgedUnits, moveDescriptions) {
+			callback(territories, units, dislodgedUnits, moveDescriptions);
 		});
 	});
 }
@@ -83,13 +83,27 @@ Game.prototype.processMoves = function(gameState, callback) {
 Game.prototype.prepareNewGameState = function(gameState, results, callback) {
 	var territories = gameState.territories;
 	var units = {};
+	var dislodged = {};
+	var descriptions = {};
 	Object.keys(gameState.moves).forEach((key) => {
-		if(gameState.moves[key].moveType === 'MOVE') {
-			if(results[key].success) {
-				var unit = gameState.moves[key].unit;
-				var newLocation = gameState.moves[key].secondLoc;
-				units[newLocation] = unit;
-			}
+		console.log(key);
+		// get descriptions
+		descriptions[key] = results[key].description;
+		
+		var unit = gameState.moves[key].unit;
+		// create dislodge list
+		if(results[key].dislodged) {
+			dislodged[key] = {};
+			dislodged[key].unit = unit;
+			dislodged[key].retreatOptions = results[key].retreatOptions;
+			return;
+		}
+		// for all units not dislodged
+		if(gameState.moves[key].moveType === 'MOVE' && results[key].success) {
+			var newLocation = gameState.moves[key].secondLoc;
+			units[newLocation] = unit;
+		} else {
+			units[key] = gameState.units[key];
 		}
 	});
 	
@@ -97,7 +111,7 @@ Game.prototype.prepareNewGameState = function(gameState, results, callback) {
 		territories[key] = units[key].nation;
 	});
 	
-	callback(territories, units);
+	callback(territories, units, dislodged, descriptions);
 }
 
 module.exports = Game;

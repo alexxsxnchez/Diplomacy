@@ -50,6 +50,10 @@ bool ArmyPiece::isConvoyValid(const ConvoyMove * move, Graph * graph) const {
 	return false;
 }
 
+std::unordered_set<string> ArmyPiece::getNeighbours(Graph * graph) const {
+	return graph->getArmyNeighbours(getLocation());
+}
+
 void ArmyPiece::print(ostream & out) const {
 	out << "Piece at: " << getLocation() << " is a " << getNationality() << " ARMY" << endl;
 }

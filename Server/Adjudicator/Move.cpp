@@ -28,6 +28,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES) {
+					dislodgedFrom_ = move->getPiece()->getLocation();
 					dislodged_ = YES;
 					return true;
 				}
@@ -46,12 +47,25 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 	return false;
 }
 
+std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
+	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
+	for(string contestedArea : contestedAreas) {
+		retreatOptions.erase(contestedArea);
+	}
+	retreatOptions.erase(dislodgedFrom_);
+	return retreatOptions;
+}
+
 DecisionResult Move::getDislodgeDecision() const {
 	return dislodged_;
 }
 
 Strength Move::getHoldStrength() const {
 	return holdStrength_;
+}
+
+string Move::getDescription() const {
+	return description_;
 }
 
 ostream & operator<<(ostream & out, const Move & move) {

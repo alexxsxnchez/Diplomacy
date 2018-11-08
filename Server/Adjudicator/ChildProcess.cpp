@@ -60,21 +60,42 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 }
 
 void ChildProcess::outputResults(MoveProcessor::Results results) {
-	cout << "{";
+	cout << "{" << endl;
 	bool first = true;
 	for(auto it : results) {
 		if(!first) {
-			cout << ", ";
+			cout << "," << endl;
 		} else {
 			first = false;
 		}
-		cout << "\"" << it.first << "\": {\"success\": ";
+		cout << "\t\"" << it.first << "\": {" << endl;
+		cout << "\t\t\"success\": ";
 		if(it.second.first) {
 			cout << "true";
 		} else {
 			cout << "false";
 		}
-		cout << ", \"description\": \"" << it.second.second << "\"}";
+		cout << "," << endl;
+		cout << "\t\t\"description\": \"" << it.second.second.first << "\"," << endl;
+		cout << "\t\t\"dislodged\": ";
+		if(it.second.second.second.first) {
+			cout << "true";
+		} else {
+			cout << "false";
+		}
+		cout << "," << endl;
+		cout << "\t\t\"retreatOptions\": [";
+		bool first2 = true;
+		for(auto it2 : it.second.second.second.second) {
+			if(!first2) {
+				cout << "," << endl;
+			} else {
+				first2 = false;
+			}
+			cout << "\t\t\t\"" << it2 << "\"";
+		}
+		cout << endl << "\t\t]";
+		cout << endl << "\t}";
 	}
-	cout << "}" << endl;
+	cout << endl <<"}";
 }

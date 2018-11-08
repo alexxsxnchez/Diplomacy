@@ -316,11 +316,64 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		count--;
 	}
 	
+	// determine contested areas
+	std::unordered_set<string> contestedAreas;
+	for(auto it : attacks_) {
+		for(auto it2 : it.second) {
+			if(it2->getDislodgeDecision() == NO) {
+				contestedAreas.insert(it.first);
+			}
+			if(it2->getMoveDecision() == NO) {
+				contestedAreas.insert(it2->getPiece()->getLocation());
+			}
+		}
+	}
+	for(auto it : nonAttacks_) {
+		contestedAreas.insert(it.first);
+	}
+	
 	// display results:
 	// output results
 	
 	MoveProcessor::Results results;
 	
+	for(Move * move : moves_) {
+		string location = move->getPiece()->getLocation();
+		// get success decision -> only matters for attacks
+		bool success = false;
+		bool path = false;
+		for(auto it : attacks_) {
+			for(auto it2 : it.second) {
+				if(it2->getPiece()->getLocation() == location) {
+					if(it2->getMoveDecision() == YES) {
+						success = true;
+					}
+					if(it2->getPathDecision() == YES) {
+						path = true;
+					}
+				}
+			}
+		}	
+		// get description
+		string description = move->getDescription();
+		// get dislodge decision
+		bool dislodge = false;
+		if(move->getDislodgeDecision() == YES) {
+			dislodge = true;
+		}
+		
+		results.insert(std::make_pair(location, 
+						std::make_pair(success,
+						std::make_pair(description,
+						std::make_pair(dislodge, move->calculateRetreatOptions(contestedAreas, map_))))));
+	}
+	
+	return results;
+	
+	
+	
+	
+	/*
 	std::cerr << "Paths for convoys: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
@@ -342,10 +395,16 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 			std::cerr << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
 			if(it2->getMoveDecision() == YES) {
 				std::cerr << "SUCCEEDED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), std::make_pair(true, "")));
+				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(true,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 			} else if(it2->getMoveDecision() == NO) {
 				std::cerr << "FAILED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), std::make_pair(false, "")));
+				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 			}
 		}
 		std::cerr << std::endl;
@@ -358,10 +417,16 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 				std::cerr << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
 				if(it3->getSupportDecision() == YES) {
 					std::cerr << "SUCCEEDED" << std::endl;
-					results.insert(std::make_pair(it3->getPiece()->getLocation(), std::make_pair(true, "")));
+					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(true,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 				} else if(it3->getSupportDecision() == NO) {
 					std::cerr << "FAILED" << std::endl;
-					results.insert(std::make_pair(it3->getPiece()->getLocation(), std::make_pair(false, "")));
+					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(false, std::unordered_set<string>)))));
 				}
 			}
 		}
@@ -373,12 +438,28 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		std::cerr << move->getPiece()->getLocation() << " dislodged decision? : ";
 		if(move->getDislodgeDecision() == YES) {
 			std::cerr << "DISLODGED" << std::endl;
+			results.find(
+			
+			
+			results.insert(std::make_pair(it2->getPiece()->getLocation(), 
+								std::make_pair(false,
+								std::make_pair("",
+								std::make_pair(true, std::unordered_set<string>)))));
 		} else if(move->getDislodgeDecision() == NO) {
 			std::cerr << "SUSTAINED" << std::endl;
 		}
 	}
 	std::cerr << std::endl;
 	return results;
+	
+	*/
+	
+	
+	
+	
+	
+	
+	
 /*	std::cout << "Processing" << std::endl;
 
 	for(Move * move : moves_) {
@@ -523,6 +604,10 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	}
 	std::cout << std::endl;
 	*/
+}
+
+void MoveProcessor::addContestedLocation(string location) {
+	contestedLocations_.insert(location);
 }
 
 std::unordered_set<Move *> & MoveProcessor::getMoves() {
