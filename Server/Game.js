@@ -143,10 +143,22 @@ Game.prototype.processAdjudicationMoves = function(next) {
 
 Game.prototype.processWinterMoves = function(next) {
 	var results = {};
-	var moves = this.model.getGameState().moves;
+	var gameState = this.model.getGameState();
 	var counts = this.calculateStarAndUnitCount();
-	Object.keys(moves).forEach((key) => {
+	
+	Object.keys(gameState.moves).forEach((key) => {
+		var nation = gameState.territories[key].nation;
 		
+		// TODOOOOO
+	
+		var description = 'Two or more units attempted to retreat to the same location.';
+		results[key].success = false;
+		results[key].description = description;
+		console.log(description);
+		var otherRetreater = alreadyDeclared[plannedDestination];
+		results[otherRetreater].success = false;
+		results[otherRetreater].description = description;
+		return;
 	
 	});
 	return results;

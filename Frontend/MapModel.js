@@ -25,9 +25,61 @@ MapModel.prototype.dataReceived = function(gameState) {
 	this.presenter.update(this.year, this.phase, this.territories, this.units, this.dislodgedUnits, this.isFinalized);
 }
 
-/*MapModel.prototype.loadGameState = function() {
-	console.log('game state loading');
-	
+MapModel.prototype.getHomeCentres = function(nation) {
+	switch(nation) {
+		case Nation.AUSTRIA:
+			return ['Trieste', 'Budapest', 'Vienna'];
+		case Nation.ENGLAND:
+			return ['Liverpool', 'Edinburgh', 'London'];
+		case Nation.FRANCE:
+			return ['Marseilles', 'Paris', 'Brest'];
+		case Nation.GERMANY:
+			return ['Munich', 'Kiel', 'Berlin'];
+		case Nation.ITALY:
+			return ['Naples', 'Rome', 'Venice'];
+		case Nation.RUSSIA:
+			return ['StPetersburg', 'Sevastopol', 'Moscow', 'Warsaw'];
+		case Nation.TURKEY:
+			return ['Smyrna', 'Constantinople', 'Ankara'];
+		default:
+			return [];
+	}
+}
+
+MapModel.prototype.getBuildOptions = function(territory) {
+	var options = [];
+	switch(territory) {
+		case 'StPetersburg':
+			options.push(MoveType.BUILDFLEETSC);
+			options.push(MoveType.BUILDFLEETNC);
+			options.push(MoveType.BUILDARMY);
+			break;
+		case 'Marseilles':
+		case 'Brest':
+		case 'Liverpool':
+		case 'London':
+		case 'Edinburgh':
+		case 'Kiel':
+		case 'Berlin':
+		case 'Sevastopol':
+		case 'Ankara':
+		case 'Constantinople':
+		case 'Smyrna':
+		case 'Trieste':
+		case 'Venice':
+		case 'Naples':
+		case 'Rome':
+			options.push(MoveType.BUILDFLEET);
+		case 'Paris':
+		case 'Munich':
+		case 'Warsaw':
+		case 'Moscow':
+		case 'Vienna':
+		case 'Budapest':
+			options.push(MoveType.BUILDARMY);
+	}
+	return options;
+}
 		/*,
 		'Prussia': {
 			type: 'army',

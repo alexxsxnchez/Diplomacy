@@ -1280,7 +1280,6 @@ MapView.prototype.update = function(year, phase, territories, units, dislodgedUn
 	colourTerritories(territories);
 	drawUnits(units, dislodgedUnits);
 	this.updateIsFinalized(isFinalized);
-	this.updateMoveMenu(phase);
 }
 
 MapView.prototype.updateUI = function(year, phase) {
@@ -1294,39 +1293,6 @@ MapView.prototype.updateIsFinalized = function(isFinalized) {
 		text = 'Unfinalize';
 	}
 	document.getElementById('finalizebutton').innerHTML = text;
-}
-
-MapView.prototype.updateMoveMenu = function(phase) {
-	switch(phase) {
-		case "SPRING":
-		case "FALL":
-			document.getElementById('movebutton').style.display = 'block'
-			document.getElementById('holdbutton').style.display = 'block'
-			document.getElementById('convoybutton').style.display = 'block'
-			document.getElementById('supportbutton').style.display = 'block'
-			document.getElementById('retreatbutton').style.display = 'none'
-			document.getElementById('destroybutton').style.display = 'none'
-			document.getElementById('buildbutton').style.display = 'none'
-			break;
-		case "SPRING_RETREAT":
-		case "FALL_RETREAT":
-			document.getElementById('movebutton').style.display = 'none'
-			document.getElementById('holdbutton').style.display = 'none'
-			document.getElementById('convoybutton').style.display = 'none'
-			document.getElementById('supportbutton').style.display = 'none'
-			document.getElementById('retreatbutton').style.display = 'block'
-			document.getElementById('destroybutton').style.display = 'block'
-			document.getElementById('buildbutton').style.display = 'none'
-			break;
-		case "WINTER":
-			document.getElementById('movebutton').style.display = 'none'
-			document.getElementById('holdbutton').style.display = 'none'
-			document.getElementById('convoybutton').style.display = 'none'
-			document.getElementById('supportbutton').style.display = 'none'
-			document.getElementById('retreatbutton').style.display = 'none'
-			document.getElementById('destroybutton').style.display = 'block'
-			document.getElementById('buildbutton').style.display = 'block'
-	}
 }
 
 function colourTerritories(territoryOwnership) {
@@ -1441,25 +1407,34 @@ MapView.prototype.addTerritorySelectedHandler = function(territoryClickHandler) 
 
 MapView.prototype.addMoveTypeSelectedHandler = function(moveClickHandler) {
 	document.getElementById('movebutton').addEventListener("click", function() {
-		moveClickHandler('MOVE');
+		moveClickHandler(MoveType.MOVE);
 	});
 	document.getElementById('holdbutton').addEventListener("click", function() {
-		moveClickHandler('HOLD');
+		moveClickHandler(MoveType.HOLD);
 	});
 	document.getElementById('supportbutton').addEventListener("click", function() {
-		moveClickHandler('SUPPORT');
+		moveClickHandler(MoveType.SUPPORT);
 	});
 	document.getElementById('convoybutton').addEventListener("click", function() {
-		moveClickHandler('CONVOY');
+		moveClickHandler(MoveType.CONVOY);
 	});
 	document.getElementById('retreatbutton').addEventListener("click", function() {
-		moveClickHandler('RETREAT');
+		moveClickHandler(MoveType.RETREAT);
 	});
 	document.getElementById('destroybutton').addEventListener("click", function() {
-		moveClickHandler('DESTROY');
+		moveClickHandler(MoveType.DESTROY);
 	});
-	document.getElementById('buildbutton').addEventListener("click", function() {
-		moveClickHandler('BUILD');
+	document.getElementById('buildarmybutton').addEventListener("click", function() {
+		moveClickHandler(MoveType.BUILDARMY);
+	});
+	document.getElementById('buildfleetbutton').addEventListener("click", function() {
+		moveClickHandler(MoveType.BUILDFLEET);
+	});
+	document.getElementById('buildncbutton').addEventListener("click", function() {
+		moveClickHandler(MoveType.BUILDFLEETNC);
+	});
+	document.getElementById('buildscbutton').addEventListener("click", function() {
+		moveClickHandler(MoveType.BUILDFLEETSC);
 	});
 }
 
@@ -1475,12 +1450,61 @@ MapView.prototype.onFailureToClickMoveMenu = function() {
 	//movemenu.style.animation-duration = '1s';
 }
 
-MapView.prototype.showMoveMenu = function() {
+MapView.prototype.showMoveMenu = function(options) {
+	this.updateMoveMenu(options);
 	var movemenu = document.getElementById('movemenu');
 	movemenu.style.top = "50%";
 	movemenu.style.left = "50%";
 	movemenu.style.display = 'block';
 }
+
+MapView.prototype.updateMoveMenu = function(options) {
+	document.getElementById('movebutton').style.display = 'none'
+	document.getElementById('holdbutton').style.display = 'none'
+	document.getElementById('convoybutton').style.display = 'none'
+	document.getElementById('supportbutton').style.display = 'none'
+	document.getElementById('retreatbutton').style.display = 'none'
+	document.getElementById('destroybutton').style.display = 'none'
+	document.getElementById('buildarmybutton').style.display = 'none'
+	document.getElementById('buildfleetbutton').style.display = 'none'
+	document.getElementById('buildncbutton').style.display = 'none'
+	document.getElementById('buildscbutton').style.display = 'none'
+	options.forEach((option) => {
+		switch(option) {
+			case MoveType.BUILDARMY:
+				document.getElementById('buildarmybutton').style.display = 'block';
+				break;
+			case MoveType.BUILDFLEET:
+				document.getElementById('buildfleetbutton').style.display = 'block';
+				break;
+			case MoveType.BUILDFLEETNC:
+				document.getElementById('buildncbutton').style.display = 'block';
+				break;
+			case MoveType.BUILDFLEETSC:
+				document.getElementById('buildscbutton').style.display = 'block';
+				break;
+			case MoveType.MOVE:
+				document.getElementById('movebutton').style.display = 'block';
+				break;
+			case MoveType.RETREAT:
+				document.getElementById('retreatbutton').style.display = 'block';
+				break;
+			case MoveType.HOLD:
+				document.getElementById('holdbutton').style.display = 'block';
+				break;
+			case MoveType.DESTROY:
+				document.getElementById('destroybutton').style.display = 'block';
+				break;
+			case MoveType.CONVOY:
+				document.getElementById('convoybutton').style.display = 'block';
+				break;
+			case MoveType.SUPPORT:
+				document.getElementById('supportbutton').style.display = 'block';
+				break;
+		}
+	});
+}
+
 
 MapView.prototype.closeMoveMenu = function() {
 	var movemenu = document.getElementById('movemenu');
