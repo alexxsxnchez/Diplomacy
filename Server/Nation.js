@@ -5,7 +5,8 @@ var Nation = {
 	GERMANY: 'GERMANY',
 	ITALY: 'ITALY',
 	RUSSIA: 'RUSSIA',
-	TURKEY: 'TURKEY'
+	TURKEY: 'TURKEY',
+	NEUTRAL: 'NEUTRAL'
 }
 
 module.exports = Nation;

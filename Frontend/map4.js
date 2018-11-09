@@ -1275,10 +1275,17 @@ function MapView() {
 	});
 }
 
-MapView.prototype.update = function(territories, units, isFinalized) {
+MapView.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized) {
+	this.updateUI(year, phase);
 	colourTerritories(territories);
-	drawUnits(units);
+	drawUnits(units, dislodgedUnits);
 	this.updateIsFinalized(isFinalized);
+	this.updateMoveMenu(phase);
+}
+
+MapView.prototype.updateUI = function(year, phase) {
+	document.getElementById('yearText').innerHTML = year;
+	document.getElementById('phaseText').innerHTML = phase;
 }
 
 MapView.prototype.updateIsFinalized = function(isFinalized) {
@@ -1289,12 +1296,45 @@ MapView.prototype.updateIsFinalized = function(isFinalized) {
 	document.getElementById('finalizebutton').innerHTML = text;
 }
 
+MapView.prototype.updateMoveMenu = function(phase) {
+	switch(phase) {
+		case "SPRING":
+		case "FALL":
+			document.getElementById('movebutton').style.display = 'block'
+			document.getElementById('holdbutton').style.display = 'block'
+			document.getElementById('convoybutton').style.display = 'block'
+			document.getElementById('supportbutton').style.display = 'block'
+			document.getElementById('retreatbutton').style.display = 'none'
+			document.getElementById('destroybutton').style.display = 'none'
+			document.getElementById('buildbutton').style.display = 'none'
+			break;
+		case "SPRING_RETREAT":
+		case "FALL_RETREAT":
+			document.getElementById('movebutton').style.display = 'none'
+			document.getElementById('holdbutton').style.display = 'none'
+			document.getElementById('convoybutton').style.display = 'none'
+			document.getElementById('supportbutton').style.display = 'none'
+			document.getElementById('retreatbutton').style.display = 'block'
+			document.getElementById('destroybutton').style.display = 'block'
+			document.getElementById('buildbutton').style.display = 'none'
+			break;
+		case "WINTER":
+			document.getElementById('movebutton').style.display = 'none'
+			document.getElementById('holdbutton').style.display = 'none'
+			document.getElementById('convoybutton').style.display = 'none'
+			document.getElementById('supportbutton').style.display = 'none'
+			document.getElementById('retreatbutton').style.display = 'none'
+			document.getElementById('destroybutton').style.display = 'block'
+			document.getElementById('buildbutton').style.display = 'block'
+	}
+}
+
 function colourTerritories(territoryOwnership) {
 	Object.keys(territoryOwnership).forEach((territory) => {
 		if(!(territory in Colourable)) {
 			return;
 		}
-		var nation = territoryOwnership[territory];
+		var nation = territoryOwnership[territory].nation;
 		var terrColour;
 		var starColour;
 		switch(nation) {
@@ -1342,7 +1382,7 @@ function colourTerritories(territoryOwnership) {
 	});
 }
 
-function drawUnits(units) {
+function drawUnits(units, dislodgedUnits) {
 	for(var i = 0; i < Units.length; i++) {
 		Units[i].hide();
 	}
@@ -1411,6 +1451,15 @@ MapView.prototype.addMoveTypeSelectedHandler = function(moveClickHandler) {
 	});
 	document.getElementById('convoybutton').addEventListener("click", function() {
 		moveClickHandler('CONVOY');
+	});
+	document.getElementById('retreatbutton').addEventListener("click", function() {
+		moveClickHandler('RETREAT');
+	});
+	document.getElementById('destroybutton').addEventListener("click", function() {
+		moveClickHandler('DESTROY');
+	});
+	document.getElementById('buildbutton').addEventListener("click", function() {
+		moveClickHandler('BUILD');
 	});
 }
 

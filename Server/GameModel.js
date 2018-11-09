@@ -32,6 +32,8 @@ GameModel.prototype.updateNewTurn = function(year, phase, territories, units, di
 	this.gameState.moveDescriptions = moveDescriptions;
 	this.gameState.finalized = [];
 	//updateDb as well
+	console.log('updating new turn with: ');
+	console.log(this.gameState);
 	next();
 }
 

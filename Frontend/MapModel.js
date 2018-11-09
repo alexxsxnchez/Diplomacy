@@ -14,11 +14,15 @@ MapModel.prototype.addFinalizeHandler = function(handler) {
 }
 
 MapModel.prototype.dataReceived = function(gameState) {
-	this.units = gameState.units;
+	this.year = gameState.year;
+	this.phase = gameState.phase;
 	this.territories = gameState.territories;
+	this.units = gameState.units;
+	this.dislodgedUnits = gameState.dislodgedUnits;
 	this.moves = gameState.moves;
+	this.moveDescriptions = gameState.moveDescriptions;
 	this.isFinalized = gameState.finalized.length > 0;
-	this.presenter.update(this.territories, this.units, this.isFinalized);
+	this.presenter.update(this.year, this.phase, this.territories, this.units, this.dislodgedUnits, this.isFinalized);
 }
 
 /*MapModel.prototype.loadGameState = function() {
@@ -167,12 +171,24 @@ MapModel.prototype.dataReceived = function(gameState) {
 	this.presenter.update(this.territories, this.units);
 }*/
 
+MapModel.prototype.getDislodgedUnitAt = function(territory) {
+	if(territory in this.dislodgedUnits) {
+		return this.dislodgedUnits[territory].unit;
+	} else {
+		return null;
+	}
+}
+
 MapModel.prototype.getUnitAt = function(territory) {
 	if(territory in this.units) {
 		return this.units[territory];
 	} else {
 		return null;
 	}
+}
+
+MapModel.prototype.getPhase = function() {
+	return this.phase;
 }
 
 MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation) {

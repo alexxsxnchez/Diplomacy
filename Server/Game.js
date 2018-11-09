@@ -71,6 +71,10 @@ Game.prototype.processTurn = function(next) {
 			});
 			break;
 		case Phase.WINTER:
+			var results = this.processWinterMoves();
+			this.prepareNewGameState(results, function() {
+				next();
+			});
 			break;
 	}
 }
@@ -78,9 +82,11 @@ Game.prototype.processTurn = function(next) {
 Game.prototype.processRetreatMoves = function() {
 	var results = {};
 	var moves = this.model.getGameState().moves;
+	var dislodged = this.model.getGameState().dislodgedUnits;
 	var alreadyDeclared = {};
 	
 	Object.keys(moves).forEach((key) => {
+		results[key] = {};
 		results[key].success = true;
 		results[key].description = '';
 		results[key].dislodged = false;
@@ -88,10 +94,17 @@ Game.prototype.processRetreatMoves = function() {
 	
 		if(moves[key].moveType === 'RETREAT') {
 			var plannedDestination = moves[key].secondLoc;
+			if(!dislodged[key].retreatOptions.includes(plannedDestination)) {
+				results[key].success = false;
+				results[key].description = "Illegal move. Destination is not a location this unit can retreat to.";
+				return;
+			}
+			
 			if(plannedDestination in Object.keys(alreadyDeclared)) {
 				var description = 'Two or more units attempted to retreat to the same location.';
 				results[key].success = false;
 				results[key].description = description;
+				console.log(description);
 				var otherRetreater = alreadyDeclared[plannedDestination];
 				results[otherRetreater].success = false;
 				results[otherRetreater].description = description;
@@ -128,29 +141,46 @@ Game.prototype.processAdjudicationMoves = function(next) {
 	});
 }
 
+Game.prototype.processWinterMoves = function(next) {
+	var results = {};
+	var moves = this.model.getGameState().moves;
+	var counts = this.calculateStarAndUnitCount();
+	Object.keys(moves).forEach((key) => {
+		
+	
+	});
+	return results;
+}
+
 Game.prototype.prepareNewGameState = function(results, next) {
 	var gameState = this.model.getGameState();
 	var units = {};
+	if(gameState.phase !== "SPRING" && gameState.phase !== "FALL") {
+		units = gameState.units;
+	}
 	var dislodged = {};
 	var descriptions = {};
 	
-	Object.keys(gameState.moves).forEach((key) => {
-		console.log(key);
-		// get descriptions
+	Object.keys(results).forEach((key) => {
+		// prepare descriptions
 		descriptions[key] = results[key].description;
 		
 		var unit = gameState.moves[key].unit;
-		// create dislodge list
+		// prepare dislodge list
 		if(results[key].dislodged) {
 			dislodged[key] = {};
 			dislodged[key].unit = unit;
 			dislodged[key].retreatOptions = results[key].retreatOptions;
 			return;
 		}
-		// for all units not dislodged
-		if((gameState.moves[key].moveType === 'MOVE' || gameState.moves[key].moveType === 'RETREAT') && results[key].success) {
+		// prepare units that have moves
+		var moveType = gameState.moves[key].moveType
+		if((moveType === 'MOVE' || moveType === 'RETREAT') && results[key].success) {
 			var newLocation = gameState.moves[key].secondLoc;
 			units[newLocation] = unit;
+		} else if(moveType === 'BUILD' || moveType === 'DESTROY') {
+		
+		
 		} else {
 			units[key] = gameState.units[key];
 		}
@@ -158,39 +188,124 @@ Game.prototype.prepareNewGameState = function(results, next) {
 	
 	// update territories
 	var territories = gameState.territories;
+	console.log(territories);
 	Object.keys(units).forEach((key) => {
-		territories[key] = units[key].nation;
+		if(Object.keys(territories).includes(key)) {
+			territories[key].nation = units[key].nation;
+		}
 	});
 	
 	// update phase && year
-	var year = gameState.year + 1;
-	var phase = gameState.phase;
-	switch(phase) {
-		case Phase.SPRING:
-			phase = Phase.SPRING_RETREAT;
-			break;
-		case Phase.SPRING_RETREAT:
-			phase = Phase.FALL;
-			break;
-		case Phase.FALL:
-			phase = Phase.SPRING_RETREAT;
-			break;
-		case Phase.FALL_RETREAT:
-			this.checkIfGameOver(); // todo
-			phase = Phase.WINTER;
-			break;
-		case Phase.WINTER:
-			phase = Phase.SPRING;
-	}
-	
+	var yearAndPhase = this.decideNextPhase(gameState.year, gameState.phase, dislodged);
+	var year = yearAndPhase.year;
+	var phase = yearAndPhase.phase;
 	this.model.updateNewTurn(year, phase, territories, units, dislodged, descriptions, function() {
 		next();
 	});
 }
 
-Game.prototype.checkIfGameOver = function() {
-	// TODO
+Game.prototype.decideNextPhase = function(year, phase, dislodgedUnits) {
+	switch(phase) {
+		case Phase.SPRING:
+			if(Object.keys(dislodgedUnits).length === 0) {
+				phase = Phase.FALL;
+			} else {
+				phase = Phase.SPRING_RETREAT;
+			}
+			break;
+		case Phase.SPRING_RETREAT:
+			phase = Phase.FALL;
+			break;
+		case Phase.FALL:
+			if(Object.keys(dislodgedUnits).length === 0) {
+				this.checkIfGameOver();
+				// if there are builds to be made
+				var counts = this.calculateStarAndUnitCount();
+				/*Object.keys(counts).reduce((nation) => {
+					if(
+				}
+				*/
+				
+				phase = Phase.WINTER;
+			} else {
+				phase = Phase.FALL_RETREAT;
+			}
+			break;
+		case Phase.FALL_RETREAT:
+			this.checkIfGameOver();
+			// if there are builds to be made
+			phase = Phase.WINTER;
+			break;
+		case Phase.WINTER:
+			phase = Phase.SPRING;
+			year += 1;
+	}
+	
+	var returnObj = {};
+	returnObj.year = year;
+	returnObj.phase = phase;
+	return returnObj;
+}
 
+Game.prototype.checkIfGameOver = function() {
+	var starCounts = this.calculateStarAndUnitCount();
+	Object.keys(starCounts).forEach((nation) => {
+		var count = starCounts[nation].stars;
+		if(count >= 18) {
+			//TODO
+			console.log(nation + ' has won with ' + count + ' supply centers!!');
+		}
+	});
+}
+
+Game.prototype.calculateStarAndUnitCount = function() {
+	var counts = {
+		"AUSTRIA": {
+			stars: 0,
+			units: 0
+		},
+		"ENGLAND": {
+			stars: 0,
+			units: 0
+		},
+		"FRANCE": {
+			stars: 0,
+			units: 0
+		},
+		"GERMANY": {
+			stars: 0,
+			units: 0
+		},
+		"ITALY": {
+			stars: 0,
+			units: 0
+		},
+		"RUSSIA": {
+			stars: 0,
+			units: 0
+		},
+		"TURKEY": {
+			stars: 0,
+			units: 0
+		},
+		"NEUTRAL": {
+			stars: 0,
+			units: 0
+		},
+	}
+	var territories = this.model.getGameState().territories;
+	Object.keys(territories).forEach((key) => {
+		if(territories[key].hasStar) {
+			var nation = territories[key].nation;
+			counts[nation].stars++;
+		}
+	});
+	var units = this.model.getGameState().units;
+	Object.keys(units).forEach((key) => {
+		var nation = units[key].nation;
+		counts[nation].units++;
+	});
+	return counts;
 }
 
 module.exports = Game;

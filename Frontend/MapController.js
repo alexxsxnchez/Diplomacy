@@ -16,23 +16,27 @@ function MapController(view, model) {
 MapController.prototype.onTerritorySelected = function(territory) {
 	console.log(territory + " was selected");
 	if(this.selectedMoveType === null) {
-		console.log("selectedMoveType is null");
 		if(this.firstLocation !== null) {
-			console.log("firstLocation is not null thought BAD");
 			this.view.onFailureToClickMoveMenu();
 			return;
 		}
-		this.selectedUnit = this.model.getUnitAt(territory);
+		var phase = this.model.getPhase();
+		if(phase === "SPRING_RETREAT" || phase === "FALL_RETREAT") {
+			this.selectedUnit = this.model.getDislodgedUnitAt(territory);
+		} else {
+			this.selectedUnit = this.model.getUnitAt(territory);
+		}
 		if(this.selectedUnit !== null) {
 			this.firstLocation = territory;
 			this.view.showMoveMenu();
+		} else if(phase === "WINTER") {
+			// check if star and then we can show build option
 		}
 	} else if(this.secondLocation === null) {
 		this.secondLocation = territory;
 		switch(this.selectedMoveType) {
-			/*case MoveType.MOVE:
-			case MoveType.RETREAT:*/
 			case 'MOVE':
+			case 'RETREAT':
 				this.moveSelectionComplete();
 		}
 	} else {
@@ -46,9 +50,8 @@ MapController.prototype.onMoveTypeSelected = function(moveType) {
 	this.selectedMoveType = moveType;
 	this.view.closeMoveMenu();
 	switch(moveType) {
-		/*case MoveType.HOLD:
-		case MoveType.BUILD:
-		case MoveType.DESTROY:*/
+		case 'BUILD':
+		case 'DESTROY':
 		case 'HOLD':
 			this.moveSelectionComplete();
 	}
