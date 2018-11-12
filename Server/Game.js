@@ -145,22 +145,53 @@ Game.prototype.processWinterMoves = function(next) {
 	var results = {};
 	var gameState = this.model.getGameState();
 	var counts = this.calculateStarAndUnitCount();
+	var differences = {};
+	
+	Object.keys(counts).forEach((nation) => {
+		var diff = counts[nation].stars - counts[nation].units;
+		differences[nation] = diff;
+	});
 	
 	Object.keys(gameState.moves).forEach((key) => {
+		var move = gameState.moves[key];
 		var nation = gameState.territories[key].nation;
+		var diff = differences[nation];
 		
-		// TODOOOOO
-	
-		var description = 'Two or more units attempted to retreat to the same location.';
-		results[key].success = false;
-		results[key].description = description;
-		console.log(description);
-		var otherRetreater = alreadyDeclared[plannedDestination];
-		results[otherRetreater].success = false;
-		results[otherRetreater].description = description;
-		return;
-	
+		results[key].success = true;
+		results[key].description = 'Successful';
+		
+		if(diff < 0) {
+			if(move.moveType !== 'DESTROY') {
+				results[key].success = false;
+				results[key].description = 'Illegal build.';
+			} else {
+				differences[nation]++;
+			}
+		} else if(diff > 0) {
+			if(move.moveType === 'DESTROY') {
+				results[key].success = false;
+				results[key].description = 'Can\'t disband!';
+			} else {
+				differences[nation]--;
+			}
+		} else {
+			results[key].success = false;
+			if(move.moveType === 'DESTROY') {
+				results[key].description = 'Too many disbands!';
+			} else {
+				results[key].description = 'Too many builds!';
+			}
+		}
 	});
+	
+	// check if user did not enter enough disbands
+	Object.keys(differences).forEach((nation) => {
+		var diff = differences[nation];
+		if(diff < 0) {
+			// must auto delete
+			
+		}
+	}); 
 	return results;
 }
 
@@ -250,7 +281,7 @@ Game.prototype.decideNextPhase = function(year, phase, dislodgedUnits) {
 			break;
 		case Phase.WINTER:
 			phase = Phase.SPRING;
-			year += 1;
+			year++;
 	}
 	
 	var returnObj = {};
