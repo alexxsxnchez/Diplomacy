@@ -88,7 +88,7 @@ Game.prototype.processRetreatMoves = function() {
 	Object.keys(moves).forEach((key) => {
 		results[key] = {};
 		results[key].success = true;
-		results[key].description = '';
+		results[key].description = 'Successful';
 		results[key].dislodged = false;
 		results[key].retreatOptions = [];
 	
@@ -145,20 +145,32 @@ Game.prototype.processWinterMoves = function(next) {
 	var results = {};
 	var gameState = this.model.getGameState();
 	var counts = this.calculateStarAndUnitCount();
+	console.log(counts);
 	var differences = {};
 	
 	Object.keys(counts).forEach((nation) => {
+		if(nation === Nation.NEUTRAL) {
+			return;
+		}
 		var diff = counts[nation].stars - counts[nation].units;
 		differences[nation] = diff;
 	});
+	console.log(differences);
 	
 	Object.keys(gameState.moves).forEach((key) => {
 		var move = gameState.moves[key];
-		var nation = gameState.territories[key].nation;
+		var nation;
+		if(move.moveType === 'DESTROY') { // if destroying fleet in water, must get nation by unit, not by territory
+			nation = gameState.units[key].nation;
+		} else { // no such unit in location since we are building, must use territory
+			nation = gameState.territories[key].nation;
+		}
 		var diff = differences[nation];
 		
+		results[key] = {};
 		results[key].success = true;
 		results[key].description = 'Successful';
+		results[key].dislodged = false;
 		
 		if(diff < 0) {
 			if(move.moveType !== 'DESTROY') {
@@ -188,8 +200,25 @@ Game.prototype.processWinterMoves = function(next) {
 	Object.keys(differences).forEach((nation) => {
 		var diff = differences[nation];
 		if(diff < 0) {
-			// must auto delete
-			
+			Object.keys(gameState.units).forEach((key) => {
+				var unit = gameState.units[key];
+				if(key in results || diff === 0 || unit.nation != nation) {
+					return;
+				}
+				var move = {};
+				move.unit = unit;
+				move.moveType = 'DESTROY';
+				move.firstLoc = key;
+				move.secondLoc = null;
+				move.thirdLoc = null;
+				this.model.addMove(move);
+				results[key] = {};
+				results[key].dislodged = false;
+				results[key].success = true;
+				results[key].description = 'Destroy move auto-created due to insufficient disband orders.';
+				differences[nation]++;
+				diff = differences[nation];
+			});
 		}
 	}); 
 	return results;
@@ -221,14 +250,31 @@ Game.prototype.prepareNewGameState = function(results, next) {
 		if((moveType === 'MOVE' || moveType === 'RETREAT') && results[key].success) {
 			var newLocation = gameState.moves[key].secondLoc;
 			units[newLocation] = unit;
-		} else if(moveType === 'BUILD' || moveType === 'DESTROY') {
-		
-		
-		} else {
+		} else if(moveType === 'BUILDARMY' && results[key].success) {
+			units[key] = {};
+			units[key].type = 'army';
+			units[key].nation = gameState.territories[key].nation;
+		} else if(moveType === 'BUILDFLEET' && results[key].success) {
+			units[key] = {};
+			units[key].type = 'fleet';
+			units[key].nation = gameState.territories[key].nation;
+		}else if(moveType === 'BUILDFLEETNC' && results[key].success) {
+			units[key] = {};
+			units[key].type = 'fleet';
+			units[key].coast = 'NC';
+			units[key].nation = gameState.territories[key].nation;
+		}else if(moveType === 'BUILDFLEETSC' && results[key].success) {
+			units[key] = {};
+			units[key].type = 'fleet';
+			units[key].nation = gameState.territories[key].nation;
+			units[key].coast = 'SC';
+		} else if(moveType === 'DESTROY' && gameState.phase === 'WINTER' && results[key].success) {
+			delete units[key];
+		} else if(typeof gameState.units[key] !== 'undefined') {
 			units[key] = gameState.units[key];
 		}
 	});
-	
+	console.log(units);
 	// update territories
 	var territories = gameState.territories;
 	console.log(territories);
