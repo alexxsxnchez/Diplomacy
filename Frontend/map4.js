@@ -1438,6 +1438,18 @@ MapView.prototype.addMoveTypeSelectedHandler = function(moveClickHandler) {
 	});
 }
 
+this.view.addCoastSeletedHandler = function(coastSelectedHandler) {
+	document.getElementById('movencbutton').addEventListener("click", function() {
+		coastSelectedHandler(MoveType.MOVENC);
+	});
+	document.getElementById('moveecbutton').addEventListener("click", function() {
+		coastSelectedHandler(MoveType.MOVEEC);
+	});
+	document.getElementById('movescbutton').addEventListener("click", function() {
+		coastSelectedHandler(MoveType.MOVESC);
+	});
+}
+
 MapView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
 	document.getElementById('finalizebutton').addEventListener("click", function() {
 		finalizeClickHandler();
@@ -1504,7 +1516,6 @@ MapView.prototype.updateMoveMenu = function(options) {
 		}
 	});
 }
-
 
 MapView.prototype.closeMoveMenu = function() {
 	var movemenu = document.getElementById('movemenu');

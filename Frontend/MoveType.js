@@ -1,5 +1,8 @@
 var MoveType = {
 	MOVE: 'MOVE',
+	MOVENC: 'MOVENC',
+	MOVEEC: 'MOVEEC',
+	MOVESC: 'MOVESC',
 	SUPPORT: 'SUPPORT',
 	HOLD: 'HOLD',
 	CONVOY: 'CONVOY',
