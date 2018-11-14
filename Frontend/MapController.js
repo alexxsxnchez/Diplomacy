@@ -104,7 +104,8 @@ MapController.prototype.moveMenuOptionNotSelected = function(territory) {
 MapController.prototype.secondTerritorySelected = function(territory) {
 	var options = [];
 	this.secondLocation = territory;
-	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast1 === null && this.selectedUnit.type === 'fleet') {
+	var movingPieceIsFleet = this.selectedUnit.type === 'fleet' && (this.selectedMoveType === MoveType.MOVE || this.selectedMoveType === MoveType.RETREAT);
+	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast1 === null && movingPieceIsFleet) {
 		if(territory === 'Bulgaria') {
 			options.push(MoveType.MOVEEC);
 		} else {
@@ -115,8 +116,8 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 		this.view.showMoveMenu(options);
 	} else {
 		switch(this.selectedMoveType) {
-			case 'MOVE':
-			case 'RETREAT':
+			case MoveType.MOVE:
+			case MoveType.RETREAT:
 				this.moveSelectionComplete();
 				break;
 			default:
@@ -154,12 +155,12 @@ MapController.prototype.onMoveTypeSelected = function(moveType) {
 	this.selectedMoveType = moveType;
 	this.view.closeMoveMenu();
 	switch(moveType) {
-		case 'BUILDARMY':
-		case 'BUILDFLEET':
-		case 'BUILDFLEETNC':
-		case 'BUILDFLEETSC':
-		case 'DESTROY':
-		case 'HOLD':
+		case MoveType.BUILDARMY:
+		case MoveType.BUILDFLEET:
+		case MoveType.BUILDFLEETNC:
+		case MoveType.BUILDFLEETSC:
+		case MoveType.DESTROY:
+		case MoveType.HOLD:
 			this.moveSelectionComplete();
 			break;
 		default:
