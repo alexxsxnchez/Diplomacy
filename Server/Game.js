@@ -14,7 +14,7 @@ function Game(io, socket) {
 Game.prototype.setupEvents = function() {
 	var self = this;
 	this.socket.on('move', function(moveData) {
-		console.log('move received: ' + moveData); 
+		console.log('move received: ' + JSON.stringify(moveData, null, '    ')); 
 		self.addMove(moveData);
 	});
 	this.socket.on('finalize', function(finalizeData) {

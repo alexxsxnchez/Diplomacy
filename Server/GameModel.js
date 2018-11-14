@@ -33,7 +33,7 @@ GameModel.prototype.updateNewTurn = function(year, phase, territories, units, di
 	this.gameState.finalized = [];
 	//updateDb as well
 	console.log('updating new turn with: ');
-	console.log(this.gameState);
+	console.log(JSON.stringify(this.gameState, null, '    '));
 	next();
 }
 
