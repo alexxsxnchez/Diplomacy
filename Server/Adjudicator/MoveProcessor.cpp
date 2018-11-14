@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream>
 
+using std::endl;
+
 MoveProcessor::MoveProcessor(Graph * map) : map_{map} {}
 
 MoveProcessor::~MoveProcessor() {
@@ -81,6 +83,52 @@ void MoveProcessor::addMove(SupportMove * move) {
 	// act as hold move
 	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
 }
+
+void MoveProcessor::handleIllegalMove(HoldMove * move) {}
+
+void MoveProcessor::handleIllegalMove(MovementMove * move) {
+	auto it = attacks_.find(move->getDestination());
+	assert(it != attacks_.end());
+	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+		if((*it2)->getPiece()->getLocation() == move->getPiece()->getLocation()) {
+			it->second.erase(it2);
+			break;
+		}
+	}
+	// act as hold move
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot move to " move->getDestination() + ".");
+}
+
+void MoveProcessor::handleIllegalMove(SupportMove * move) {
+	auto it = supports_.find(move->getDestination());
+	assert(it != supports_.end());
+	auto it2 = it->second.find(move->getSource());
+	assert(it2 != it->second.end());
+	for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+		if((*it3)->getPiece()->getLocation() == move->getPiece()->getLocation()) {
+			it2->second.erase(it3);
+			break;
+		}
+	}
+	move->setSupport
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot support any unit to " move->getDestination() + ".");
+}
+
+void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
+	auto it = convoys_.find(move->getDestination());
+	assert(it != convoys_.end());
+	auto it2 = it->second.find(move->getSource());
+	assert(it2 != it->second.end());
+	for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+		if((*it3)->getPiece()->getLocation() == move->getPiece()->getLocation()) {
+			it2->second.erase(it3);
+			break;
+		}
+	}
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot convoy any unit from " + move->getSource() + " to " move->getDestination() + ".");
+}
+
 
 // ALGO
 
@@ -290,6 +338,12 @@ void fixParadox() {
 }
 
 MoveProcessor::Results MoveProcessor::processMoves() {
+	for(Move * move : moves_) {
+		if(!move->isLegal(map_)) {
+			handleIllegalMove(move);
+		}		
+	}
+
 	int count = 15;
 	while(count > 0) {
 		bool allDone = true;
@@ -608,6 +662,47 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	}
 	std::cout << std::endl;
 	*/
+}
+
+void MoveProcessor::outputResults(Results results, std::ostream & out) {
+	out << "{" << endl;
+	bool first = true;
+	for(auto it : results) {
+		if(!first) {
+			out << "," << endl;
+		} else {
+			first = false;
+		}
+		out << "\t\"" << it.first << "\": {" << endl;
+		out << "\t\t\"success\": ";
+		if(it.second.first) {
+			out << "true";
+		} else {
+			out << "false";
+		}
+		out << "," << endl;
+		out << "\t\t\"description\": \"" << it.second.second.first << "\"," << endl;
+		out << "\t\t\"dislodged\": ";
+		if(it.second.second.second.first) {
+			out << "true";
+		} else {
+			out << "false";
+		}
+		out << "," << endl;
+		out << "\t\t\"retreatOptions\": [" << endl;
+		bool first2 = true;
+		for(auto it2 : it.second.second.second.second) {
+			if(!first2) {
+				out << "," << endl;
+			} else {
+				first2 = false;
+			}
+			out << "\t\t\t\"" << it2 << "\"";
+		}
+		out << endl << "\t\t]";
+		out << endl << "\t}";
+	}
+	out << endl <<"}";
 }
 
 void MoveProcessor::addContestedLocation(string location) {

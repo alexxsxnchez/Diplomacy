@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <map>
 #include "Nation.h"
+#include <ostream>
 
 using std::string;
 
@@ -36,6 +37,10 @@ class MoveProcessor {
 		ConvoyMap convoys_;
 		Graph * map_;
 		std::unordered_set<string> contestedLocations_;
+		void handleIllegalMove(MovementMove * move);
+		void handleIllegalMove(SupportMove * move);
+		void handleIllegalMove(ConvoyMove * move);
+		void handleIllegalMove(HoldMove * move);
 		//		map<string, std::pair<std::unordered_set<const SupportMove *>, float> > supports_;
 		/*void processMovesByConvoys();
 		void processConvoys();
@@ -50,6 +55,7 @@ class MoveProcessor {
 		void addMove(SupportMove * move);
 		void addMove(ConvoyMove * move);
 		Results processMoves();
+		void outputResults(Results results, std::ostream & out);
 		
 		std::unordered_set<Move *> & getMoves();
 		NonAttackMap & getNonAttacks();

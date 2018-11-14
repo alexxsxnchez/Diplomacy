@@ -19,13 +19,18 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 		string firstLoc = it.key();
 		string unitType = it.value()["unit"]["type"];
 		string nationStr = it.value()["unit"]["nation"];
+		string coastSpecifier = "";
+		if(it.value()["unit"]["coast"].is_string()) {
+			coastSpecifier = it.value()["unit"]["coast"];
+		}
+		std::cerr << "COAST: " << coastSpecifier << std::endl; 
 		Nation nationality = getNation(nationStr);
 		
 		Piece * piece;
 		if(unitType == "army") {
 			piece = new ArmyPiece(nationality, firstLoc);
 		} else if(unitType == "fleet") {
-			piece = new FleetPiece(nationality, firstLoc); // coast specifier
+			piece = new FleetPiece(nationality, firstLoc, coastSpecifier); // coast specifier
 		} else {
 			assert(false);
 		}	
@@ -56,46 +61,6 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 	}
 	
 	MoveProcessor::Results results = p.processMoves();
-	outputResults(results);
+	p.outputResults(results, cout);
 }
 
-void ChildProcess::outputResults(MoveProcessor::Results results) {
-	cout << "{" << endl;
-	bool first = true;
-	for(auto it : results) {
-		if(!first) {
-			cout << "," << endl;
-		} else {
-			first = false;
-		}
-		cout << "\t\"" << it.first << "\": {" << endl;
-		cout << "\t\t\"success\": ";
-		if(it.second.first) {
-			cout << "true";
-		} else {
-			cout << "false";
-		}
-		cout << "," << endl;
-		cout << "\t\t\"description\": \"" << it.second.second.first << "\"," << endl;
-		cout << "\t\t\"dislodged\": ";
-		if(it.second.second.second.first) {
-			cout << "true";
-		} else {
-			cout << "false";
-		}
-		cout << "," << endl;
-		cout << "\t\t\"retreatOptions\": [" << endl;
-		bool first2 = true;
-		for(auto it2 : it.second.second.second.second) {
-			if(!first2) {
-				cout << "," << endl;
-			} else {
-				first2 = false;
-			}
-			cout << "\t\t\t\"" << it2 << "\"";
-		}
-		cout << endl << "\t\t]";
-		cout << endl << "\t}";
-	}
-	cout << endl <<"}";
-}

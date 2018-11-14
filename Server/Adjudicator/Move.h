@@ -53,6 +53,7 @@ class Move {
 		virtual bool process(MoveProcessor & processor) = 0;
 		DecisionResult getDislodgeDecision() const;
 		Strength getHoldStrength() const;
+		void setDescription(string description);
 		string getDescription() const;
 		std::unordered_set<string> calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const;
 		virtual bool isCompletelyDecided() const = 0;

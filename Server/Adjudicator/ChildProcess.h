@@ -19,5 +19,4 @@ class ChildProcess {
 	
 	public:
 		ChildProcess(Graph * g, string data);
-		void outputResults(MoveProcessor::Results results);
 };

@@ -454,6 +454,24 @@ static void tc29(Graph * g) {
 	p.processMoves();
 	std::cout << "----" << std::endl;
 }
+
+static void tc30(Graph * g) {
+	MoveProcessor p(g);
+	p.addMove(new MovementMove(new FleetPiece(Nation::FRANCE, "Spain", "NC"), "Gascony"));
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
+	std::cout << "----" << std::endl;
+}
+
+static void tc31(Graph * g) {
+	MoveProcessor p(g);
+	p.addMove(new MovementMove(new FleetPiece(Nation::FRANCE, "Spain", "SC"), "Gascony"));
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
+	std::cout << "----" << std::endl;
+}
+
+
 	
 void runTests(Graph * g) {
 	cout << endl << *g << endl;
@@ -481,7 +499,7 @@ void runTests(Graph * g) {
 	
 	cout << "about to start real tests" << endl;
 	tc1(g);
-	tc2(g);
+	/*tc2(g);
 	tc3(g);
 	tc4(g);
 	tc5(g);
@@ -510,13 +528,14 @@ void runTests(Graph * g) {
 	tc26(g);
 	tc27(g);
 	tc28(g);
-	tc29(g);
-	
+	tc29(g);*/
+	tc30(g);
+	tc31(g);
 
-	list<string> path = g->searchPath("Clyde", "London");
+	/*list<string> path = g->searchPath("Clyde", "London");
 	for(string s : path) {
 		cout << s << endl;
-	}
+	}*/
 }
 
 int main(int argc, char ** argv) {

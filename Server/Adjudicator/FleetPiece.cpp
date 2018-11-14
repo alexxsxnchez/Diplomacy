@@ -55,9 +55,10 @@ bool FleetPiece::isConvoyValid(const ConvoyMove * move, Graph * graph) const {
 	if(getLocation() == destinationString || getLocation() == sourceString) {
 		return false;
 	}
+	Territory * location = graph->getTerritory(getLocation());
 	Territory * source = graph->getTerritory(sourceString);
 	Territory * destination = graph->getTerritory(destinationString);
-	return source->getType() == Territory::Type::COAST && destination->getType() == Territory::Type::COAST;
+	return source->getType() == Territory::Type::COAST && destination->getType() == Territory::Type::COAST && location->getType() == Territory::Type::WATER;
 }
 
 std::unordered_set<string> FleetPiece::getNeighbours(Graph * graph) const {

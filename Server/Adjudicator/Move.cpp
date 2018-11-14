@@ -68,6 +68,10 @@ Strength Move::getHoldStrength() const {
 	return holdStrength_;
 }
 
+void Move::setDescription(string description) {
+	description_ = description;
+}
+
 string Move::getDescription() const {
 	return description_;
 }
