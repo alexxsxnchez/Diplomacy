@@ -1438,7 +1438,7 @@ MapView.prototype.addMoveTypeSelectedHandler = function(moveClickHandler) {
 	});
 }
 
-this.view.addCoastSeletedHandler = function(coastSelectedHandler) {
+MapView.prototype.addCoastSelectedHandler = function(coastSelectedHandler) {
 	document.getElementById('movencbutton').addEventListener("click", function() {
 		coastSelectedHandler(MoveType.MOVENC);
 	});
@@ -1481,6 +1481,9 @@ MapView.prototype.updateMoveMenu = function(options) {
 	document.getElementById('buildfleetbutton').style.display = 'none'
 	document.getElementById('buildncbutton').style.display = 'none'
 	document.getElementById('buildscbutton').style.display = 'none'
+	document.getElementById('movencbutton').style.display = 'none'
+	document.getElementById('moveecbutton').style.display = 'none'
+	document.getElementById('movescbutton').style.display = 'none'
 	options.forEach((option) => {
 		switch(option) {
 			case MoveType.BUILDARMY:
@@ -1512,6 +1515,15 @@ MapView.prototype.updateMoveMenu = function(options) {
 				break;
 			case MoveType.SUPPORT:
 				document.getElementById('supportbutton').style.display = 'block';
+				break;
+			case MoveType.MOVENC:
+				document.getElementById('movencbutton').style.display = 'block';
+				break;
+			case MoveType.MOVEEC:
+				document.getElementById('moveecbutton').style.display = 'block';
+				break;
+			case MoveType.MOVESC:
+				document.getElementById('movescbutton').style.display = 'block';
 				break;
 		}
 	});

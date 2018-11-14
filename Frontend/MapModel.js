@@ -243,17 +243,18 @@ MapModel.prototype.getPhase = function() {
 	return this.phase;
 }
 
-MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation) {
+MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, coast1, thirdLocation, coast2) {
 	// send to server
-	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation;
+	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + coast1 + " " + thirdLocation + " " + coast2;
 	console.log(s);
 	var move = {};
 	move.unit = unit;
 	move.moveType = moveType;
 	move.firstLoc = firstLocation;
 	move.secondLoc = secondLocation;
-	move.thirdLoc = thirdLocation; 
-	
+	move.thirdLoc = thirdLocation;
+	move.coast1 = coast1;
+	move.coast2 = coast2;
 	this.moveCreatedHandler(move);
 }
 
