@@ -143,7 +143,8 @@ static void tc1(Graph * g) {
 	MoveProcessor p(g);
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Berlin"), "Silesia"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Silesia"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----done tc1" << std::endl;
 }
 
@@ -152,7 +153,8 @@ static void tc2(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Prussia"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Moscow"), "Warsaw"));
 	p.addMove(new HoldMove(new ArmyPiece(Nation::GERMANY, "Prussia")));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -162,7 +164,8 @@ static void tc3(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Livonia"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Moscow"), "Warsaw"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Livonia"), "Moscow"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -170,7 +173,8 @@ static void tc4(Graph * g) {
 	MoveProcessor p(g);
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Prussia"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Warsaw"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -179,7 +183,8 @@ static void tc5(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Gascony"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Burgundy"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::FRANCE, "Gascony"), "Marseilles", "Burgundy"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -189,7 +194,8 @@ static void tc6(Graph * g) {
 	p.addMove(new MovementMove(new FleetPiece(Nation::ITALY, "Naples"), "TyrrehenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "WesternMed"), "GulfOfLyons", "TyrrehenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Rome"), "Naples", "TyrrehenianSea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -198,7 +204,8 @@ static void tc7(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::GERMANY, "BalticSea"), "Silesia", "Prussia"));
 	p.addMove(new HoldMove(new ArmyPiece(Nation::RUSSIA, "Prussia")));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -208,7 +215,8 @@ static void tc8(Graph * g) {
 	p.addMove(new HoldMove(new FleetPiece(Nation::ITALY, "TyrrehenianSea")));
 	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "WesternMed"), "GulfOfLyons", "TyrrehenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Rome"), "TyrrehenianSea", "TyrrehenianSea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -220,7 +228,8 @@ static void tc9(Graph * g) {
 	p.addMove(new SupportMove(new ArmyPiece(Nation::AUSTRIA, "Tyrolia"), "Bohemia", "Munich"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Berlin"), "Munich", "Silesia"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Warsaw", "Silesia"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -230,7 +239,8 @@ static void tc10(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Rumania"), "Bulgaria"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Sevastopol"), "Rumania"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Serbia"), "Rumania", "Bulgaria"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -242,7 +252,8 @@ static void tc11(Graph * g) {
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Serbia"), "Rumania", "Bulgaria"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Greece"), "Rumania", "Bulgaria"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::TURKEY, "BlackSea"), "Bulgaria", "Rumania"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -252,7 +263,8 @@ static void tc12(Graph * g) {
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia", "Warsaw"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Bohemia"), "Silesia"));
 	p.addMove(new HoldMove(new ArmyPiece(Nation::RUSSIA, "Warsaw")));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -261,7 +273,8 @@ static void tc13(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Prussia"), "Warsaw"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Prussia", "Warsaw"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Silesia"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -272,7 +285,8 @@ static void tc14(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Silesia"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::RUSSIA, "BalticSea"), "Prussia"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Warsaw"), "Prussia", "Silesia"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;	
 }
 
@@ -282,7 +296,8 @@ static void tc14_5(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Venice"), "Piedmont"));	
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Piedmont"));	
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Burgundy"), "Marseilles"));	
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -293,7 +308,8 @@ static void tc14_6(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Piedmont"));	
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Piedmont", "Marseilles"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "GulfOfLyons"), "Marseilles", "Marseilles"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -305,7 +321,8 @@ static void tc15(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Prussia"), "Berlin"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::AUSTRIA, "Tyrolia"), "Bohemia", "Munich"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Silesia"), "Prussia", "Berlin"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -313,7 +330,8 @@ static void tc16(Graph * g) {
 	MoveProcessor p(g);
 	p.addMove(new MovementMove(new ArmyPiece(Nation::ENGLAND, "London"), "Norway", true));
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "NorthSea"), "London", "Norway"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;	
 }
 
@@ -323,7 +341,8 @@ static void tc17(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "EnglishChannel"), "London", "Tunis"));
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "MidAtlantic"), "London", "Tunis"));
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "WesternMed"), "London", "Tunis"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;	
 }
 
@@ -334,7 +353,8 @@ static void tc18(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::FRANCE, "TyrrhenianSea"), "Spain", "Naples"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Tunis"), "IonianSea", "TyrrhenianSea"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::ITALY, "IonianSea"), "TyrrhenianSea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -343,7 +363,8 @@ static void tc19(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Paris"), "Burgundy"));
 	p.addMove(new HoldMove(new ArmyPiece(Nation::FRANCE, "Burgundy")));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Paris", "Burgundy"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -353,7 +374,8 @@ static void tc20(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Burgundy"), "Marseilles"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::GERMANY, "Ruhr"), "Paris", "Burgundy"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::ITALY, "Marseilles"), "Burgundy"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -363,7 +385,8 @@ static void tc21(Graph * g) {
 	p.addMove(new HoldMove(new ArmyPiece(Nation::FRANCE, "Burgundy")));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::FRANCE, "Paris"), "Ruhr", "Burgundy"));
 	p.addMove(new HoldMove(new ArmyPiece(Nation::GERMANY, "Munich")));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -374,7 +397,8 @@ static void tc22(Graph * g) {
 	p.addMove(new SupportMove(new ArmyPiece(Nation::AUSTRIA, "Bohemia"), "Silesia", "Munich"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Silesia"), "Munich"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Ruhr"), "Munich"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }	
 
@@ -386,7 +410,8 @@ static void tc23(Graph * g) {
 	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "North_Sea"), "Denmark"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::GERMANY, "HelgolandBight"), "NorthSea", "Denmark"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "Denmark"), "Kiel"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -395,7 +420,8 @@ static void tc24(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::AUSTRIA, "Vienna"), "Budapest"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::AUSTRIA, "Serbia"), "Budapest"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::RUSSIA, "Galicia"), "Serbia", "Budapest"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -406,7 +432,8 @@ static void tc25(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "NorthSea"), "London", "Belgium"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Belgium"), "London", true));
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::FRANCE, "EnglishChannel"), "Belgium", "London"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;	
 }
 
@@ -417,7 +444,8 @@ static void tc26(Graph * g) {
 	p.addMove(new MovementMove(new FleetPiece(Nation::FRANCE, "Brest"), "EnglishChannel"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::FRANCE, "IrishSea"), "Brest", "EnglishChannel"));
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::ENGLAND, "EnglishChannel"), "London", "Belgium"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;	
 }
 
@@ -428,7 +456,8 @@ static void tc27(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::FRANCE, "TyrrhenianSea"), "Tunis", "Naples"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::ITALY, "IonianSea"), "TyrrhenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Naples"), "IonianSea", "TyrrhenianSea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -439,7 +468,8 @@ static void tc28(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::FRANCE, "IonianSea"), "Tunis", "Naples"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::ITALY, "Rome"), "TyrrhenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Naples"), "Rome", "TyrrhenianSea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -451,7 +481,8 @@ static void tc29(Graph * g) {
 	p.addMove(new SupportMove(new ArmyPiece(Nation::FRANCE, "Apulia"), "Tunis", "Naples"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::ITALY, "Rome"), "TyrrhenianSea"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::ITALY, "Naples"), "Rome", "Tyrrhenian_Sea"));
-	p.processMoves();
+	MoveProcessor::Results results = p.processMoves();
+	p.outputResults(results, std::cerr);
 	std::cout << "----" << std::endl;
 }
 
@@ -498,8 +529,8 @@ void runTests(Graph * g) {
 	}
 	
 	cout << "about to start real tests" << endl;
-	tc1(g);
-	/*tc2(g);
+	//tc1(g);
+	tc2(g);
 	tc3(g);
 	tc4(g);
 	tc5(g);
@@ -528,7 +559,7 @@ void runTests(Graph * g) {
 	tc26(g);
 	tc27(g);
 	tc28(g);
-	tc29(g);*/
+	tc29(g);
 	tc30(g);
 	tc31(g);
 

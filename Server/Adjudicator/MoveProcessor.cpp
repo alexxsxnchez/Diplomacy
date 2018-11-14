@@ -97,7 +97,7 @@ void MoveProcessor::handleIllegalMove(MovementMove * move) {
 	}
 	// act as hold move
 	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
-	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot move to " move->getDestination() + ".");
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot move to " + move->getDestination() + ".");
 }
 
 void MoveProcessor::handleIllegalMove(SupportMove * move) {
@@ -111,8 +111,8 @@ void MoveProcessor::handleIllegalMove(SupportMove * move) {
 			break;
 		}
 	}
-	move->setSupport
-	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot support any unit to " move->getDestination() + ".");
+//	move->setSupport
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot support any unit to " + move->getDestination() + ".");
 }
 
 void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
@@ -126,7 +126,7 @@ void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
 			break;
 		}
 	}
-	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot convoy any unit from " + move->getSource() + " to " move->getDestination() + ".");
+	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot convoy any unit from " + move->getSource() + " to " + move->getDestination() + ".");
 }
 
 
