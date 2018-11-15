@@ -338,11 +338,11 @@ void fixParadox() {
 }
 
 MoveProcessor::Results MoveProcessor::processMoves() {
-	for(Move * move : moves_) {
+	/*for(Move * move : moves_) {
 		if(!move->isLegal(map_)) {
 			handleIllegalMove(move);
 		}		
-	}
+	}*/
 
 	int count = 15;
 	while(count > 0) {
