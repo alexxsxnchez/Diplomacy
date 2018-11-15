@@ -1,5 +1,5 @@
 #include "ConvoyMove.h"
-#include <ostream>
+#include <iostream>
 #include "Piece.h"
 #include "MovementMove.h"
 
@@ -90,5 +90,6 @@ string ConvoyMove::getDestination() const {
 }
 
 bool ConvoyMove::isCompletelyDecided() const {
+//	std::cerr << "convoy dislodged?: " << dislodged_ << std::endl;
 	return dislodged_ != UNDECIDED;
 }

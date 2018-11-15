@@ -45,15 +45,15 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 		dislodged_ = NO;
 		return true;
 	}
-	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
+//	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
 	return false;
 }
 
 std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
 	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
-	std::cerr << "neighbours" << std::endl;
+//	std::cerr << "neighbours" << std::endl;
 	for(string s : retreatOptions) {
-		std::cerr << s << std::endl;
+//		std::cerr << s << std::endl;
 	}
 	for(string contestedArea : contestedAreas) {
 		retreatOptions.erase(contestedArea);

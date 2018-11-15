@@ -167,7 +167,7 @@ unsigned int MoveProcessor::calculateSupportStrength(string source, string desti
 	} else {
 		trueOrFalse = "false";
 	}
-	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
+//	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
 	return count;
 }
 
@@ -342,7 +342,12 @@ void MoveProcessor::fixParadox() {
 		Move * currentMove = move;
 		Move * dependency = nullptr;
 		while(move != dependency) {
+//			std::cerr << "isParadoxCore: " << isParadoxCore << std::endl;
 			dependency = currentMove->getParadoxDependency(this); // if movement see if attacks
+			if(dependency == nullptr) {
+				std::cerr << "fuck" << std::endl;
+			}
+//			std::cerr << "dependency: " << dependency->getPiece()->getLocation() << std::endl;
 		 	dependency->settleParadox(isParadoxCore);
 		 	currentMove = dependency;
 		}
@@ -361,7 +366,7 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		bool allDone = true;
 		bool isParadox = true;
 		for(Move * move : moves_) {
-			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
+//			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
 			if(move->isCompletelyDecided()) {
 				continue;
 			}
@@ -397,9 +402,9 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	for(auto it : nonAttacks_) {
 		contestedAreas.insert(it.first);
 	}
-	std::cerr << "--======----" << std::endl;
+//	std::cerr << "--======----" << std::endl;
 	for(auto it : contestedAreas) {
-		std::cerr << it << std::endl;
+//		std::cerr << it << std::endl;
 	}
 	
 	// display results:
@@ -716,6 +721,10 @@ MoveProcessor::AttackMap & MoveProcessor::getAttacks() {
 		
 MoveProcessor::ConvoyMap & MoveProcessor::getConvoys() {
 	return convoys_;
+}
+
+MoveProcessor::SupportMap & MoveProcessor::getSupports() {
+	return supports_;
 }
 
 

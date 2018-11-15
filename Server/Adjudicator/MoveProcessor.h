@@ -63,7 +63,7 @@ class MoveProcessor {
 		AttackMap & getAttacks();
 		void addContestedLocation(string location);
 		
-		//SupportMap & getSupports() const;
+		SupportMap & getSupports();
 		ConvoyMap & getConvoys();
 		Graph * getMap() const;
 		unsigned int calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality = INVALID) const;

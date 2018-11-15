@@ -25,9 +25,10 @@ Move * SupportMove::getParadoxDependency(MoveProcessor * processor) const {
 	MoveProcessor::AttackMap attacks = processor->getAttacks();
 	auto it = attacks.find(getPiece()->getLocation());
 	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-		if((*it2)->getMoveDecision() == UNDECIDED) {
+//		std::cerr << "ok: " << (*it2)->getPiece()->getLocation() << std::endl;
+		//if((*it2)->getMoveDecision() == UNDECIDED) {
 			return *it2;
-		}
+		//}
 	}
 	return nullptr;
 }
@@ -61,6 +62,7 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 			if(move->getPiece()->getLocation() == destination_) {
 				continue;
 			}
+			std::cerr << move->getPiece()->getLocation() << ": attackStrength: " << move->getAttackStrength().min << " to " << move->getAttackStrength().max << std::endl;
 			if(move->getAttackStrength().min > 0) {
 				supportGiven_ = NO;
 				return true;
@@ -72,6 +74,7 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 		}
 	} catch(std::out_of_range) {}
 	if(canStillBeGiven && dislodged_ == NO) {
+	
 		supportGiven_ = YES;
 		return true;
 	}

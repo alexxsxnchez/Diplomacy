@@ -26,7 +26,7 @@ class MovementMove : public Move {
 		bool determineMoveDecision(MoveProcessor & processor);
 		bool determinePathDecision(MoveProcessor & processor);
 		bool determineDislodgeDecision(MoveProcessor & processor) override;
-		DecisionResult reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch = false);
+		DecisionResult reachesPath(MoveProcessor & processor/*, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch = false*/);
 	protected:
 		void print(ostream & out) const;
 		

@@ -180,7 +180,7 @@ static void tc4(Graph * g) {
 
 static void tc5(Graph * g) {
 	MoveProcessor p(g);
-	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Gascony"));
+	p.addMove(new MovementMove(new ArmyPiece(Nation::GERMANY, "Burgundy"), "Marseilles"));
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Marseilles"), "Burgundy"));
 	p.addMove(new SupportMove(new ArmyPiece(Nation::FRANCE, "Gascony"), "Marseilles", "Burgundy"));
 	MoveProcessor::Results results = p.processMoves();
@@ -407,7 +407,7 @@ static void tc23(Graph * g) {
 	p.addMove(new MovementMove(new ArmyPiece(Nation::RUSSIA, "Berlin"), "Kiel"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::RUSSIA, "Skagerrak"), "Denmark"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::RUSSIA, "BalticSea"), "Skagerrak", "Denmark"));
-	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "North_Sea"), "Denmark"));
+	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "NorthSea"), "Denmark"));
 	p.addMove(new SupportMove(new FleetPiece(Nation::GERMANY, "HelgolandBight"), "NorthSea", "Denmark"));
 	p.addMove(new MovementMove(new FleetPiece(Nation::GERMANY, "Denmark"), "Kiel"));
 	MoveProcessor::Results results = p.processMoves();
@@ -425,7 +425,6 @@ static void tc24(Graph * g) {
 	std::cout << "----" << std::endl;
 }
 
-// ERROR: should get solved when circular attacks paradox is solved
 static void tc25(Graph * g) {
 	MoveProcessor p(g);
 	p.addMove(new MovementMove(new ArmyPiece(Nation::ENGLAND, "London"), "Belgium", true));
@@ -434,7 +433,7 @@ static void tc25(Graph * g) {
 	p.addMove(new ConvoyMove(new FleetPiece(Nation::FRANCE, "EnglishChannel"), "Belgium", "London"));
 	MoveProcessor::Results results = p.processMoves();
 	p.outputResults(results, std::cerr);
-	std::cout << "----" << std::endl;	
+	std::cout << "----25" << std::endl;	
 }
 
 static void tc26(Graph * g) {
@@ -449,7 +448,7 @@ static void tc26(Graph * g) {
 	std::cout << "----" << std::endl;	
 }
 
-// ERROR: prob fixed with convoy paradox
+// convoy paradox
 static void tc27(Graph * g) {
 	MoveProcessor p(g);
 	p.addMove(new MovementMove(new ArmyPiece(Nation::FRANCE, "Tunis"), "Naples", true));
@@ -529,7 +528,7 @@ void runTests(Graph * g) {
 	}
 	
 	cout << "about to start real tests" << endl;
-	//tc1(g);
+	tc1(g);
 	tc2(g);
 	tc3(g);
 	tc4(g);
