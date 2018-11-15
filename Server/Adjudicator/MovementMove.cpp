@@ -17,6 +17,43 @@ void MovementMove::print(ostream & out) const {
 bool MovementMove::isLegal(Graph * graph) const {
 	return getPiece()->isMovementValid(this, graph);
 }
+
+bool MovementMove::isPartOfParadoxCore(MoveProcessor * processor) const {
+	std::cout << "ispartofparadoxcore" << std::endl;
+	MoveProcessor::AttackMap & attacks = processor->getAttacks();
+	for(auto it = attacks.begin(); it != attacks.end(); it++) {
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			if((*it2)->getPiece()->getLocation() == destination_) {
+				std::cout << "false" << std::endl;
+				return false;
+			}
+		} 
+	}
+	std::cout << "true" << std::endl;
+	return true;
+}
+
+Move * MovementMove::getParadoxDependency(MoveProcessor * processor) const {
+	MoveProcessor::AttackMap & attacks = processor->getAttacks();
+	for(auto it = attacks.begin(); it != attacks.end(); it++) {
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			if((*it2)->getPiece()->getLocation() == destination_) {
+				std::cout << getPiece()->getLocation() << destination_ << std::endl;
+				return *it2;
+			}
+		} 
+	}
+	return nullptr;
+}
+
+void MovementMove::settleParadox(bool isParadoxCore) {
+	if(isParadoxCore) {
+	
+	} else {
+		moved_ = YES;
+	}
+};
+
 /*
 void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 			map<string, map<const MovementMove *, float> > & attacksViaConvoy, 
@@ -118,10 +155,12 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.max = 0;
 			} else {
-				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());			
+				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());
+				// possibly have calcsupport strength return list of dependencies, thru params	
 			}
 		} else {
 			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given
+			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 	
@@ -170,6 +209,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 		}
 		if(!headOnWon) {
 			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false);
+			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 }
@@ -177,6 +217,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
 	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true);
 	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false);
+	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
 void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
@@ -188,6 +229,7 @@ void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
 		case(UNDECIDED):
 			holdStrength_.min = 0;
 			holdStrength_.max = 1;
+			// add moved_ to dependency list
 			break;
 		case(NO):
 			holdStrength_.min = 1;
@@ -247,6 +289,7 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 			std::cerr << "FUCK2" << std::endl;
 			return true;
 		}
+		// add either defendstrength of headondefender to dependency list or highestPreventStrength
 		return false;
 	} else {
 		for(auto holdIt = processor.getMoves().begin(); holdIt != processor.getMoves().end(); holdIt++) {

@@ -55,6 +55,7 @@ class MoveProcessor {
 		void addMove(SupportMove * move);
 		void addMove(ConvoyMove * move);
 		Results processMoves();
+		void fixParadox();
 		void outputResults(Results results, std::ostream & out);
 		
 		std::unordered_set<Move *> & getMoves();

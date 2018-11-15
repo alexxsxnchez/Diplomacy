@@ -43,6 +43,9 @@ class MovementMove : public Move {
 		Strength getDefendStrength() const;
 		bool isCompletelyDecided() const;
 		
+		bool isPartOfParadoxCore(MoveProcessor * processor) const;
+		Move * getParadoxDependency(MoveProcessor * processor) const;
+		void settleParadox(bool isParadoxCore);
 };
 
 #endif

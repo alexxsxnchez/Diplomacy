@@ -20,6 +20,10 @@ class HoldMove : public Move {
 		bool isLegal(Graph * graph) const;
 		bool process(MoveProcessor & processor);
 		bool isCompletelyDecided() const;
+		
+		bool isPartOfParadoxCore(MoveProcessor * processor) const;
+		Move * getParadoxDependency(MoveProcessor * processor) const;
+		void settleParadox(bool isParadoxCore);
 };
 
 #endif

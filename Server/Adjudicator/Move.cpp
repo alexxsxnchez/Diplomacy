@@ -14,6 +14,7 @@ Piece * Move::getPiece() const {
 void Move::calculateHoldStrength(MoveProcessor & processor) {
 	holdStrength_.min = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), true);
 	holdStrength_.max = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), false);
+	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
 bool Move::determineDislodgeDecision(MoveProcessor & processor) {
@@ -32,6 +33,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 					dislodged_ = YES;
 					return true;
 				}
+				// add move's move decision to dependency list
 			}
 		}
 	} else {

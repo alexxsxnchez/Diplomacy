@@ -333,8 +333,20 @@ void MoveProcessor::processAttacks() {
 }
 */
 
-void fixParadox() {
-
+void MoveProcessor::fixParadox() {
+	for(Move * move : moves_) {
+		if(move->isCompletelyDecided()) {
+			continue;
+		}
+		bool isParadoxCore = move->isPartOfParadoxCore(this);
+		Move * currentMove = move;
+		Move * dependency = nullptr;
+		while(move != dependency) {
+			dependency = currentMove->getParadoxDependency(this); // if movement see if attacks
+		 	dependency->settleParadox(isParadoxCore);
+		 	currentMove = dependency;
+		}
+	}
 }
 
 MoveProcessor::Results MoveProcessor::processMoves() {
@@ -426,12 +438,12 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 						std::make_pair(dislodge, move->calculateRetreatOptions(contestedAreas, map_))))));
 	}
 	
-	return results;
 	
 	
 	
 	
-	/*
+	
+	
 	std::cerr << "Paths for convoys: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
@@ -453,16 +465,8 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 			std::cerr << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
 			if(it2->getMoveDecision() == YES) {
 				std::cerr << "SUCCEEDED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(true,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 			} else if(it2->getMoveDecision() == NO) {
 				std::cerr << "FAILED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 			}
 		}
 		std::cerr << std::endl;
@@ -475,16 +479,8 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 				std::cerr << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
 				if(it3->getSupportDecision() == YES) {
 					std::cerr << "SUCCEEDED" << std::endl;
-					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(true,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 				} else if(it3->getSupportDecision() == NO) {
 					std::cerr << "FAILED" << std::endl;
-					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 				}
 			}
 		}
@@ -496,13 +492,6 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		std::cerr << move->getPiece()->getLocation() << " dislodged decision? : ";
 		if(move->getDislodgeDecision() == YES) {
 			std::cerr << "DISLODGED" << std::endl;
-			results.find(
-			
-			
-			results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(true, std::unordered_set<string>)))));
 		} else if(move->getDislodgeDecision() == NO) {
 			std::cerr << "SUSTAINED" << std::endl;
 		}
@@ -510,7 +499,7 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	std::cerr << std::endl;
 	return results;
 	
-	*/
+	
 	
 	
 	
