@@ -443,12 +443,6 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 						std::make_pair(dislodge, move->calculateRetreatOptions(contestedAreas, map_))))));
 	}
 	
-	
-	
-	
-	
-	
-	
 	std::cerr << "Paths for convoys: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
