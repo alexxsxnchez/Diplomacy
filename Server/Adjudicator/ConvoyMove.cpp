@@ -1,6 +1,7 @@
 #include "ConvoyMove.h"
-#include <ostream>
+#include <iostream>
 #include "Piece.h"
+#include "MovementMove.h"
 
 using std::string;
 using std::map;
@@ -21,6 +22,27 @@ bool ConvoyMove::process(MoveProcessor & processor) {
 	bool dislodgedUpdated = determineDislodgeDecision(processor);
 	return dislodgedUpdated;
 }
+
+
+bool ConvoyMove::isPartOfParadoxCore(MoveProcessor * processor) const {
+	return true;
+}
+
+Move * ConvoyMove::getParadoxDependency(MoveProcessor * processor) const {
+	MoveProcessor::AttackMap attacks = processor->getAttacks();
+	auto it = attacks.find(getPiece()->getLocation());
+	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+		if((*it2)->getMoveDecision() == UNDECIDED) {
+			return *it2;
+		}
+	}
+	return nullptr;
+}
+
+void ConvoyMove::settleParadox(bool isParadoxCore) {
+	//TODO
+};
+
 
 
 /*void ConvoyMove::process(map<string, map<const Move *, float> > & attacks, 
@@ -68,5 +90,6 @@ string ConvoyMove::getDestination() const {
 }
 
 bool ConvoyMove::isCompletelyDecided() const {
+//	std::cerr << "convoy dislodged?: " << dislodged_ << std::endl;
 	return dislodged_ != UNDECIDED;
 }

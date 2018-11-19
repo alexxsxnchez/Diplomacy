@@ -57,6 +57,10 @@ class Move {
 		string getDescription() const;
 		std::unordered_set<string> calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const;
 		virtual bool isCompletelyDecided() const = 0;
+		//
+		virtual bool isPartOfParadoxCore(MoveProcessor * processor) const = 0;
+		virtual Move * getParadoxDependency(MoveProcessor * processor) const = 0;
+		virtual void settleParadox(bool isParadoxCore) = 0;
 
 		friend ostream & operator<<(ostream & out, const Move & move);
 };

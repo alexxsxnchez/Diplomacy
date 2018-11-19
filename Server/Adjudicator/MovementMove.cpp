@@ -1,10 +1,12 @@
 #include "MovementMove.h"
 #include "ConvoyMove.h"
+#include "SupportMove.h"
 #include <ostream>
 #include "Piece.h"
 #include <unordered_set>
 #include "Graph.h"
 #include <iostream>
+#include <queue>
 
 using std::string;
 
@@ -17,6 +19,75 @@ void MovementMove::print(ostream & out) const {
 bool MovementMove::isLegal(Graph * graph) const {
 	return getPiece()->isMovementValid(this, graph);
 }
+
+bool MovementMove::isPartOfParadoxCore(MoveProcessor * processor) const {
+//	std::cout << "ispartofparadoxcore" << std::endl;
+	MoveProcessor::AttackMap & attacks = processor->getAttacks();
+	for(auto it = attacks.begin(); it != attacks.end(); it++) {
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			if((*it2)->getPiece()->getLocation() == destination_) {
+//				std::cout << "false" << std::endl;
+				return false;
+			}
+		} 
+	}
+//	std::cout << "true" << std::endl;
+	return true;
+}
+
+Move * MovementMove::getParadoxDependency(MoveProcessor * processor) const {
+	MoveProcessor::AttackMap & attacks = processor->getAttacks();
+	for(auto it = attacks.begin(); it != attacks.end(); it++) {
+		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+			if((*it2)->getPiece()->getLocation() == destination_) {
+				std::cout << getPiece()->getLocation() << destination_ << std::endl;
+				return *it2;
+			}
+		} 
+	}
+	
+	MoveProcessor::SupportMap & supports = processor->getSupports();
+	auto it = supports.find(destination_);
+	if(it != supports.end()) {
+		auto it2 = it->second.find(getPiece()->getLocation());
+		if(it2 != it->second.end()) {
+			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+				if((*it3)->getSupportDecision() == UNDECIDED) {
+					return *it3;
+				}
+			}
+		}
+	}
+	
+	if(viaConvoy_) {
+		MoveProcessor::ConvoyMap & convoys = processor->getConvoys();
+		auto it = convoys.find(destination_);
+		if(it != convoys.end()) {
+			auto it2 = it->second.find(getPiece()->getLocation());
+			if(it2 != it->second.end()) {
+				for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+					if((*it3)->getDislodgeDecision() == UNDECIDED) {
+						return *it3;
+					}
+				}
+			}
+		}
+	}
+	
+	return nullptr;
+}
+
+void MovementMove::settleParadox(bool isParadoxCore) {
+	if(isParadoxCore) {
+		attackStrength_.min = 0;
+		attackStrength_.max = 0;
+		preventStrength_.min = 0;
+		preventStrength_.max = 0;
+	} else {
+		moved_ = YES;
+	}
+};
+
 /*
 void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 			map<string, map<const MovementMove *, float> > & attacksViaConvoy, 
@@ -47,7 +118,6 @@ void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 }
 */
 void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
-	std::cerr << "ok" << std::endl;
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
 	MovementMove * leavingDefender = nullptr;
@@ -67,7 +137,6 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			for(auto it3 = processor.getAttacks().begin(); it3 != processor.getAttacks().end(); it3++) {
 				for(auto it4 = it3->second.begin(); it4 != it3->second.end(); it4++) { 
 					if((*it4)->getPiece()->getLocation() == destination_ && (*it4)->getMoveDecision() != YES) {
-						std::cerr << "YESSS" << std::endl;
 						leavingDefender = *it4;
 						break;
 					}
@@ -75,8 +144,6 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			}
 		}
 	}
-	
-	std::cerr << "NOOO" << std::endl;
 
 	// first min
 	if(hasPath_ != YES) {
@@ -102,7 +169,7 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 
 	// now max
 	if(hasPath_ == NO) {
-			attackStrength_.max = 0;
+		attackStrength_.max = 0;
 	} else {
 		if(leavingDefender != nullptr && leavingDefender->getMoveDecision() != NO) {
 			leavingDefender = nullptr;
@@ -118,14 +185,16 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.max = 0;
 			} else {
-				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());			
+				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());
+				// possibly have calcsupport strength return list of dependencies, thru params	
 			}
 		} else {
 			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given
+			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 	
-	std::cerr << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
+//	std::cerr << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
 }
 
 void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
@@ -170,6 +239,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 		}
 		if(!headOnWon) {
 			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false);
+			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 }
@@ -177,6 +247,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
 	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true);
 	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false);
+	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
 void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
@@ -188,6 +259,7 @@ void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
 		case(UNDECIDED):
 			holdStrength_.min = 0;
 			holdStrength_.max = 1;
+			// add moved_ to dependency list
 			break;
 		case(NO):
 			holdStrength_.min = 1;
@@ -218,7 +290,6 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	}
 	
 	if(attackStrength_.max <= highestPreventStrengthMin) {
-		std::cerr << "FUCK" << std::endl;
 		moved_ = NO;
 		return true;
 	}
@@ -244,9 +315,9 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 			return true;
 		} else if(attackStrength_.max <= headOnDefenderMove->getDefendStrength().min) {
 			moved_ = NO;
-			std::cerr << "FUCK2" << std::endl;
 			return true;
 		}
+		// add either defendstrength of headondefender to dependency list or highestPreventStrength
 		return false;
 	} else {
 		for(auto holdIt = processor.getMoves().begin(); holdIt != processor.getMoves().end(); holdIt++) {
@@ -257,7 +328,6 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 					return true;
 				} else if(attackStrength_.max <= (*holdIt)->getHoldStrength().min) {
 					moved_ = NO;
-					std::cerr << "FUCK3" << std::endl;
 					return true;
 				}
 				return false;
@@ -280,11 +350,78 @@ bool MovementMove::determinePathDecision(MoveProcessor & processor) {
 		return true;
 	}
 	std::unordered_set<string> alreadySearched;
-	hasPath_ = reachesPath(processor, this->getPiece()->getLocation(), alreadySearched, true);
+	hasPath_ = reachesPath(processor/*, this->getPiece()->getLocation(), alreadySearched, true*/);
 	return hasPath_ != UNDECIDED;
 }
 
-DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch) {
+DecisionResult MovementMove::reachesPath(MoveProcessor & processor) {
+	std::unordered_set<string> alreadySearched;
+	std::queue<std::pair<string, DecisionResult> > queue;
+	alreadySearched.insert(getPiece()->getLocation());
+	queue.push(std::make_pair(getPiece()->getLocation(), YES));
+	
+	MoveProcessor::ConvoyMap & convoyMap = processor.getConvoys();
+	auto it = convoyMap.find(destination_);
+	if(it == convoyMap.end()) {
+		return NO;
+	}
+	auto it2 = it->second.find(getPiece()->getLocation());
+	if(it2 == it->second.end()) {
+		return NO;
+	}
+	std::unordered_set<ConvoyMove *> convoys = it2->second;
+	bool firstSearch = true;
+	DecisionResult bestResult = NO;
+	while(!queue.empty()) {
+		std::pair<string, DecisionResult> pair = queue.front();
+		string currentSource = pair.first;
+//		std::cerr << "currentSource: " << currentSource << std::endl;
+		queue.pop();
+		
+		const std::unordered_set<string> neighbours = processor.getMap()->getFleetNeighbours(currentSource);
+		for(string neighbour : neighbours) {
+			if(neighbour == destination_) {
+				if(firstSearch) {
+					continue;
+				}
+//				std::cerr << "found destination from current source: " << currentSource << "with result: " << pair.second << std::endl;
+				if(pair.second == YES) {
+					return YES;
+				} else {
+					bestResult = pair.second;
+				}
+			}
+			if(alreadySearched.count(neighbour) != 0) {
+				continue;
+			}
+			
+			for(ConvoyMove * convoyMove : convoys) {
+//				std::cerr << "convoy move location: " << convoyMove->getPiece()->getLocation() << " neighbour: " << neighbour << std::endl;
+				if(convoyMove->getPiece()->getLocation() == neighbour) {
+					if(convoyMove->getDislodgeDecision() != YES) {
+						DecisionResult currentResult;
+						if(pair.second == YES && convoyMove->getDislodgeDecision() == NO) {
+							currentResult = YES;
+						} else {
+							currentResult = UNDECIDED;
+						}
+						queue.push(std::make_pair(convoyMove->getPiece()->getLocation(), currentResult));
+					}
+					alreadySearched.insert(neighbour);
+					break;
+				}
+			}
+		}
+		firstSearch = false;
+	}
+	return bestResult;
+}
+
+
+
+
+
+/*DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string currentSource, std::unordered_set<string> & alreadySearched, bool firstSearch) {
 	DecisionResult currentBest = NO;
 	try {
 		std::unordered_set<ConvoyMove *> & convoys = processor.getConvoys().at(destination_).at(this->getPiece()->getLocation());
@@ -294,6 +431,7 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 				if(firstSearch) {
 					continue;
 				}
+				std::cerr << "found destination from current source: " << currentSource << std::endl;
 				return YES;
 			}
 		
@@ -335,8 +473,9 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor, string curre
 	}
 	
 	std::cerr << "LOL3\n\n" << std::endl;
+	std::cerr << "path decision for " << getPiece()->getLocation() << " is " << currentBest << std::endl;
 	return currentBest;
-}
+}*/
 
 bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 	if(dislodged_ != UNDECIDED) {
@@ -373,7 +512,7 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 }
 
 bool MovementMove::process(MoveProcessor & processor) {
-	std::cerr << "movementmove processing started" << std::endl;
+//	std::cerr << "movementmove processing started" << std::endl;
 	bool pathUpdated = determinePathDecision(processor);
 	calculateAttackStrength(processor);
 	calculatePreventStrength(processor);

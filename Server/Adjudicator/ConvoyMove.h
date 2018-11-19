@@ -24,6 +24,10 @@ class ConvoyMove : public Move {
 		string getSource() const;
 		string getDestination() const;
 		bool isCompletelyDecided() const;
+		
+		bool isPartOfParadoxCore(MoveProcessor * processor) const;
+		Move * getParadoxDependency(MoveProcessor * processor) const;
+		void settleParadox(bool isParadoxCore);
 };
 
 #endif

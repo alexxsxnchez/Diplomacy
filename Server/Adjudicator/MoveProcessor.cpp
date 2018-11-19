@@ -167,7 +167,7 @@ unsigned int MoveProcessor::calculateSupportStrength(string source, string desti
 	} else {
 		trueOrFalse = "false";
 	}
-	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
+//	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
 	return count;
 }
 
@@ -333,8 +333,25 @@ void MoveProcessor::processAttacks() {
 }
 */
 
-void fixParadox() {
-
+void MoveProcessor::fixParadox() {
+	for(Move * move : moves_) {
+		if(move->isCompletelyDecided()) {
+			continue;
+		}
+		bool isParadoxCore = move->isPartOfParadoxCore(this);
+		Move * currentMove = move;
+		Move * dependency = nullptr;
+		while(move != dependency) {
+//			std::cerr << "isParadoxCore: " << isParadoxCore << std::endl;
+			dependency = currentMove->getParadoxDependency(this); // if movement see if attacks
+			if(dependency == nullptr) {
+				std::cerr << "fuck" << std::endl;
+			}
+//			std::cerr << "dependency: " << dependency->getPiece()->getLocation() << std::endl;
+		 	dependency->settleParadox(isParadoxCore);
+		 	currentMove = dependency;
+		}
+	}
 }
 
 MoveProcessor::Results MoveProcessor::processMoves() {
@@ -349,7 +366,7 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		bool allDone = true;
 		bool isParadox = true;
 		for(Move * move : moves_) {
-			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
+//			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
 			if(move->isCompletelyDecided()) {
 				continue;
 			}
@@ -385,9 +402,9 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	for(auto it : nonAttacks_) {
 		contestedAreas.insert(it.first);
 	}
-	std::cerr << "--======----" << std::endl;
+//	std::cerr << "--======----" << std::endl;
 	for(auto it : contestedAreas) {
-		std::cerr << it << std::endl;
+//		std::cerr << it << std::endl;
 	}
 	
 	// display results:
@@ -426,12 +443,6 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 						std::make_pair(dislodge, move->calculateRetreatOptions(contestedAreas, map_))))));
 	}
 	
-	return results;
-	
-	
-	
-	
-	/*
 	std::cerr << "Paths for convoys: " << std::endl;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
@@ -453,16 +464,8 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 			std::cerr << it2->getPiece()->getLocation() << " attack on " << it.first << " ";
 			if(it2->getMoveDecision() == YES) {
 				std::cerr << "SUCCEEDED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(true,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 			} else if(it2->getMoveDecision() == NO) {
 				std::cerr << "FAILED" << std::endl;
-				results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 			}
 		}
 		std::cerr << std::endl;
@@ -475,16 +478,8 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 				std::cerr << it3->getPiece()->getLocation() << " support from " << it2.first << " to " << it.first << " ";
 				if(it3->getSupportDecision() == YES) {
 					std::cerr << "SUCCEEDED" << std::endl;
-					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(true,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 				} else if(it3->getSupportDecision() == NO) {
 					std::cerr << "FAILED" << std::endl;
-					results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(false, std::unordered_set<string>)))));
 				}
 			}
 		}
@@ -496,13 +491,6 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		std::cerr << move->getPiece()->getLocation() << " dislodged decision? : ";
 		if(move->getDislodgeDecision() == YES) {
 			std::cerr << "DISLODGED" << std::endl;
-			results.find(
-			
-			
-			results.insert(std::make_pair(it2->getPiece()->getLocation(), 
-								std::make_pair(false,
-								std::make_pair("",
-								std::make_pair(true, std::unordered_set<string>)))));
 		} else if(move->getDislodgeDecision() == NO) {
 			std::cerr << "SUSTAINED" << std::endl;
 		}
@@ -510,7 +498,7 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	std::cerr << std::endl;
 	return results;
 	
-	*/
+	
 	
 	
 	
@@ -727,6 +715,10 @@ MoveProcessor::AttackMap & MoveProcessor::getAttacks() {
 		
 MoveProcessor::ConvoyMap & MoveProcessor::getConvoys() {
 	return convoys_;
+}
+
+MoveProcessor::SupportMap & MoveProcessor::getSupports() {
+	return supports_;
 }
 
 

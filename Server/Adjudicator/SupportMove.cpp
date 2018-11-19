@@ -17,6 +17,32 @@ bool SupportMove::isLegal(Graph * graph) const {
 	return getPiece()->isSupportValid(this, graph);
 }
 
+bool SupportMove::isPartOfParadoxCore(MoveProcessor * processor) const {
+	return true;
+}
+
+Move * SupportMove::getParadoxDependency(MoveProcessor * processor) const {
+	MoveProcessor::AttackMap attacks = processor->getAttacks();
+	auto it = attacks.find(getPiece()->getLocation());
+	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+//		std::cerr << "ok: " << (*it2)->getPiece()->getLocation() << std::endl;
+		//if((*it2)->getMoveDecision() == UNDECIDED) {
+			return *it2;
+		//}
+	}
+	return nullptr;
+}
+
+void SupportMove::settleParadox(bool isParadoxCore) {
+	//TODO
+};
+
+
+
+
+
+
+
 // not critical TODO: currently says support is successful when there is no unit to receive the support
 
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
@@ -36,16 +62,19 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 			if(move->getPiece()->getLocation() == destination_) {
 				continue;
 			}
+			std::cerr << move->getPiece()->getLocation() << ": attackStrength: " << move->getAttackStrength().min << " to " << move->getAttackStrength().max << std::endl;
 			if(move->getAttackStrength().min > 0) {
 				supportGiven_ = NO;
 				return true;
 			}
 			if(move->getAttackStrength().max > 0) {
 				canStillBeGiven = false;
+				// add move's attack strength to dependencies
 			}
 		}
 	} catch(std::out_of_range) {}
 	if(canStillBeGiven && dislodged_ == NO) {
+	
 		supportGiven_ = YES;
 		return true;
 	}

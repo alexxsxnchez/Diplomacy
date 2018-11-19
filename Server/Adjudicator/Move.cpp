@@ -14,6 +14,7 @@ Piece * Move::getPiece() const {
 void Move::calculateHoldStrength(MoveProcessor & processor) {
 	holdStrength_.min = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), true);
 	holdStrength_.max = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), false);
+	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
 bool Move::determineDislodgeDecision(MoveProcessor & processor) {
@@ -32,6 +33,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 					dislodged_ = YES;
 					return true;
 				}
+				// add move's move decision to dependency list
 			}
 		}
 	} else {
@@ -43,15 +45,15 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 		dislodged_ = NO;
 		return true;
 	}
-	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
+//	std::cerr << "Returning false (undecided) for nonAttack dislodgeDecision" << std::endl;
 	return false;
 }
 
 std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
 	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
-	std::cerr << "neighbours" << std::endl;
+//	std::cerr << "neighbours" << std::endl;
 	for(string s : retreatOptions) {
-		std::cerr << s << std::endl;
+//		std::cerr << s << std::endl;
 	}
 	for(string contestedArea : contestedAreas) {
 		retreatOptions.erase(contestedArea);

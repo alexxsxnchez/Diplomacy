@@ -29,6 +29,10 @@ class SupportMove : public Move {
 		string getDestination() const;
 		DecisionResult getSupportDecision() const;
 		bool isCompletelyDecided() const;
+		
+		bool isPartOfParadoxCore(MoveProcessor * processor) const;
+		Move * getParadoxDependency(MoveProcessor * processor) const;
+		void settleParadox(bool isParadoxCore);
 };
 
 #endif

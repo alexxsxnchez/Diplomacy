@@ -18,6 +18,19 @@ bool HoldMove::process(MoveProcessor & processor) {
 	return dislodgedUpdated;
 }
 
+bool HoldMove::isPartOfParadoxCore(MoveProcessor * processor) const {
+	return true;
+}
+
+Move * HoldMove::getParadoxDependency(MoveProcessor * processor) const {
+	return nullptr;
+}
+
+void HoldMove::settleParadox(bool isParadoxCore) {
+	//TODO
+};
+
+
 /*
 void HoldMove::process(map<string, map<const Move *, float> > & attacks, 
 			map<string, map<string, std::unordered_set<const SupportMove *> > > & supports, 
