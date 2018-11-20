@@ -62,7 +62,7 @@ void MoveProcessor::addMove(ConvoyMove * move) {
 
 void MoveProcessor::addMove(SupportMove * move) {
 	moves_.insert(move);
-	auto itS = supports_.find(move->getDestination());
+	auto itS = supports_.find(move->getDestination()); // add coast specif for destination
 	if(itS == supports_.end()) {
 		std::map<string, std::unordered_set<SupportMove *> > supportsToDestination;
 		std::unordered_set<SupportMove *> setOfMoves;
@@ -101,7 +101,7 @@ void MoveProcessor::handleIllegalMove(MovementMove * move) {
 }
 
 void MoveProcessor::handleIllegalMove(SupportMove * move) {
-	auto it = supports_.find(move->getDestination());
+	auto it = supports_.find(move->getDestination()); // add coast specif
 	assert(it != supports_.end());
 	auto it2 = it->second.find(move->getSource());
 	assert(it2 != it->second.end());
@@ -143,7 +143,7 @@ void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
 // 6. repeat step 5 until no more standoffs. Return successful movements
 
 // throws out_of_range exception
-unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality) const {
+unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, string destinationCoastSpecifier, bool onlyGiven, Nation nationality) const {
 	unsigned int count = 0;
 	try {
 		auto supportToDestination = supports_.at(destination);

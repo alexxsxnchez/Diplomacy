@@ -10,7 +10,7 @@
 
 using std::string;
 
-MovementMove::MovementMove(Piece * piece, string destination, bool viaConvoy) : Move{piece}, destination_{destination}, viaConvoy_{viaConvoy} {}
+MovementMove::MovementMove(Piece * piece, string destination, string coastSpecifier, bool viaConvoy) : Move{piece}, destination_{destination}, coastSpecifier_{coastSpecifier}, viaConvoy_{viaConvoy} {}
 
 void MovementMove::print(ostream & out) const {
 	out << *getPiece() << " MOVES to " << destination_ << std::endl;
@@ -29,7 +29,7 @@ bool MovementMove::isPartOfParadoxCore(MoveProcessor * processor) const {
 //				std::cout << "false" << std::endl;
 				return false;
 			}
-		} 
+		}
 	}
 //	std::cout << "true" << std::endl;
 	return true;
@@ -47,7 +47,7 @@ Move * MovementMove::getParadoxDependency(MoveProcessor * processor) const {
 	}
 	
 	MoveProcessor::SupportMap & supports = processor->getSupports();
-	auto it = supports.find(destination_);
+	auto it = supports.find(destination_); // add coast specif
 	if(it != supports.end()) {
 		auto it2 = it->second.find(getPiece()->getLocation());
 		if(it2 != it->second.end()) {
@@ -121,11 +121,11 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
 	MovementMove * leavingDefender = nullptr;
-	auto it = processor.getNonAttacks().find(destination_);
+	auto it = processor.getNonAttacks().find(destination_); // no coast
 	if(it != processor.getNonAttacks().end()) {
 		defender = it->second->getPiece();
 	} else {
-		auto it2 = processor.getAttacks().find(source);
+		auto it2 = processor.getAttacks().find(source); // no coast
 		if(it2 != processor.getAttacks().end()) {
 			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
 				if((*it3)->getPiece()->getLocation() == destination_) {
@@ -159,10 +159,10 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.min = 0;
 			} else {
-				attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true, same->getNationality());			
+				attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true, same->getNationality()); // should add coast specifier			
 			}
 		} else {
-			attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true); // true is only given
+			attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true); // true is only given // should add coast specifier
 		}
 	
 	}
@@ -185,11 +185,11 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.max = 0;
 			} else {
-				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());
+				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality()); // add coast specif
 				// possibly have calcsupport strength return list of dependencies, thru params	
 			}
 		} else {
-			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given
+			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given  // add coast specif
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
@@ -216,7 +216,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 			}
 		}
 		if(!headOnWon) {
-			preventStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true);
+			preventStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true); // add coast specif
 		}
 	}
 	
@@ -238,15 +238,15 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 			}
 		}
 		if(!headOnWon) {
-			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false);
+			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // add coast specif
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 }
 
 void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
-	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true);
-	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false);
+	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true); // add coast specif
+	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false); // add coast specif
 	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
@@ -526,6 +526,10 @@ bool MovementMove::process(MoveProcessor & processor) {
 
 string MovementMove::getDestination() const {
 	return destination_;
+}
+
+string getCoastSpecifier() const {
+	return coastSpecifier_;
 }
 
 bool MovementMove::getViaConvoy() const {

@@ -17,6 +17,7 @@ class MovementMove : public Move {
 		DecisionResult moved_ = UNDECIDED;
 		DecisionResult hasPath_ = UNDECIDED;
 		string destination_;
+		string coastSpecifier_;
 		bool viaConvoy_;
 		
 		void calculateAttackStrength(MoveProcessor & processor);
@@ -31,10 +32,11 @@ class MovementMove : public Move {
 		void print(ostream & out) const;
 		
 	public:
-		MovementMove(Piece * piece, string destination, bool viaConvoy = false);
+		MovementMove(Piece * piece, string destination, string coastSpecifier = "", bool viaConvoy = false);
 		bool isLegal(Graph * graph) const;
 		bool process(MoveProcessor & processor);
 		string getDestination() const;
+		string getCoastSpecifier() const;
 		bool getViaConvoy() const;
 		DecisionResult getMoveDecision() const;
 		DecisionResult getPathDecision() const;

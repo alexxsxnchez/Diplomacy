@@ -30,22 +30,40 @@ bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const
 	}
 	string destinationString = move->getDestination();
 	Territory * destination = graph->getTerritory(destinationString);
-	string currentLocation = coast_ == "" ? getLocation() : coast_;
+	
+	
+	string currentLocation = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
 	if(currentLocation == destinationString || getLocation() == destinationString) {
 		return false;
 	}
 
 	unordered_set<string> neighbours = graph->getFleetNeighbours(currentLocation);
+	if(destinationString == "StPetersburg" || destinationString == "Spain" || destination == "Bulgaria") {
+		string coastSpecifier = move->getCoastSpecifier();
+		if(destinationString == "Bulgaria") {
+			if(coastSpecifier != "EC" && coastSpecifier != "SC") {
+				return false; // invalid coast
+			}
+		} else {
+			if(coastSpecifier != "NC" && coastSpecifier != "SC") {
+				return false; // invalid coast
+			}
+		}
+		
+	}
+	
 	return neighbours.find(destinationString) != neighbours.end();
 }
 
 bool FleetPiece::isSupportValid(const SupportMove * move, Graph * graph) const {
 	string sourceString = move->getSource();
 	string destinationString = move->getDestination();
-	if(getLocation() == destinationString || getLocation() == sourceString) {
+	//string currentLocation = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
+	string currentLocation = getLocation(); // don't include coast
+	if(currentLocation == destinationString || currentLocation == sourceString) {
 		return false;
 	}
-	unordered_set<string> neighbours = graph->getFleetNeighbours(getLocation());
+	unordered_set<string> neighbours = graph->getFleetNeighbours(currentLocation);
 	return neighbours.find(destinationString) != neighbours.end();
 }
 
