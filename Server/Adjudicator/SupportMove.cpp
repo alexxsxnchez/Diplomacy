@@ -7,7 +7,7 @@
 
 using std::string;
 
-SupportMove::SupportMove(Piece * piece, string source, string destination) : Move{piece}, source_{source}, destination_{destination} {}
+SupportMove::SupportMove(Piece * piece, string source, string destination, string coastSpecifier) : Move{piece}, source_{source}, destination_{destination}, coast_{coastSpecifier} {}
 
 void SupportMove::print(ostream & out) const {
 	out << *getPiece() << " SUPPORTS " << source_ << " to " << destination_ << std::endl;
@@ -38,6 +38,10 @@ void SupportMove::settleParadox(bool isParadoxCore) {
 };
 
 
+void SupportMove::forceFail() {
+	supportGiven_ = NO;
+	description_ = "Illegal move. " + getPiece()->getLocation() + " cannot support any unit to " + destination_ + ".";
+}
 
 
 
@@ -46,7 +50,7 @@ void SupportMove::settleParadox(bool isParadoxCore) {
 // not critical TODO: currently says support is successful when there is no unit to receive the support
 
 bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
-	std::cerr << "about to process support decision" << std::endl;
+	//std::cerr << "about to process support decision" << std::endl;
 	if(supportGiven_ != UNDECIDED) {
 		return false;
 	}
@@ -58,11 +62,11 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 	try {
 		std::unordered_set<MovementMove *> attacks = processor.getAttacks().at(this->getPiece()->getLocation());
 		for(MovementMove * move : attacks) {
-			std::cerr << "Attack on support at " << getPiece()->getLocation() << " from " << move->getPiece()->getLocation() << " while destination is " << destination_ << std::endl;
+			//std::cerr << "Attack on support at " << getPiece()->getLocation() << " from " << move->getPiece()->getLocation() << " while destination is " << destination_ << std::endl;
 			if(move->getPiece()->getLocation() == destination_) {
 				continue;
 			}
-			std::cerr << move->getPiece()->getLocation() << ": attackStrength: " << move->getAttackStrength().min << " to " << move->getAttackStrength().max << std::endl;
+			//std::cerr << move->getPiece()->getLocation() << ": attackStrength: " << move->getAttackStrength().min << " to " << move->getAttackStrength().max << std::endl;
 			if(move->getAttackStrength().min > 0) {
 				supportGiven_ = NO;
 				return true;
@@ -175,6 +179,10 @@ string SupportMove::getSource() const {
 
 string SupportMove::getDestination() const {
 	return destination_;
+}
+
+string SupportMove::getCoast() const {
+	return coast_;
 }
 
 DecisionResult SupportMove::getSupportDecision() const {

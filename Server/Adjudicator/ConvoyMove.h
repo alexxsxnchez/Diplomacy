@@ -13,6 +13,7 @@ class ConvoyMove : public Move {
 	private:
 		string source_;
 		string destination_;
+		bool isLegal_ = true;
 
 	protected:
 		void print(ostream & out) const;
@@ -23,11 +24,13 @@ class ConvoyMove : public Move {
 		bool process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;
+		bool getIsLegal() const;
 		bool isCompletelyDecided() const;
 		
 		bool isPartOfParadoxCore(MoveProcessor * processor) const;
 		Move * getParadoxDependency(MoveProcessor * processor) const;
 		void settleParadox(bool isParadoxCore);
+		void forceFail();
 };
 
 #endif

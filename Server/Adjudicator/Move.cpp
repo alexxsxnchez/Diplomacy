@@ -12,8 +12,8 @@ Piece * Move::getPiece() const {
 }
 
 void Move::calculateHoldStrength(MoveProcessor & processor) {
-	holdStrength_.min = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), true);
-	holdStrength_.max = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), false);
+	holdStrength_.min = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), "", true); // should be no coast
+	holdStrength_.max = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), "", false); // should be no coast
 	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
@@ -50,13 +50,30 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 }
 
 std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
-	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph);
+	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph); // with coasts
 //	std::cerr << "neighbours" << std::endl;
-	for(string s : retreatOptions) {
-//		std::cerr << s << std::endl;
+/*	for(string s : retreatOptions) {
+		std::cerr << s << std::endl;
 	}
+	*/
 	for(string contestedArea : contestedAreas) {
 		retreatOptions.erase(contestedArea);
+		if(contestedArea == "Spain") {
+			retreatOptions.erase("Spain_SC");
+			retreatOptions.erase("Spain_NC");
+		} else if(contestedArea == "StPetersburg") {
+			retreatOptions.erase("StPetersburg_SC");
+			retreatOptions.erase("StPetersburg_NC");
+		} else if(contestedArea == "Bulgaria") {
+			retreatOptions.erase("Bulgaria_SC");
+			retreatOptions.erase("Bulgaria_EC");
+		} else if(contestedArea == "Spain_SC" || contestedArea == "Spain_NC") {
+			retreatOptions.erase("Spain");
+		} else if(contestedArea == "StPetersburg_SC" || contestedArea == "StPetersburg_NC") {
+			retreatOptions.erase("StPetersburg");
+		} else if(contestedArea == "Bulgaria_SC" || contestedArea == "Bulgaria_EC") {
+			retreatOptions.erase("Bulgaria");
+		}
 	}
 	retreatOptions.erase(dislodgedFrom_);
 	return retreatOptions;

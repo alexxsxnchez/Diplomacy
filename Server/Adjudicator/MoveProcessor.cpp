@@ -62,13 +62,14 @@ void MoveProcessor::addMove(ConvoyMove * move) {
 
 void MoveProcessor::addMove(SupportMove * move) {
 	moves_.insert(move);
-	auto itS = supports_.find(move->getDestination()); // add coast specif for destination
+	string destination = move->getCoast() == "" ? move->getDestination() : move->getDestination() + "_" + move->getCoast();
+	auto itS = supports_.find(destination); // add coast specif for destination
 	if(itS == supports_.end()) {
 		std::map<string, std::unordered_set<SupportMove *> > supportsToDestination;
 		std::unordered_set<SupportMove *> setOfMoves;
 		setOfMoves.insert(move);
 		supportsToDestination.insert(std::make_pair(move->getSource(), setOfMoves));
-		supports_.insert(std::make_pair(move->getDestination(), supportsToDestination));
+		supports_.insert(std::make_pair(destination, supportsToDestination));
 	} else {
 		auto it2 = itS->second.find(move->getSource());
 		if(it2 == itS->second.end()) {
@@ -87,7 +88,7 @@ void MoveProcessor::addMove(SupportMove * move) {
 void MoveProcessor::handleIllegalMove(HoldMove * move) {}
 
 void MoveProcessor::handleIllegalMove(MovementMove * move) {
-	auto it = attacks_.find(move->getDestination());
+	/*auto it = attacks_.find(move->getDestination());
 	assert(it != attacks_.end());
 	for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 		if((*it2)->getPiece()->getLocation() == move->getPiece()->getLocation()) {
@@ -96,12 +97,13 @@ void MoveProcessor::handleIllegalMove(MovementMove * move) {
 		}
 	}
 	// act as hold move
-	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));
+	nonAttacks_.insert(std::make_pair(move->getPiece()->getLocation(), move));*/
 	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot move to " + move->getDestination() + ".");
 }
 
 void MoveProcessor::handleIllegalMove(SupportMove * move) {
-	auto it = supports_.find(move->getDestination()); // add coast specif
+	/*string destinationWithCoast = move->getCoast() == "" ? move->getDestination() : move->getDestination() + "_" + move->getCoast();
+	auto it = supports_.find(destinationWithCoast); // add coast specif
 	assert(it != supports_.end());
 	auto it2 = it->second.find(move->getSource());
 	assert(it2 != it->second.end());
@@ -111,12 +113,12 @@ void MoveProcessor::handleIllegalMove(SupportMove * move) {
 			break;
 		}
 	}
-//	move->setSupport
+//	move->setSupport*/
 	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot support any unit to " + move->getDestination() + ".");
 }
 
 void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
-	auto it = convoys_.find(move->getDestination());
+	/*auto it = convoys_.find(move->getDestination());
 	assert(it != convoys_.end());
 	auto it2 = it->second.find(move->getSource());
 	assert(it2 != it->second.end());
@@ -125,7 +127,7 @@ void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
 			it2->second.erase(it3);
 			break;
 		}
-	}
+	}*/
 	move->setDescription("Illegal move. " + move->getPiece()->getLocation() + " cannot convoy any unit from " + move->getSource() + " to " + move->getDestination() + ".");
 }
 
@@ -146,10 +148,11 @@ void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
 unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, string destinationCoastSpecifier, bool onlyGiven, Nation nationality) const {
 	unsigned int count = 0;
 	try {
-		auto supportToDestination = supports_.at(destination);
+		string destinationComplete = destinationCoastSpecifier == "" ? destination : destination + "_" + destinationCoastSpecifier;
+		auto supportToDestination = supports_.at(destinationComplete);
 		auto supportFromSource = supportToDestination.at(source);
 		for(const SupportMove * move : supportFromSource) {
-			if(move->getPiece()->getNationality() == nationality) {
+			if(move->getPiece()->getNationality() == nationality || move->getCoast() != destinationCoastSpecifier) {
 				continue;
 			}
 			if(move->getSupportDecision() != NO && !onlyGiven) {
@@ -355,11 +358,11 @@ void MoveProcessor::fixParadox() {
 }
 
 MoveProcessor::Results MoveProcessor::processMoves() {
-	/*for(Move * move : moves_) {
+	for(Move * move : moves_) {
 		if(!move->isLegal(map_)) {
-			handleIllegalMove(move);
-		}		
-	}*/
+			move->forceFail();
+		}
+	}
 
 	int count = 15;
 	while(count > 0) {

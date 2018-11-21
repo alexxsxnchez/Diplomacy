@@ -36,7 +36,7 @@ class MovementMove : public Move {
 		bool isLegal(Graph * graph) const;
 		bool process(MoveProcessor & processor);
 		string getDestination() const;
-		string getCoastSpecifier() const;
+		string getCoast() const;
 		bool getViaConvoy() const;
 		DecisionResult getMoveDecision() const;
 		DecisionResult getPathDecision() const;
@@ -48,6 +48,7 @@ class MovementMove : public Move {
 		bool isPartOfParadoxCore(MoveProcessor * processor) const;
 		Move * getParadoxDependency(MoveProcessor * processor) const;
 		void settleParadox(bool isParadoxCore);
+		void forceFail();
 };
 
 #endif

@@ -29,7 +29,6 @@ bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const
 		return false;
 	}
 	string destinationString = move->getDestination();
-	Territory * destination = graph->getTerritory(destinationString);
 	
 	
 	string currentLocation = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
@@ -37,9 +36,10 @@ bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const
 		return false;
 	}
 
-	unordered_set<string> neighbours = graph->getFleetNeighbours(currentLocation);
-	if(destinationString == "StPetersburg" || destinationString == "Spain" || destination == "Bulgaria") {
-		string coastSpecifier = move->getCoastSpecifier();
+	unordered_set<string> neighbours = graph->getFleetNeighbours(currentLocation); // with coasts
+	
+	if(destinationString == "StPetersburg" || destinationString == "Spain" || destinationString == "Bulgaria") {
+		string coastSpecifier = move->getCoast();
 		if(destinationString == "Bulgaria") {
 			if(coastSpecifier != "EC" && coastSpecifier != "SC") {
 				return false; // invalid coast
@@ -49,7 +49,7 @@ bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const
 				return false; // invalid coast
 			}
 		}
-		
+		destinationString = destinationString + "_" + coastSpecifier;
 	}
 	
 	return neighbours.find(destinationString) != neighbours.end();
@@ -58,12 +58,20 @@ bool FleetPiece::isMovementValid(const MovementMove * move, Graph * graph) const
 bool FleetPiece::isSupportValid(const SupportMove * move, Graph * graph) const {
 	string sourceString = move->getSource();
 	string destinationString = move->getDestination();
-	//string currentLocation = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
-	string currentLocation = getLocation(); // don't include coast
-	if(currentLocation == destinationString || currentLocation == sourceString) {
+	string destinationCoast = move->getCoast();
+	string locationWithCoast = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
+	//string currentLocation = getLocation(); // don't include coast
+	if(getLocation() == destinationString || getLocation() == sourceString) {
 		return false;
 	}
-	unordered_set<string> neighbours = graph->getFleetNeighbours(currentLocation);
+	
+	unordered_set<string> neighbours = graph->getFleetNeighbours(locationWithCoast); // with coasts
+	if(coast_ == "") {
+		std::unordered_set<string> doubleCoastNeighbours = graph->getDoubleCoastNeighbours(getLocation());
+		for(string doubleCoastNeighbour : doubleCoastNeighbours) {
+			neighbours.insert(doubleCoastNeighbour);
+		}
+	}
 	return neighbours.find(destinationString) != neighbours.end();
 }
 
@@ -80,7 +88,8 @@ bool FleetPiece::isConvoyValid(const ConvoyMove * move, Graph * graph) const {
 }
 
 std::unordered_set<string> FleetPiece::getNeighbours(Graph * graph) const {
-	return graph->getFleetNeighbours(getLocation());
+	string locationWithCoast = coast_ == "" ? getLocation() : getLocation() + "_" + coast_;
+	return graph->getFleetNeighbours(locationWithCoast);
 }
 
 void FleetPiece::print(ostream & out) const {

@@ -90,7 +90,7 @@ c Syria false
 w BarentsSea false
 w NorwegianSea false
 w NorthSea false
-w Skagerrack false
+w Skagerrak false
 w BalticSea false
 w GulfOfBothnia false
 w HelgolandBight false
@@ -99,7 +99,7 @@ w IrishSea false
 w EnglishChannel false
 w MidAtlantic false
 w WesternMed false
-w GulfOfLyons false
+w GulfOfLyon false
 w TyrrhenianSea false
 w IonianSea false
 w AdriaticSea false
@@ -168,7 +168,7 @@ f Picardy EnglishChannel
 f Gascony MidAtlantic
 f Gascony Spain_NC
 f Marseilles Spain_SC
-f Marseilles GulfOfLyons
+f Marseilles GulfOfLyon
 f Marseilles Piedmont
 
 // Iberia -- Army
@@ -180,16 +180,22 @@ f Portugal Spain_NC
 f Portugal MidAtlantic
 f Spain_SC MidAtlantic
 f Spain_NC MidAtlantic
-f Spain_SC GulfOfLyons
+f Spain_SC GulfOfLyon
 f Spain_SC WesternMed
+d Spain GulfOfLyon
+d Spain WesternMed
+d Spain MidAtlantic
+d Spain Portugal
+d Spain Marseilles
+d Spain Gascony
 
 // Africa -- Army
-a North_Africa Tunis
+a NorthAfrica Tunis
 
 // Africa -- Fleet
-f North_Africa Tunis
-f North_Africa MidAtlantic
-f North_Africa WesternMed
+f NorthAfrica Tunis
+f NorthAfrica MidAtlantic
+f NorthAfrica WesternMed
 f Tunis WesternMed
 f Tunis TyrrhenianSea
 f Tunis IonianSea
@@ -209,13 +215,13 @@ a Rome Naples
 a Naples Apulia
 
 // Italy -- Fleet
-f Piedmont GulfOfLyons
+f Piedmont GulfOfLyon
 f Piedmont Tuscany
 f Venice Trieste
 f Venice AdriaticSea
 f Venice Apulia
 f Tuscany Rome
-f Tuscany GulfOfLyons
+f Tuscany GulfOfLyon
 f Tuscany TyrrhenianSea
 f Rome TyrrhenianSea
 f Rome Naples
@@ -278,10 +284,10 @@ a Norway StPetersburg
 // Scandinavia -- Fleet
 f Denmark HelgolandBight
 f Denmark NorthSea
-f Denmark Skagerrack
+f Denmark Skagerrak
 f Denmark Sweden
 f Denmark BalticSea
-f Sweden Skagerrack
+f Sweden Skagerrak
 f Sweden BalticSea
 f Sweden GulfOfBothnia
 f Sweden Norway
@@ -289,7 +295,7 @@ f Sweden Finland
 f Norway BarentsSea
 f Norway NorwegianSea
 f Norway NorthSea
-f Norway Skagerrack
+f Norway Skagerrak
 f Norway StPetersburg_NC
 
 // Russia -- Army
@@ -315,6 +321,11 @@ f Finland StPetersburg_SC
 f StPetersburg_NC BarentsSea
 f StPetersburg_SC GulfOfBothnia
 f StPetersburg_SC Livonia
+d StPetersburg Livonia
+d StPetersburg Finland
+d StPetersburg Norway
+d StPetersburg BarentsSea
+d StPetersburg GulfOfBothnia
 f Livonia GulfOfBothnia
 f Livonia BalticSea
 f Sevastopol Rumania
@@ -363,6 +374,11 @@ f Bulgaria_EC Constantinople
 f Bulgaria_SC AegeanSea
 f Bulgaria_SC Greece
 f Bulgaria_SC Constantinople
+d Bulgaria BlackSea
+d Bulgaria AegeanSea
+d Bulgaria Constantinople
+d Bulgaria Rumania
+d Bulgaria Greece
 f Greece IonianSea
 f Greece AegeanSea
 
@@ -394,9 +410,9 @@ f EasternMed IonianSea
 f AegeanSea IonianSea
 f IonianSea AdriaticSea
 f IonianSea TyrrhenianSea
-f TyrrhenianSea GulfOfLyons
+f TyrrhenianSea GulfOfLyon
 f TyrrhenianSea WesternMed
-f GulfOfLyons WesternMed
+f GulfOfLyon WesternMed
 f WesternMed MidAtlantic
 f MidAtlantic NorthAtlantic
 f MidAtlantic IrishSea
@@ -406,7 +422,7 @@ f NorthAtlantic NorwegianSea
 f IrishSea EnglishChannel
 f EnglishChannel NorthSea
 f NorthSea HelgolandBight
-f NorthSea Skagerrack
+f NorthSea Skagerrak
 f NorthSea NorwegianSea
 f NorwegianSea BarentsSea
 f BalticSea GulfOfBothnia

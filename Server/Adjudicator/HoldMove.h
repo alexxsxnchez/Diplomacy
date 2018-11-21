@@ -24,6 +24,7 @@ class HoldMove : public Move {
 		bool isPartOfParadoxCore(MoveProcessor * processor) const;
 		Move * getParadoxDependency(MoveProcessor * processor) const;
 		void settleParadox(bool isParadoxCore);
+		void forceFail();
 };
 
 #endif
