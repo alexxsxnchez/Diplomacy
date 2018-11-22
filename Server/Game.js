@@ -93,24 +93,28 @@ Game.prototype.processRetreatMoves = function() {
 		results[key].retreatOptions = [];
 	
 		if(moves[key].moveType === 'RETREAT') {
+			var coast = moves[key].coast;
 			var plannedDestination = moves[key].secondLoc;
+			if(coast != null) {
+				plannedDestination = plannedDestination.concat('_', coast);
+			}
 			if(!dislodged[key].retreatOptions.includes(plannedDestination)) {
 				results[key].success = false;
 				results[key].description = "Illegal move. Destination is not a location this unit can retreat to.";
 				return;
 			}
 			
-			if(plannedDestination in Object.keys(alreadyDeclared)) {
+			if(Object.keys(alreadyDeclared).includes(moves[key].secondLoc)) {
 				var description = 'Two or more units attempted to retreat to the same location.';
 				results[key].success = false;
 				results[key].description = description;
 				console.log(description);
-				var otherRetreater = alreadyDeclared[plannedDestination];
+				var otherRetreater = alreadyDeclared[moves[key].secondLoc];
 				results[otherRetreater].success = false;
 				results[otherRetreater].description = description;
 				return;
 			}
-			alreadyDeclared[plannedDestination] = key;
+			alreadyDeclared[moves[key].secondLoc] = key;
 		} else {
 			// do nothing for DISBAND
 		}
@@ -249,6 +253,10 @@ Game.prototype.prepareNewGameState = function(results, next) {
 		var moveType = gameState.moves[key].moveType
 		if((moveType === 'MOVE' || moveType === 'RETREAT') && results[key].success) {
 			var newLocation = gameState.moves[key].secondLoc;
+			delete unit.coast;
+			if(gameState.moves[key].coast !== null) {
+				unit.coast = gameState.moves[key].coast;
+			}
 			units[newLocation] = unit;
 		} else if(moveType === 'BUILDARMY' && results[key].success) {
 			units[key] = {};

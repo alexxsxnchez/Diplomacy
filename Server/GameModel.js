@@ -57,6 +57,7 @@ GameModel.prototype.generateDefaultMoves = function(units, dislodgedUnits) {
 			holdMove.moveType = 'HOLD';
 			holdMove.secondLoc = null;
 			holdMove.thirdLoc = null; 
+			holdMove.coast = null;
 			defaultMoves[key] = holdMove;
 		});
 	}

@@ -19,8 +19,7 @@ function MapController(view, model) {
 	this.firstLocation = null;
 	this.secondLocation = null;
 	this.thirdLocation = null;
-	this.coast1 = null;
-	this.coast2 = null;
+	this.coast = null;
 	/////
 	this.view.addTerritorySelectedHandler(this.onTerritorySelected.bind(this));
 	this.view.addMoveTypeSelectedHandler(this.onMoveTypeSelected.bind(this));
@@ -105,7 +104,7 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 	var options = [];
 	this.secondLocation = territory;
 	var movingPieceIsFleet = this.selectedUnit.type === 'fleet' && (this.selectedMoveType === MoveType.MOVE || this.selectedMoveType === MoveType.RETREAT);
-	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast1 === null && movingPieceIsFleet) {
+	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast === null && movingPieceIsFleet) {
 		if(territory === 'Bulgaria') {
 			options.push(MoveType.MOVEEC);
 		} else {
@@ -136,7 +135,7 @@ MapController.prototype.thirdTerritorySelected = function(territory) {
 	this.thirdLocation = territory;
 	var movingPiece = this.model.getUnitAt(this.secondLocation);
 	var movingPieceIsFleet = (movingPiece !== null && movingPiece.type === 'fleet');
-	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast2 === null && movingPieceIsFleet) {
+	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast === null && movingPieceIsFleet) {
 		if(territory === 'Bulgaria') {
 			options.push(MoveType.MOVEEC);
 		} else {
@@ -182,11 +181,10 @@ MapController.prototype.onCoastSpecifierSelected = function(coastSpecifier) {
 			break;
 	}
 	this.view.closeMoveMenu();
+	this.coast = coast;
 	if(this.selectPhase === SelectPhase.COAST1) {
-		this.coast1 = coast;
 		this.secondTerritorySelected(this.secondLocation);
 	} else {
-		this.coast2 = coast;
 		this.thirdTerritorySelected(this.thirdLocation);
 	}
 }
@@ -198,12 +196,11 @@ MapController.prototype.resetMoveSelection = function() {
 	this.firstLocation = null;
 	this.secondLocation = null;
 	this.thirdLocation = null;
-	this.coast1 = null;
-	this.coast2 = null;
+	this.coast = null;
 }
 
 MapController.prototype.moveSelectionComplete = function() {
-	this.model.createNewMove(this.selectedUnit, this.selectedMoveType, this.firstLocation, this.secondLocation, this.coast1, this.thirdLocation, this.coast2);
+	this.model.createNewMove(this.selectedUnit, this.selectedMoveType, this.firstLocation, this.secondLocation, this.thirdLocation, this.coast);
 	this.resetMoveSelection();
 	if(this.model.getIsFinalized()) {
 		this.model.toggleIsFinalized();

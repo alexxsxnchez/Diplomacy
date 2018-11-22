@@ -19,36 +19,40 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 		string firstLoc = it.key();
 		string unitType = it.value()["unit"]["type"];
 		string nationStr = it.value()["unit"]["nation"];
-		string coastSpecifier = "";
+		string unitCoastSpecifier = "";
 		if(it.value()["unit"]["coast"].is_string()) {
-			coastSpecifier = it.value()["unit"]["coast"];
+			unitCoastSpecifier = it.value()["unit"]["coast"];
 		}
-		std::cerr << "COAST: " << coastSpecifier << std::endl; 
+		std::cerr << "COAST: " << unitCoastSpecifier << std::endl; 
 		Nation nationality = getNation(nationStr);
 		
 		Piece * piece;
 		if(unitType == "army") {
 			piece = new ArmyPiece(nationality, firstLoc);
 		} else if(unitType == "fleet") {
-			piece = new FleetPiece(nationality, firstLoc, coastSpecifier); // coast specifier
+			piece = new FleetPiece(nationality, firstLoc, unitCoastSpecifier); // coast specifier
 		} else {
 			assert(false);
 		}	
 		
 		string moveType = it.value()["moveType"];
+		string moveCoastSpecifier = "";
+		if(it.value()["coast"].is_string()) {
+			moveCoastSpecifier = it.value()["coast"];
+		}
 		if(moveType == "HOLD") {
 			HoldMove * move = new HoldMove(piece);
 			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "MOVE") {
 			string secondLoc = it.value()["secondLoc"];
-			MovementMove * move = new MovementMove(piece, secondLoc); // need to add convoy specifier
+			MovementMove * move = new MovementMove(piece, secondLoc, moveCoastSpecifier); // need to add convoy specifier
 			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "SUPPORT") {
 			string secondLoc = it.value()["secondLoc"];
 			string thirdLoc = it.value()["thirdLoc"];
-			SupportMove * move = new SupportMove(piece, secondLoc, thirdLoc);
+			SupportMove * move = new SupportMove(piece, secondLoc, thirdLoc, moveCoastSpecifier);
 			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "CONVOY") {

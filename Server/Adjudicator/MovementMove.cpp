@@ -40,7 +40,7 @@ Move * MovementMove::getParadoxDependency(MoveProcessor * processor) const {
 	for(auto it = attacks.begin(); it != attacks.end(); it++) {
 		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 			if((*it2)->getPiece()->getLocation() == destination_) {
-				std::cout << getPiece()->getLocation() << destination_ << std::endl;
+				std::cerr << getPiece()->getLocation() << destination_ << std::endl;
 				return *it2;
 			}
 		} 
