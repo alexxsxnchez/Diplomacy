@@ -209,4 +209,5 @@ MapController.prototype.moveSelectionComplete = function() {
 
 MapController.prototype.onFinalizeSelected = function() {
 	this.model.toggleIsFinalized();
+	this.coastMenuOptionNotSelected();
 }

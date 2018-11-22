@@ -283,12 +283,18 @@ Game.prototype.prepareNewGameState = function(results, next) {
 		}
 	});
 	console.log(units);
+	
+	
+	
 	// update territories
+	var updateStarTerritories = gameState.phase === Phase.FALL_RETREAT || (gameState.phase === Phase.FALL && Object.keys(dislodged).length === 0);
 	var territories = gameState.territories;
 	console.log(territories);
 	Object.keys(units).forEach((key) => {
 		if(Object.keys(territories).includes(key)) {
-			territories[key].nation = units[key].nation;
+			if(updateStarTerritories || !territories[key].hasStar) {
+				territories[key].nation = units[key].nation;
+			}
 		}
 	});
 	
@@ -296,6 +302,8 @@ Game.prototype.prepareNewGameState = function(results, next) {
 	var yearAndPhase = this.decideNextPhase(gameState.year, gameState.phase, dislodged);
 	var year = yearAndPhase.year;
 	var phase = yearAndPhase.phase;
+	
+	// update gameState
 	this.model.updateNewTurn(year, phase, territories, units, dislodged, descriptions, function() {
 		next();
 	});
