@@ -10,7 +10,7 @@
 
 using std::string;
 
-MovementMove::MovementMove(Piece * piece, string destination, bool viaConvoy) : Move{piece}, destination_{destination}, viaConvoy_{viaConvoy} {}
+MovementMove::MovementMove(Piece * piece, string destination, string coastSpecifier, bool viaConvoy) : Move{piece}, destination_{destination}, coastSpecifier_{coastSpecifier}, viaConvoy_{viaConvoy} {}
 
 void MovementMove::print(ostream & out) const {
 	out << *getPiece() << " MOVES to " << destination_ << std::endl;
@@ -29,7 +29,7 @@ bool MovementMove::isPartOfParadoxCore(MoveProcessor * processor) const {
 //				std::cout << "false" << std::endl;
 				return false;
 			}
-		} 
+		}
 	}
 //	std::cout << "true" << std::endl;
 	return true;
@@ -40,14 +40,15 @@ Move * MovementMove::getParadoxDependency(MoveProcessor * processor) const {
 	for(auto it = attacks.begin(); it != attacks.end(); it++) {
 		for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
 			if((*it2)->getPiece()->getLocation() == destination_) {
-				std::cout << getPiece()->getLocation() << destination_ << std::endl;
+				std::cerr << getPiece()->getLocation() << destination_ << std::endl;
 				return *it2;
 			}
 		} 
 	}
 	
 	MoveProcessor::SupportMap & supports = processor->getSupports();
-	auto it = supports.find(destination_);
+	string destination = coastSpecifier_ == "" ? destination_ : destination_ + "_" + coastSpecifier_; 
+	auto it = supports.find(destination); // add coast specif
 	if(it != supports.end()) {
 		auto it2 = it->second.find(getPiece()->getLocation());
 		if(it2 != it->second.end()) {
@@ -121,11 +122,11 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
 	MovementMove * leavingDefender = nullptr;
-	auto it = processor.getNonAttacks().find(destination_);
+	auto it = processor.getNonAttacks().find(destination_); // no coast
 	if(it != processor.getNonAttacks().end()) {
 		defender = it->second->getPiece();
 	} else {
-		auto it2 = processor.getAttacks().find(source);
+		auto it2 = processor.getAttacks().find(source); // no coast
 		if(it2 != processor.getAttacks().end()) {
 			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
 				if((*it3)->getPiece()->getLocation() == destination_) {
@@ -159,10 +160,10 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.min = 0;
 			} else {
-				attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true, same->getNationality());			
+				attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, true, same->getNationality()); // should add coast specifier			
 			}
 		} else {
-			attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true); // true is only given
+			attackStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, true); // true is only given // should add coast specifier
 		}
 	
 	}
@@ -185,11 +186,11 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			if(same->getNationality() == this->getPiece()->getNationality()) {
 				attackStrength_.max = 0;
 			} else {
-				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false, same->getNationality());
+				attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, false, same->getNationality()); // add coast specif
 				// possibly have calcsupport strength return list of dependencies, thru params	
 			}
 		} else {
-			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false); // true is only given
+			attackStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, false); // true is only given  // add coast specif
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
@@ -216,7 +217,7 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 			}
 		}
 		if(!headOnWon) {
-			preventStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, true);
+			preventStrength_.min = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, true); // add coast specif
 		}
 	}
 	
@@ -238,15 +239,15 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 			}
 		}
 		if(!headOnWon) {
-			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, false);
+			preventStrength_.max = 1 + processor.calculateSupportStrength(source, destination_, coastSpecifier_, false); // add coast specif
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
 }
 
 void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
-	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, true);
-	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, false);
+	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_,  coastSpecifier_, true); // add coast specif
+	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, coastSpecifier_, false); // add coast specif
 	// possibly have calcsupport strength return list of dependencies, thru params
 }
 
@@ -378,8 +379,20 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor) {
 //		std::cerr << "currentSource: " << currentSource << std::endl;
 		queue.pop();
 		
-		const std::unordered_set<string> neighbours = processor.getMap()->getFleetNeighbours(currentSource);
+		std::unordered_set<string> neighbours = processor.getMap()->getFleetNeighbours(currentSource); // no coasts
+		std::unordered_set<string> doubleCoastNeighbours = processor.getMap()->getDoubleCoastNeighbours(currentSource);
+		for(string doubleCoastNeighbour : doubleCoastNeighbours) {
+			neighbours.insert(doubleCoastNeighbour);
+		}
+		
+		/*if(currentSource.find("_EC") != string::npos || currentSource.find("_SC") != string::npos || currentSource.find("_NC") != string::npos) {
+			currentSource.erase(currentSource.length() - 3);
+			neighbours = processor.getMap()->getCoastConvoyNeighbours(currentSource);
+		}*/
 		for(string neighbour : neighbours) {
+			if(neighbour.find("_EC") != string::npos || neighbour.find("_SC") != string::npos || neighbour.find("_NC") != string::npos) {
+				neighbour.erase(neighbour.length() - 3);
+			}
 			if(neighbour == destination_) {
 				if(firstSearch) {
 					continue;
@@ -396,6 +409,9 @@ DecisionResult MovementMove::reachesPath(MoveProcessor & processor) {
 			}
 			
 			for(ConvoyMove * convoyMove : convoys) {
+				if(!convoyMove->getIsLegal()) {
+					continue;
+				}
 //				std::cerr << "convoy move location: " << convoyMove->getPiece()->getLocation() << " neighbour: " << neighbour << std::endl;
 				if(convoyMove->getPiece()->getLocation() == neighbour) {
 					if(convoyMove->getDislodgeDecision() != YES) {
@@ -524,8 +540,24 @@ bool MovementMove::process(MoveProcessor & processor) {
 	return pathUpdated || moveUpdated || dislodgedUpdated;
 }
 
+void MovementMove::forceFail() {
+	attackStrength_.min = 0;
+	attackStrength_.max = 0;
+	preventStrength_.min = 0;
+	preventStrength_.max = 0;
+	defendStrength_.min = 0;
+	defendStrength_.max = 0;
+	moved_ = NO;
+	hasPath_ = NO;
+	description_ = "Illegal move. " + getPiece()->getLocation() + " cannot move to " + destination_ + ".";
+}
+
 string MovementMove::getDestination() const {
 	return destination_;
+}
+
+string MovementMove::getCoast() const {
+	return coastSpecifier_;
 }
 
 bool MovementMove::getViaConvoy() const {

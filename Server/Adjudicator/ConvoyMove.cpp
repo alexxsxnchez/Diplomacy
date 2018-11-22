@@ -43,6 +43,11 @@ void ConvoyMove::settleParadox(bool isParadoxCore) {
 	//TODO
 };
 
+void ConvoyMove::forceFail() {
+	isLegal_ = false;
+	description_ = "Illegal move. " + getPiece()->getLocation() + " cannot convoy any unit from " + source_ + " to " + destination_ + ".";
+}
+
 
 
 /*void ConvoyMove::process(map<string, map<const Move *, float> > & attacks, 
@@ -87,6 +92,10 @@ string ConvoyMove::getSource() const {
 
 string ConvoyMove::getDestination() const {
 	return destination_;
+}
+
+bool ConvoyMove::getIsLegal() const {
+	return isLegal_;
 }
 
 bool ConvoyMove::isCompletelyDecided() const {

@@ -66,7 +66,7 @@ class MoveProcessor {
 		SupportMap & getSupports();
 		ConvoyMap & getConvoys();
 		Graph * getMap() const;
-		unsigned int calculateSupportStrength(string source, string destination, bool onlyGiven, Nation nationality = INVALID) const;
+		unsigned int calculateSupportStrength(string source, string destination, string coastSpecifier, bool onlyGiven, Nation nationality = INVALID) const;
 };
 
 #endif

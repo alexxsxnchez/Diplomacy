@@ -24,6 +24,10 @@ void Graph::Node::addFleetNeighbour(string id) {
 	fleetNeighbours_.insert(id);
 }
 
+void Graph::Node::addDoubleCoastNeighbour(string id) {
+	doubleCoastNeighbours_.insert(id);
+}
+
 void Graph::Node::removeArmyNeighbour(string id) {
 	armyNeighbours_.erase(id);
 }
@@ -46,6 +50,10 @@ const unordered_set<string> & Graph::Node::getArmyNeighbours() const {
 
 const unordered_set<string> & Graph::Node::getFleetNeighbours() const {
 	return fleetNeighbours_;
+}
+
+const unordered_set<string> & Graph::Node::getDoubleCoastNeighbours() const {
+	return doubleCoastNeighbours_;
 }
 
 void Graph::Node::outputArmyNeighbours(ostream & out) const {
@@ -115,6 +123,17 @@ bool Graph::addFleetEdge(string id1, string id2) {
 	return true;
 }
 
+bool Graph::addDoubleCoastEdge(string id1, string id2) {
+	auto it1 = nodes_.find(id1);
+	auto it2 = nodes_.find(id2);
+	if(it1 == nodes_.end() || it2 == nodes_.end()) {
+		return false;
+	}
+	it1->second->addDoubleCoastNeighbour(id2);
+	it2->second->addDoubleCoastNeighbour(id1);
+	return true;
+}
+
 bool Graph::removeArmyEdge(string id1, string id2) {
 	auto it1 = nodes_.find(id1);
 	auto it2 = nodes_.find(id2);
@@ -159,6 +178,14 @@ unordered_set<string> Graph::getFleetNeighbours(string id) const {
 		return unordered_set<string>();
 	}
 	return it->second->getFleetNeighbours();
+}
+
+unordered_set<string> Graph::getDoubleCoastNeighbours(string id) const {
+	auto it = nodes_.find(id);
+	if(it == nodes_.end()) {
+		return unordered_set<string>();
+	}
+	return it->second->getDoubleCoastNeighbours();
 }
 
 list<string> Graph::searchPath(string src, string dest) const {

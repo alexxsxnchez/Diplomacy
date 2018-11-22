@@ -30,6 +30,8 @@ void HoldMove::settleParadox(bool isParadoxCore) {
 	//TODO
 };
 
+void HoldMove::forceFail() {}
+
 
 /*
 void HoldMove::process(map<string, map<const Move *, float> > & attacks, 
