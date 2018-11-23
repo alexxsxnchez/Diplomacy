@@ -15,6 +15,7 @@ class ArmyPiece : public Piece {
 		bool isMovementValid(const MovementMove * move, Graph * graph) const;
 		bool isSupportValid(const SupportMove * move, Graph * graph) const;
 		bool isConvoyValid(const ConvoyMove * move, Graph * graph) const;
+		void determineConvoyStatus(MovementMove * move, Graph * graph);
 		std::unordered_set<string> getNeighbours(Graph * graph) const;
 };
 

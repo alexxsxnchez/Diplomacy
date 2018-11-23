@@ -1450,6 +1450,15 @@ MapView.prototype.addCoastSelectedHandler = function(coastSelectedHandler) {
 	});
 }
 
+MapView.prototype.addRouteSelectedHandler = function(routeSelectedHandler) {
+	document.getElementById('landroutebutton').addEventListener("click", function() {
+		routeSelectedHandler(MoveType.LANDROUTE);
+	});
+	document.getElementById('viaconvoybutton').addEventListener("click", function() {
+		routeSelectedHandler(MoveType.VIACONVOY);
+	});
+}
+
 MapView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
 	document.getElementById('finalizebutton').addEventListener("click", function() {
 		finalizeClickHandler();
@@ -1484,6 +1493,8 @@ MapView.prototype.updateMoveMenu = function(options) {
 	document.getElementById('movencbutton').style.display = 'none'
 	document.getElementById('moveecbutton').style.display = 'none'
 	document.getElementById('movescbutton').style.display = 'none'
+	document.getElementById('landroutebutton').style.display = 'none'
+	document.getElementById('viaconvoybutton').style.display = 'none'
 	options.forEach((option) => {
 		switch(option) {
 			case MoveType.BUILDARMY:
@@ -1524,6 +1535,12 @@ MapView.prototype.updateMoveMenu = function(options) {
 				break;
 			case MoveType.MOVESC:
 				document.getElementById('movescbutton').style.display = 'block';
+				break;
+			case MoveType.LANDROUTE:
+				document.getElementById('landroutebutton').style.display = 'block';
+				break;
+			case MoveType.VIACONVOY:
+				document.getElementById('viaconvoybutton').style.display = 'block';
 				break;
 		}
 	});

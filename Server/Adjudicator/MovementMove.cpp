@@ -564,6 +564,10 @@ bool MovementMove::getViaConvoy() const {
 	return viaConvoy_;
 }
 
+void MovementMove::setConvoyStatus(bool status) {
+	viaConvoy_ = status;
+}
+
 DecisionResult MovementMove::getMoveDecision() const {
 	return moved_;
 }

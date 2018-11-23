@@ -92,6 +92,10 @@ std::unordered_set<string> FleetPiece::getNeighbours(Graph * graph) const {
 	return graph->getFleetNeighbours(locationWithCoast);
 }
 
+void FleetPiece::determineConvoyStatus(MovementMove * move, Graph * graph) {
+	move->setConvoyStatus(false);
+}
+
 void FleetPiece::print(ostream & out) const {
 	out << "Piece at: " << getLocation();
 	if(coast_ != "") {

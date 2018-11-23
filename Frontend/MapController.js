@@ -3,6 +3,7 @@ var SelectPhase = {
 	FIRST: 'FIRST',
 	MOVEMENU: 'MOVEMENU',
 	SECOND: 'SECOND',
+	CONVOYMENU: 'CONVOYMENU',
 	COAST1: 'COAST1',
 	THIRD: 'THIRD',
 	COAST2: 'COAST2'
@@ -20,11 +21,13 @@ function MapController(view, model) {
 	this.secondLocation = null;
 	this.thirdLocation = null;
 	this.coast = null;
+	this.viaConvoy = null;
 	/////
 	this.view.addTerritorySelectedHandler(this.onTerritorySelected.bind(this));
 	this.view.addMoveTypeSelectedHandler(this.onMoveTypeSelected.bind(this));
 	this.view.addCoastSelectedHandler(this.onCoastSpecifierSelected.bind(this));
 	this.view.addFinalizeSelectedHandler(this.onFinalizeSelected.bind(this));
+	this.view.addRouteSelectedHandler(this.onRouteSelected.bind(this));
 }
 
 MapController.prototype.onTerritorySelected = function(territory) {
@@ -37,6 +40,9 @@ MapController.prototype.onTerritorySelected = function(territory) {
 			break;
 		case SelectPhase.FIRST:
 			this.secondTerritorySelected(territory);
+			break;
+		case SelectPhase.CONVOYMENU:
+			this.coastMenuOptionNotSelected();
 			break;
 		case SelectPhase.COAST1:
 			this.coastMenuOptionNotSelected();
@@ -113,15 +119,51 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 		options.push(MoveType.MOVESC);
 		this.selectPhase = SelectPhase.COAST1;
 		this.view.showMoveMenu(options);
-	} else {
-		switch(this.selectedMoveType) {
-			case MoveType.MOVE:
-			case MoveType.RETREAT:
-				this.moveSelectionComplete();
-				break;
-			default:
-				this.selectPhase = SelectPhase.SECOND;
+		return;
+	}
+	console.log('haha');
+	if(this.selectedUnit.type === 'army' && this.selectedMoveType === MoveType.MOVE && this.viaConvoy === null) { 
+		console.log('lolol');
+		var canConvoyToAdjacent = ConvoyPairs.reduce((alreadyFound, pair) => {
+			if(alreadyFound) {
+				return true;
+			}
+			var otherUnit;
+			if(this.firstLocation === pair.coast1 && this.secondLocation === pair.coast2) {
+				otherUnit = this.model.getUnitAt(pair.coast2);
+			} else if(this.firstLocation === pair.coast2 && this.secondLocation === pair.coast1) {
+				otherUnit = this.model.getUnitAt(pair.coast1);
+			} else {
+				return false;
+			}
+			if(otherUnit !== null) {
+				console.log(JSON.stringify(otherUnit));
+				return pair.waters.reduce((existsAFleet, water) => {
+					if(existsAFleet) {
+						return true;
+					}
+					return this.model.getUnitAt(water) !== null;
+				}, false);
+			}
+			return false;	
+		}, false);
+		
+		if(canConvoyToAdjacent) {
+			this.selectPhase = SelectPhase.CONVOYMENU;
+			options.push(MoveType.LANDROUTE);
+			options.push(MoveType.VIACONVOY);
+			this.view.showMoveMenu(options);
+			return;
 		}
+	}
+	
+	switch(this.selectedMoveType) {
+		case MoveType.MOVE:
+		case MoveType.RETREAT:
+			this.moveSelectionComplete();
+			break;
+		default:
+			this.selectPhase = SelectPhase.SECOND;
 	}
 }
 
@@ -189,6 +231,16 @@ MapController.prototype.onCoastSpecifierSelected = function(coastSpecifier) {
 	}
 }
 
+MapController.prototype.onRouteSelected = function(route) {
+	if(route === MoveType.VIACONVOY) {
+		this.viaConvoy = true;
+	} else {
+		this.viaConvoy = false;
+	}
+	this.view.closeMoveMenu();
+	this.secondTerritorySelected(this.secondLocation);
+}
+
 MapController.prototype.resetMoveSelection = function() {
 	this.selectPhase = SelectPhase.NONE;
 	this.selectedUnit = null;
@@ -197,10 +249,14 @@ MapController.prototype.resetMoveSelection = function() {
 	this.secondLocation = null;
 	this.thirdLocation = null;
 	this.coast = null;
+	this.viaConvoy = null;
 }
 
 MapController.prototype.moveSelectionComplete = function() {
-	this.model.createNewMove(this.selectedUnit, this.selectedMoveType, this.firstLocation, this.secondLocation, this.thirdLocation, this.coast);
+	if(this.viaConvoy === null) {
+		this.viaConvoy = false;
+	}
+	this.model.createNewMove(this.selectedUnit, this.selectedMoveType, this.firstLocation, this.secondLocation, this.thirdLocation, this.coast, this.viaConvoy);
 	this.resetMoveSelection();
 	if(this.model.getIsFinalized()) {
 		this.model.toggleIsFinalized();

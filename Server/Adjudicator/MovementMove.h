@@ -38,6 +38,7 @@ class MovementMove : public Move {
 		string getDestination() const;
 		string getCoast() const;
 		bool getViaConvoy() const;
+		void setConvoyStatus(bool status);
 		DecisionResult getMoveDecision() const;
 		DecisionResult getPathDecision() const;
 		Strength getAttackStrength() const;

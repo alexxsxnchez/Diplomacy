@@ -32,7 +32,6 @@ bool ArmyPiece::isMovementValid(const MovementMove * move, Graph * graph) const 
 	Territory * destination = graph->getTerritory(destinationString);
 	unordered_set<string> neighbours = graph->getArmyNeighbours(getLocation());
 	bool isDestinationInNeighbours = neighbours.find(destinationString) != neighbours.end();
-
 	return (destination->getType() == Territory::Type::COAST && graph->getTerritory(getLocation())->getType() == Territory::Type::COAST && move->getViaConvoy()) || isDestinationInNeighbours;
 }
 
@@ -52,6 +51,18 @@ bool ArmyPiece::isConvoyValid(const ConvoyMove * move, Graph * graph) const {
 
 std::unordered_set<string> ArmyPiece::getNeighbours(Graph * graph) const {
 	return graph->getArmyNeighbours(getLocation());
+}
+
+void ArmyPiece::determineConvoyStatus(MovementMove * move, Graph * graph) {
+	if(move->getViaConvoy()) {
+		return;
+	}
+	Territory * destination = graph->getTerritory(move->getDestination());
+	unordered_set<string> neighbours = graph->getArmyNeighbours(getLocation());
+	bool isDestinationInNeighbours = neighbours.find(move->getDestination()) != neighbours.end();
+	if(destination->getType() == Territory::Type::COAST && graph->getTerritory(getLocation())->getType() == Territory::Type::COAST && !isDestinationInNeighbours) {
+		move->setConvoyStatus(true);
+	}
 }
 
 void ArmyPiece::print(ostream & out) const {
