@@ -25,6 +25,7 @@ void MoveProcessor::addMove(HoldMove * move) {
 }
 
 void MoveProcessor::addMove(MovementMove * move) {
+	move->getPiece()->determineConvoyStatus(move, map_);
 	moves_.insert(move);
 	auto it = attacks_.find(move->getDestination());
 	if(it == attacks_.end()) {

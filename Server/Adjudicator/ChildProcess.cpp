@@ -46,7 +46,8 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 			p.addMove(move);
 		} else if(moveType == "MOVE") {
 			string secondLoc = it.value()["secondLoc"];
-			MovementMove * move = new MovementMove(piece, secondLoc, moveCoastSpecifier); // need to add convoy specifier
+			bool viaConvoy = it.value()["viaConvoy"];
+			MovementMove * move = new MovementMove(piece, secondLoc, moveCoastSpecifier, viaConvoy); // need to add convoy specifier
 			std::cerr << *move << std::endl;
 			p.addMove(move);
 		} else if(moveType == "SUPPORT") {

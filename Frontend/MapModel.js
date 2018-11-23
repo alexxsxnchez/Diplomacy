@@ -244,9 +244,9 @@ MapModel.prototype.getPhase = function() {
 	return this.phase;
 }
 
-MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation, coast) {
+MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation, coast, viaConvoy) {
 	// send to server
-	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation + " " + coast;
+	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation + " " + coast + " withConvoy: " + viaConvoy;
 	console.log(s);
 	var move = {};
 	move.unit = unit;
@@ -255,6 +255,7 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	move.secondLoc = secondLocation;
 	move.thirdLoc = thirdLocation;
 	move.coast = coast;
+	move.viaConvoy = viaConvoy;
 	this.moveCreatedHandler(move);
 }
 
