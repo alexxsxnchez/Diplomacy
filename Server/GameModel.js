@@ -13,11 +13,10 @@ GameModel.prototype.loadFakeDB = function() {
 GameModel.prototype.loadInitialConditions = function() {
 	this.gameState.year = initialConditions.year;
 	this.gameState.phase = initialConditions.phase;
-	this.gameState.territories = initialConditions.territories;
-	this.gameState.units = initialConditions.units;
+	this.gameState.territories = JSON.parse(JSON.stringify(initialConditions.territories));
+	this.gameState.units = JSON.parse(JSON.stringify(initialConditions.units));
 	this.gameState.dislodgedUnits = {};
 	this.gameState.moves = this.generateDefaultMoves(this.gameState.units, this.gameState.dislodgedUnits);
-	console.log(this.gameState.moves);
 	this.gameState.moveDescriptions = {};
 	this.gameState.finalized = [];
 }

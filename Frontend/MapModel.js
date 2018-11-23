@@ -17,6 +17,7 @@ MapModel.prototype.dataReceived = function(gameState) {
 	this.year = gameState.year;
 	this.phase = gameState.phase;
 	this.territories = gameState.territories;
+	console.log(gameState.territories);
 	this.units = gameState.units;
 	this.dislodgedUnits = gameState.dislodgedUnits;
 	this.moves = gameState.moves;

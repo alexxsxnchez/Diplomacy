@@ -21,6 +21,7 @@ Interactor.prototype.onFinalizedToggled = function(isFinalized) {
 Interactor.prototype.setupServerConnection = function() {
 	this.socket = io.connect();
 	var self = this;
+	console.log('setting up server connection');
 	this.socket.on('join', function(data) {
 		console.log('I have joined room');
 		//self.model.loadGameState();
