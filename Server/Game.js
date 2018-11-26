@@ -327,13 +327,12 @@ Game.prototype.decideNextPhase = function(year, phase, dislodgedUnits) {
 			if(Object.keys(dislodgedUnits).length === 0) {
 				this.checkIfGameOver();
 				// if there are builds to be made
-				var counts = this.calculateStarAndUnitCount();
-				/*Object.keys(counts).reduce((nation) => {
-					if(
+				if(this.checkIfBuildsRequired()) {
+					phase = Phase.WINTER;
+				} else {
+					phase = Phase.SPRING;
+					year++;
 				}
-				*/
-				
-				phase = Phase.WINTER;
 			} else {
 				phase = Phase.FALL_RETREAT;
 			}
@@ -341,7 +340,12 @@ Game.prototype.decideNextPhase = function(year, phase, dislodgedUnits) {
 		case Phase.FALL_RETREAT:
 			this.checkIfGameOver();
 			// if there are builds to be made
-			phase = Phase.WINTER;
+			if(this.checkIfBuildsRequired()) {
+				phase = Phase.WINTER;
+			} else {
+				phase = Phase.SPRING;
+				year++;
+			}
 			break;
 		case Phase.WINTER:
 			phase = Phase.SPRING;
@@ -363,6 +367,19 @@ Game.prototype.checkIfGameOver = function() {
 			console.log(nation + ' has won with ' + count + ' supply centers!!');
 		}
 	});
+}
+
+Game.prototype.checkIfBuildsRequired = function() {
+	var counts = this.calculateStarAndUnitCount();
+	return Object.keys(counts).reduce((buildsRequired, nation) => {
+		if(buildsRequired) {
+			return true;
+		}
+		if(nation === Nation.NEUTRAL) {
+			return false;
+		}
+		return counts[nation].stars !== counts[nation].units;
+	}, false);
 }
 
 Game.prototype.calculateStarAndUnitCount = function() {
