@@ -64,7 +64,6 @@ void MoveProcessor::addMove(ConvoyMove * move) {
 void MoveProcessor::addMove(SupportMove * move) {
 	moves_.insert(move);
 	string destination = move->getCoast() == "" ? move->getDestination() : move->getDestination() + "_" + move->getCoast();
-	std::cerr << "adding support: " << move->getPiece()->getLocation() << ", destination : " << destination << std::endl;
 	auto itS = supports_.find(destination); // add coast specif for destination
 	if(itS == supports_.end()) {
 		std::map<string, std::unordered_set<SupportMove *> > supportsToDestination;
@@ -149,16 +148,12 @@ void MoveProcessor::handleIllegalMove(ConvoyMove * move) {
 // throws out_of_range exception
 unsigned int MoveProcessor::calculateSupportStrength(string source, string destination, string destinationCoastSpecifier, bool onlyGiven, Nation nationality) const {
 	unsigned int count = 0;
-	std::cerr << "just entered calculate support func for " << source << destination << destinationCoastSpecifier << std::endl;
 	try {
 		string destinationComplete = destinationCoastSpecifier == "" ? destination : destination + "_" + destinationCoastSpecifier;
-		std::cerr << "Calculating support source: " << source << " destination complete: " << destinationComplete << std::endl;
 		auto supportToDestination = supports_.at(destinationComplete);
 		auto supportFromSource = supportToDestination.at(source);
 		for(const SupportMove * move : supportFromSource) {
-			std::cerr << "getting count for " << source << destination << destinationCoastSpecifier << " with support move: " << move->getPiece()->getLocation() << std::endl;
 			if(move->getPiece()->getNationality() == nationality || move->getCoast() != destinationCoastSpecifier) {
-				std::cerr << "wait maybe damnn: " << move->getPiece()->getLocation() << move->getPiece()->getNationality() << move->getCoast() << destinationCoastSpecifier << std::endl;
 				continue;
 			}
 			if(move->getSupportDecision() != NO && !onlyGiven) {
@@ -168,17 +163,8 @@ unsigned int MoveProcessor::calculateSupportStrength(string source, string desti
 			}
 		}
 	} catch(std::out_of_range) {
-		std::cerr << "could not find for " << source << destination << std::endl;
 		return 0;
 	}
-	std::string trueOrFalse;
-	if(onlyGiven) {
-		trueOrFalse = "true";
-	} else {
-		trueOrFalse = "false";
-	}
-//	std::cerr << "After calculating support strength, we got " << count << " with onlyGiven boolean of " << trueOrFalse << std::endl;
-	std::cerr << "Returning count: " << count << std::endl;
 	return count;
 }
 
@@ -356,7 +342,7 @@ void MoveProcessor::fixParadox() {
 //			std::cerr << "isParadoxCore: " << isParadoxCore << std::endl;
 			dependency = currentMove->getParadoxDependency(this); // if movement see if attacks
 			if(dependency == nullptr) {
-				std::cerr << "fuck" << std::endl;
+				std::cerr << "NOT SUPPOSED TO HAPPEN" << std::endl;
 			}
 //			std::cerr << "dependency: " << dependency->getPiece()->getLocation() << std::endl;
 		 	dependency->settleParadox(isParadoxCore);
@@ -379,15 +365,12 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		for(Move * move : moves_) {
 //			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
 			if(move->isCompletelyDecided()) {
-				std::cerr << move->getPiece()->getLocation() << " is completely decided" << std::endl;
 				continue;
 			}
 			bool decisionsUpdated = move->process(*this);
 			isParadox = isParadox && !decisionsUpdated;
 			if(!move->isCompletelyDecided()) {
 				allDone = false;
-			} else {
-				std::cerr << move->getPiece()->getLocation() << " is now decided" << std::endl;
 			}
 		}
 		

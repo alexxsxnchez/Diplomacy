@@ -335,8 +335,6 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	} else {
 		for(auto holdIt = processor.getMoves().begin(); holdIt != processor.getMoves().end(); holdIt++) {
 			if((*holdIt)->getPiece()->getLocation() == destination_) {
-				std::cerr << "hfewlfla: " << getPiece()->getLocation() << " " << attackStrength_.min << " -- " << attackStrength_.max << std::endl;
-				std::cerr << "holdstrength: " << (*holdIt)->getPiece()->getLocation() << " " << (*holdIt)->getHoldStrength().min << " -- " << (*holdIt)->getHoldStrength().max << std::endl;
 				couldBeMoved = couldBeMoved && attackStrength_.min > (*holdIt)->getHoldStrength().max;
 				if(couldBeMoved) {
 					moved_ = YES;
