@@ -244,9 +244,11 @@ Game.prototype.prepareNewGameState = function(results, next) {
 		var unit = gameState.moves[key].unit;
 		// prepare dislodge list
 		if(results[key].dislodged) {
-			dislodged[key] = {};
-			dislodged[key].unit = unit;
-			dislodged[key].retreatOptions = results[key].retreatOptions;
+			if(results[key].retreatOptions.length > 0) {
+				dislodged[key] = {};
+				dislodged[key].unit = unit;
+				dislodged[key].retreatOptions = results[key].retreatOptions;
+			}
 			return;
 		}
 		// prepare units that have moves
