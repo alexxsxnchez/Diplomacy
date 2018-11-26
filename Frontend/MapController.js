@@ -66,6 +66,7 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	}
 	var options = [];
 	if(selectedUnit !== null) {
+		this.view.highlightTerritory(territory);
 		if(phase === 'WINTER') {
 			options.push(MoveType.DESTROY);
 		} else if(phase === 'SPRING_RETREAT' || phase === 'FALL_RETREAT') {
@@ -80,6 +81,7 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 			}
 		}
 	} else if(phase === "WINTER") {
+		this.view.highlightTerritory(territory);
 		// check if home centre and then we can show build option
 		if(this.model.territories[territory] === undefined) {
 			return;
@@ -251,6 +253,7 @@ MapController.prototype.resetMoveSelection = function() {
 	this.thirdLocation = null;
 	this.coast = null;
 	this.viaConvoy = null;
+	this.view.unhighlightTerritory();
 }
 
 MapController.prototype.moveSelectionComplete = function() {

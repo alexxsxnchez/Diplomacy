@@ -1237,7 +1237,7 @@ function LightenDarkenColor(col,amt) {
 
 function MapView() {
 	this.closeMoveMenu();
-
+	this.highlighted = null;
 	// disable mouse events for some territories
 	for(var i = 0; i < NotInteractable.length; i++) {
 		NotInteractable[i].node.setAttribute('pointer-events', 'none');
@@ -1549,4 +1549,13 @@ MapView.prototype.updateMoveMenu = function(options) {
 MapView.prototype.closeMoveMenu = function() {
 	var movemenu = document.getElementById('movemenu');
 	movemenu.style.display = 'none';
+}
+
+MapView.prototype.highLightTerritory = function(territory) {
+	this.highlighted = territory;	
+
+}
+
+MapView.prototype.unhighlightTerritory = function() {
+	this.highlighted = null;
 }
