@@ -1551,7 +1551,7 @@ MapView.prototype.closeMoveMenu = function() {
 	movemenu.style.display = 'none';
 }
 
-MapView.prototype.highLightTerritory = function(territory) {
+MapView.prototype.highlightTerritory = function(territory) {
 	this.highlighted = territory;	
 
 }

@@ -133,7 +133,11 @@ bool MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 		if(it2 != processor.getAttacks().end()) {
 			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
 				if((*it3)->getPiece()->getLocation() == destination_) {
-					defender = (*it3)->getPiece();
+					if(viaConvoy_ || (*it3)->getViaConvoy()) {
+						leavingDefender = *it3;
+					} else {
+						defender = (*it3)->getPiece();
+					}
 					break;
 				}
 			}
@@ -214,7 +218,7 @@ bool MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 		bool headOnWon = false;
 		if(it != processor.getAttacks().end()) {
 			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() != NO) {
+				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() != NO && !viaConvoy_ && !(*it2)->getViaConvoy()) {
 					preventStrength_.min = 0;
 					headOnWon = true;
 					break;
@@ -236,7 +240,7 @@ bool MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 
 		if(it != processor.getAttacks().end()) {
 			for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() == YES) {
+				if((*it2)->getPiece()->getLocation() == destination_ && (*it2)->getMoveDecision() == YES && !viaConvoy_ && !(*it2)->getViaConvoy()) {
 					preventStrength_.max = 0;
 					headOnWon = true;
 					break;
