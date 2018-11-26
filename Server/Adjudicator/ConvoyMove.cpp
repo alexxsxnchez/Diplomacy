@@ -18,9 +18,9 @@ bool ConvoyMove::isLegal(Graph * graph) const {
 }
 
 bool ConvoyMove::process(MoveProcessor & processor) {
-	calculateHoldStrength(processor);
+	bool holdStrengthUpdated = calculateHoldStrength(processor);
 	bool dislodgedUpdated = determineDislodgeDecision(processor);
-	return dislodgedUpdated;
+	return dislodgedUpdated || holdStrengthUpdated;
 }
 
 

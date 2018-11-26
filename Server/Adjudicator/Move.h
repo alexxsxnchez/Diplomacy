@@ -41,7 +41,7 @@ class Move {
 		string description_ = "";
 		string dislodgedFrom_ = "";
 		
-		virtual void calculateHoldStrength(MoveProcessor & processor);
+		virtual bool calculateHoldStrength(MoveProcessor & processor);
 		virtual bool determineDislodgeDecision(MoveProcessor & processor);
 		virtual void print(ostream & out) const = 0;
 		

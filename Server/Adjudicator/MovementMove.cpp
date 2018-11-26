@@ -118,7 +118,10 @@ void MovementMove::process(map<string, map<const Move *, float> > & attacks,
 	}
 }
 */
-void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
+bool MovementMove::calculateAttackStrength(MoveProcessor & processor) {
+	unsigned int attackStrengthMinPrev = attackStrength_.min;
+	unsigned int attackStrengthMaxPrev = attackStrength_.max;
+	
 	string source = getPiece()->getLocation();
 	Piece * defender = nullptr;
 	MovementMove * leavingDefender = nullptr;
@@ -194,12 +197,14 @@ void MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
-	
-//	std::cerr << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
+	//	std::cerr << "attackStrength: max: " << attackStrength_.max << " min: " << attackStrength_.min << std::endl;
+	return !(attackStrengthMinPrev == attackStrength_.min && attackStrengthMaxPrev == attackStrength_.max);
 }
 
-void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
-
+bool MovementMove::calculatePreventStrength(MoveProcessor & processor) {
+	unsigned int preventStrengthMinPrev = preventStrength_.min;
+	unsigned int preventStrengthMaxPrev = preventStrength_.max;
+	
 	// first min
 	if(hasPath_ != YES) {
 		preventStrength_.min = 0;
@@ -243,15 +248,21 @@ void MovementMove::calculatePreventStrength(MoveProcessor & processor) {
 			// possibly have calcsupport strength return list of dependencies, thru params
 		}
 	}
+	return !(preventStrengthMinPrev == preventStrength_.min && preventStrengthMaxPrev == preventStrength_.max);
 }
 
-void MovementMove::calculateDefendStrength(MoveProcessor & processor) {
+bool MovementMove::calculateDefendStrength(MoveProcessor & processor) {
+	unsigned int defendStrengthMinPrev = defendStrength_.min;
+	unsigned int defendStrengthMaxPrev = defendStrength_.max;
 	defendStrength_.min = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_,  coastSpecifier_, true); // add coast specif
 	defendStrength_.max = 1 + processor.calculateSupportStrength(getPiece()->getLocation(), destination_, coastSpecifier_, false); // add coast specif
 	// possibly have calcsupport strength return list of dependencies, thru params
+	return !(defendStrengthMinPrev == defendStrength_.min && defendStrengthMaxPrev == defendStrength_.max);
 }
 
-void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
+bool MovementMove::calculateHoldStrength(MoveProcessor & processor) {
+	unsigned int holdStrengthMinPrev = holdStrength_.min;
+	unsigned int holdStrengthMaxPrev = holdStrength_.max;
 	switch(moved_) {
 		case(YES):
 			holdStrength_.max = 0;
@@ -267,6 +278,7 @@ void MovementMove::calculateHoldStrength(MoveProcessor & processor) {
 			holdStrength_.max = 1;
 			break;
 	}
+	return !(holdStrengthMinPrev == holdStrength_.min && holdStrengthMaxPrev == holdStrength_.max);
 }
 
 bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
@@ -323,6 +335,8 @@ bool MovementMove::determineMoveDecision(MoveProcessor & processor) {
 	} else {
 		for(auto holdIt = processor.getMoves().begin(); holdIt != processor.getMoves().end(); holdIt++) {
 			if((*holdIt)->getPiece()->getLocation() == destination_) {
+				std::cerr << "hfewlfla: " << getPiece()->getLocation() << " " << attackStrength_.min << " -- " << attackStrength_.max << std::endl;
+				std::cerr << "holdstrength: " << (*holdIt)->getPiece()->getLocation() << " " << (*holdIt)->getHoldStrength().min << " -- " << (*holdIt)->getHoldStrength().max << std::endl;
 				couldBeMoved = couldBeMoved && attackStrength_.min > (*holdIt)->getHoldStrength().max;
 				if(couldBeMoved) {
 					moved_ = YES;
@@ -530,14 +544,14 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 bool MovementMove::process(MoveProcessor & processor) {
 //	std::cerr << "movementmove processing started" << std::endl;
 	bool pathUpdated = determinePathDecision(processor);
-	calculateAttackStrength(processor);
-	calculatePreventStrength(processor);
-	calculateDefendStrength(processor);
+	bool attackStrengthUpdated = calculateAttackStrength(processor);
+	bool preventStrengthUpdated = calculatePreventStrength(processor);
+	bool defendStrengthUpdated = calculateDefendStrength(processor);
 	bool moveUpdated = determineMoveDecision(processor);
-	calculateHoldStrength(processor);
+	bool holdStrengthUpdated = calculateHoldStrength(processor);
 	bool dislodgedUpdated = determineDislodgeDecision(processor);
 	
-	return pathUpdated || moveUpdated || dislodgedUpdated;
+	return pathUpdated || moveUpdated || dislodgedUpdated || holdStrengthUpdated || defendStrengthUpdated || attackStrengthUpdated || preventStrengthUpdated;
 }
 
 void MovementMove::forceFail() {

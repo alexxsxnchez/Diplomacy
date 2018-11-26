@@ -13,9 +13,9 @@ bool HoldMove::isLegal(Graph * graph) const {
 }
 
 bool HoldMove::process(MoveProcessor & processor) {
-	calculateHoldStrength(processor);
+	bool holdStrengthUpdated = calculateHoldStrength(processor);
 	bool dislodgedUpdated = determineDislodgeDecision(processor);
-	return dislodgedUpdated;
+	return dislodgedUpdated || holdStrengthUpdated;
 }
 
 bool HoldMove::isPartOfParadoxCore(MoveProcessor * processor) const {

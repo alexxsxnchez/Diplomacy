@@ -20,10 +20,10 @@ class MovementMove : public Move {
 		string coastSpecifier_;
 		bool viaConvoy_;
 		
-		void calculateAttackStrength(MoveProcessor & processor);
-		void calculatePreventStrength(MoveProcessor & processor);
-		void calculateDefendStrength(MoveProcessor & processor);
-		void calculateHoldStrength(MoveProcessor & processor) override;
+		bool calculateAttackStrength(MoveProcessor & processor);
+		bool calculatePreventStrength(MoveProcessor & processor);
+		bool calculateDefendStrength(MoveProcessor & processor);
+		bool calculateHoldStrength(MoveProcessor & processor) override;
 		bool determineMoveDecision(MoveProcessor & processor);
 		bool determinePathDecision(MoveProcessor & processor);
 		bool determineDislodgeDecision(MoveProcessor & processor) override;

@@ -69,6 +69,7 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 			//std::cerr << move->getPiece()->getLocation() << ": attackStrength: " << move->getAttackStrength().min << " to " << move->getAttackStrength().max << std::endl;
 			if(move->getAttackStrength().min > 0) {
 				supportGiven_ = NO;
+				std::cerr << "Support given is NO ";
 				return true;
 			}
 			if(move->getAttackStrength().max > 0) {
@@ -80,6 +81,7 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 	if(canStillBeGiven && dislodged_ == NO) {
 	
 		supportGiven_ = YES;
+		std::cerr << "Support given is YES ";
 		return true;
 	}
 	return false;
@@ -87,11 +89,10 @@ bool SupportMove::determineSupportDecision(MoveProcessor & processor) {
 
 bool SupportMove::process(MoveProcessor & processor) {
 
-	calculateHoldStrength(processor);
+	bool holdStrengthUpdated = calculateHoldStrength(processor);
 	bool dislodgedUpdated = determineDislodgeDecision(processor);
 	bool supportUpdated = determineSupportDecision(processor);
-	
-	return supportUpdated || dislodgedUpdated;
+	return supportUpdated || dislodgedUpdated || holdStrengthUpdated;
 }
 
 /*

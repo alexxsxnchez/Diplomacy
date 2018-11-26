@@ -11,10 +11,13 @@ Piece * Move::getPiece() const {
 	return piece_;
 }
 
-void Move::calculateHoldStrength(MoveProcessor & processor) {
+bool Move::calculateHoldStrength(MoveProcessor & processor) {
+	unsigned int holdStrengthMinPrev = holdStrength_.min;
+	unsigned int holdStrengthMaxPrev = holdStrength_.max;
 	holdStrength_.min = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), "", true); // should be no coast
 	holdStrength_.max = 1 + processor.calculateSupportStrength(piece_->getLocation(), piece_->getLocation(), "", false); // should be no coast
 	// possibly have calcsupport strength return list of dependencies, thru params
+	return !(holdStrength_.min == holdStrengthMinPrev && holdStrength_.max == holdStrengthMaxPrev);
 }
 
 bool Move::determineDislodgeDecision(MoveProcessor & processor) {

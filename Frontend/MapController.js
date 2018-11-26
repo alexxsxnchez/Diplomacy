@@ -177,7 +177,8 @@ MapController.prototype.thirdTerritorySelected = function(territory) {
 	this.thirdLocation = territory;
 	var movingPiece = this.model.getUnitAt(this.secondLocation);
 	var movingPieceIsFleet = (movingPiece !== null && movingPiece.type === 'fleet');
-	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast === null && movingPieceIsFleet) {
+	console.log(territory + this.secondLocation);
+	if((territory === 'Spain' || territory === 'Bulgaria' || territory === 'StPetersburg') && this.coast === null && movingPieceIsFleet && territory !== this.secondLocation) {
 		if(territory === 'Bulgaria') {
 			options.push(MoveType.MOVEEC);
 		} else {
