@@ -240,6 +240,25 @@ MapModel.prototype.getUnitAt = function(territory) {
 	}
 }
 
+MapModel.prototype.getStarToUnitCount = function(nation) {
+	var starCount = Object.keys(this.territories).reduce((count, territory) => {
+		if(this.territories[territory].hasStar && this.territories[territory].nation === nation) {
+			return count + 1;
+		} else {
+			return count;
+		}
+	}, 0);
+
+	var unitCount = Object.keys(this.units).reduce((count, unit) => {
+		if(this.units[unit].nation === nation) {
+			return count + 1;
+		} else {
+			return count;
+		}
+	}, 0);
+	return starCount - unitCount;
+}
+
 MapModel.prototype.getPhase = function() {
 	return this.phase;
 }

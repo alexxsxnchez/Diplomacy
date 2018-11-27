@@ -1,5 +1,6 @@
 var initialConditions = require('./InitialConditions.js');
 var Phase = require('./Phase.js');
+var Nation = require('./Nation.js');
 
 function GameModel() {
 	this.loadFakeDB();
@@ -89,6 +90,27 @@ GameModel.prototype.playerUnfinalized = function(nation) {
 // TODO
 GameModel.prototype.getIsAllFinalized = function() {
 	return this.gameState.finalized.length > 0;
+}
+
+GameModel.prototype.getHomeCentres = function(nation) {
+	switch(nation) {
+		case Nation.AUSTRIA:
+			return ['Trieste', 'Budapest', 'Vienna'];
+		case Nation.ENGLAND:
+			return ['Liverpool', 'Edinburgh', 'London'];
+		case Nation.FRANCE:
+			return ['Marseilles', 'Paris', 'Brest'];
+		case Nation.GERMANY:
+			return ['Munich', 'Kiel', 'Berlin'];
+		case Nation.ITALY:
+			return ['Naples', 'Rome', 'Venice'];
+		case Nation.RUSSIA:
+			return ['StPetersburg', 'Sevastopol', 'Moscow', 'Warsaw'];
+		case Nation.TURKEY:
+			return ['Smyrna', 'Constantinople', 'Ankara'];
+		default:
+			return [];
+	}
 }
 
 module.exports = GameModel;

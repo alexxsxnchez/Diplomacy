@@ -68,7 +68,11 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	if(selectedUnit !== null) {
 		this.view.highlightTerritory(territory);
 		if(phase === 'WINTER') {
-			options.push(MoveType.DESTROY);
+			if(this.model.getStarToUnitCount(selectedUnit.nation) < 0) {
+				options.push(MoveType.DESTROY);
+			} else {
+				return;
+			}
 		} else if(phase === 'SPRING_RETREAT' || phase === 'FALL_RETREAT') {
 			options.push(MoveType.RETREAT);
 			options.push(MoveType.DESTROY);
@@ -88,7 +92,7 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 		}
 		var nation = this.model.territories[territory].nation;
 		var homeCentres = this.model.getHomeCentres(nation);
-		if(homeCentres.includes(territory)) {
+		if(homeCentres.includes(territory) && this.model.getStarToUnitCount(nation) > 0) {
 			options = this.model.getBuildOptions(territory);
 		} else {
 			return;

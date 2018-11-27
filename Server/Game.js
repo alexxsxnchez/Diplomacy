@@ -378,7 +378,18 @@ Game.prototype.checkIfBuildsRequired = function() {
 		if(nation === Nation.NEUTRAL) {
 			return false;
 		}
-		return counts[nation].stars !== counts[nation].units;
+		
+		var hasEmptyHomeCentre = false;
+		var homeCentres = this.model.getHomeCentres(nation)
+		for(var key in Object.keys(homeCentres)) {
+			var homeCentre = homeCentres[key];
+			if(this.model.getGameState().territories[homeCentre].nation === nation && this.model.getGameState().units[homeCentre] === undefined) {
+				hasEmptyHomeCentre = true;
+				break;
+			}
+		}
+		
+		return (counts[nation].stars > counts[nation].units && hasEmptyHomeCentre) || counts[nation].stars < counts[nation].units;
 	}, false);
 }
 
