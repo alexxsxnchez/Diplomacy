@@ -873,19 +873,30 @@ void runTests(Graph * g) {
 }
 
 int main(int argc, char ** argv) {
-	if(argc == 1 || argc > 3) {
+	if(argc < 2 || argc > 4) {
 		assert(false);
 	}
 	string fileName(argv[1]);
 	Graph * g = new Graph;
 	readInNodes(*g, fileName);
-	if(argc == 2) {
-		// normal testing
-		runTests(g);
-	} else if(argc == 3) {
-		string data(argv[2]);
-		// called as child process
-		ChildProcess(g, data);
+	switch(argc) {
+		case 2: {
+			// normal testing
+			runTests(g);
+			break;	
+		}
+		case 3: {
+			string data(argv[2]);
+			// called as child process
+			ChildProcess(g, data);
+			break;
+		}
+		case 4: {
+			string units(argv[2]);
+			string destroyCounts(argv[3]);
+			ChildProcess(g, units, destroyCounts);
+			break;
+		}
 	}
 	delete g;
 }	

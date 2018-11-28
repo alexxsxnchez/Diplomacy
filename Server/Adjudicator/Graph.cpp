@@ -188,15 +188,15 @@ unordered_set<string> Graph::getDoubleCoastNeighbours(string id) const {
 	return it->second->getDoubleCoastNeighbours();
 }
 
-list<string> Graph::searchPath(string src, string dest) const {
+list<string> Graph::searchPath(string src, unordered_set<string> & destinations, bool isArmy) const {
 	list<string> list;
-	if(src == dest) {
+	if(destinations.count(src) > 0) {
 		list.push_back(src);
 		return list;
 	}
 	auto it1 = nodes_.find(src);
-	auto it2 = nodes_.find(dest);
-	if(it1 == nodes_.end() || it2 == nodes_.end()) {
+	//auto it2 = nodes_.find(dest);
+	if(it1 == nodes_.end()/* || it2 == nodes_.end()*/) {
 		return list;
 	}
 
@@ -210,7 +210,7 @@ list<string> Graph::searchPath(string src, string dest) const {
 	while(!queue.empty()) {
 		Node * node = queue.front();
 		queue.pop();
-		if(node->getId() == dest) {
+		if(destinations.count(node->getId()) > 0) {
 			list.push_front(node->getId());
 			string parent;
 			while((parent = visited.find(node->getId())->second) != "") {
@@ -219,7 +219,15 @@ list<string> Graph::searchPath(string src, string dest) const {
 			}
 			return list;
 		}
-		for(string id : node->getArmyNeighbours()) {
+		
+		unordered_set<string> neighbours(node->getFleetNeighbours());
+		if(isArmy) {
+			for(string neighbour : node->getArmyNeighbours()) {
+				neighbours.insert(neighbour);
+			}	
+		}
+		
+		for(string id : neighbours) {
 			if(visited.find(id) == visited.end()) {
 				Node * neighbour = nodes_.find(id) -> second;
 				visited.insert(std::make_pair(id, node->getId()));

@@ -2,6 +2,8 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include "Nation.h"
+#include <map>
+#include <unordered_set>
 
 using json = nlohmann::json;
 using std::string;
@@ -67,5 +69,125 @@ ChildProcess::ChildProcess(Graph * g, string data) {
 	
 	MoveProcessor::Results results = p.processMoves();
 	p.outputResults(results, cout);
+}
+
+ChildProcess::ChildProcess(Graph * g, string units, string destroyCounts) {
+	json unitsJSON = json::parse(units);
+	json destroyCountsJSON = json::parse(destroyCounts);	
+	std::map<string, std::map<string, unsigned int> > distances;
+	
+	for(json::iterator it = unitsJSON.begin(); it != unitsJSON.end(); it++) {
+		string nation = it.value()["nation"];
+		unsigned int destroyCount = destroyCountsJSON[nation];
+		if(destroyCount == 0) {
+			continue;
+		}
+		
+		Nation nationality = getNation(nation);
+		string unitType = it.value()["type"];
+		string location = it.key();
+		if(it.value()["coast"].is_string()) {
+			string unitCoastSpecifier = it.value()["coast"];
+			location = location + "_" + unitCoastSpecifier;
+		}
+		std::cerr << "hello3" << std::endl;
+		
+		unsigned int distance = calculateDistanceToHome(g, location, nationality, unitType);
+		std::cerr << "hello4 distance: " << distance << std::endl;
+		auto distanceForNationMap = distances.find(nation);
+		if(distanceForNationMap == distances.end()) {
+			std::map<string, unsigned int> distanceMap;
+			distances.insert(std::make_pair(nation, distanceMap));
+			distanceForNationMap = distances.find(nation);
+		}
+		if(distanceForNationMap->second.size() == destroyCount) {
+			unsigned int smallestDistance = 1000;
+			string smallestDistanceLocation = "";
+			for(auto it2 = distanceForNationMap->second.begin(); it2 != distanceForNationMap->second.end(); it2++) {
+				if(it2->second < smallestDistance) {
+					smallestDistance = it2->second;
+					smallestDistanceLocation = it2->first;
+				}
+			}
+			if(distance > smallestDistance) {
+				distanceForNationMap->second.erase(smallestDistanceLocation);
+				distanceForNationMap->second.insert(std::make_pair(location, distance));
+			}
+		} else {
+			distanceForNationMap->second.insert(std::make_pair(location, distance));
+		}
+	}
+	outputDestroyUnitResults(distances);
+}
+
+unsigned int ChildProcess::calculateDistanceToHome(Graph * g, string location, Nation nation, string unitType) const {
+
+	std::unordered_set<string> centres;
+	switch(nation) {
+		case RUSSIA:
+			centres.insert("StPetersburg");
+			centres.insert("StPetersburg_SC");
+			centres.insert("StPetersburg_NC");
+			centres.insert("Warsaw");
+			centres.insert("Moscow");
+			centres.insert("Sevastopol");
+			break;
+	
+		case TURKEY:
+			centres.insert("Ankara");
+			centres.insert("Smyrna");
+			centres.insert("Constantinople");
+			break;
+
+		case ITALY:
+			centres.insert("Venice");
+			centres.insert("Rome");
+			centres.insert("Naples");
+			break;
+
+		case AUSTRIA:
+			centres.insert("Vienna");
+			centres.insert("Budapest");
+			centres.insert("Trieste");
+			break;
+
+		case GERMANY:
+			centres.insert("Berlin");
+			centres.insert("Kiel");
+			centres.insert("Munich");
+			break;
+
+		case FRANCE:
+			centres.insert("Paris");
+			centres.insert("Marseilles");
+			centres.insert("Brest");
+			break;
+
+		case ENGLAND:
+			centres.insert("Liverpool");
+			centres.insert("Edinburgh");
+			centres.insert("London");
+			break;
+	}
+	
+	bool isArmy = unitType == "army";
+	return g->searchPath(location, centres, isArmy).size();
+}
+
+void ChildProcess::outputDestroyUnitResults(std::map<string, std::map<string, unsigned int> > distances) const {
+	cout << "[" << endl;
+	bool first = true;
+	for(auto it : distances) {
+		bool first = true;
+		for(auto it2 : it.second) {
+			if(!first) {
+				cout << "," << endl;
+			} else {
+				first = false;
+			}
+			cout << "\t\"" << it2.first << "\"";
+		}
+	}
+	cout << endl <<"]";
 }
 

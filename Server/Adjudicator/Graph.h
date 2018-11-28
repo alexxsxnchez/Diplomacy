@@ -60,7 +60,7 @@ class Graph {
 		unordered_set<string> getArmyNeighbours(string id) const;
 		unordered_set<string> getFleetNeighbours(string id) const;
 		unordered_set<string> getDoubleCoastNeighbours(string id) const;
-		list<string> searchPath(string id1, string id2) const;
+		list<string> searchPath(string id1, unordered_set<string> & destinations, bool isArmy) const;
 		
 		friend ostream & operator<<(ostream & out, const Graph::Node & node);
 		friend ostream & operator<<(ostream & out, const Graph & graph);

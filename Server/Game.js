@@ -71,9 +71,11 @@ Game.prototype.processTurn = function(next) {
 			});
 			break;
 		case Phase.WINTER:
-			var results = this.processWinterMoves();
-			this.prepareNewGameState(results, function() {
-				next();
+			var self = this;
+			var results = this.processWinterMoves(function(results) {
+				self.prepareNewGameState(results, function() {
+					next();
+				});
 			});
 			break;
 	}
@@ -200,32 +202,55 @@ Game.prototype.processWinterMoves = function(next) {
 		}
 	});
 	
-	// check if user did not enter enough disbands
-	Object.keys(differences).forEach((nation) => {
-		var diff = differences[nation];
-		if(diff < 0) {
-			Object.keys(gameState.units).forEach((key) => {
-				var unit = gameState.units[key];
-				if(key in results || diff === 0 || unit.nation != nation) {
-					return;
-				}
-				var move = {};
-				move.unit = unit;
-				move.moveType = 'DESTROY';
-				move.firstLoc = key;
-				move.secondLoc = null;
-				move.thirdLoc = null;
-				this.model.addMove(move);
-				results[key] = {};
-				results[key].dislodged = false;
-				results[key].success = true;
-				results[key].description = 'Destroy move auto-created due to insufficient disband orders.';
-				differences[nation]++;
-				diff = differences[nation];
-			});
+	var units = {};
+	Object.keys(gameState.units).forEach((key) => {
+		if(key in results) {
+			return;
 		}
-	}); 
-	return results;
+		units[key] = {};
+		units[key].type = gameState.units[key].type;
+		units[key].nation = gameState.units[key].nation;
+		units[key].coast = gameState.units[key].coast;
+	});
+	
+	var destroyCounts = {};
+	Object.keys(differences).forEach((nation) => {
+		destroyCounts[nation] = differences[nation] < 0 ? differences[nation] * -1 : 0;
+	});
+	
+	console.log('about to create auto destroy moves');
+	var execFile = ChildProcess.execFile;
+	var program = "Adjudicator/build/Release/standalone";
+	var inputFile = "Adjudicator/input.txt";
+	var self = this;
+	var child = execFile(program, [inputFile, JSON.stringify(units), JSON.stringify(destroyCounts)], function(error, stdout, stderr) {
+		console.log('done processing');
+		console.log('error:' + error);
+		console.log('stderr:' + stderr);
+		console.log('stdout:' + stdout);
+		console.log('-- done outputting');
+		try {
+			var unitsToDestroy = JSON.parse(stdout);
+			unitsToDestroy.forEach((territory) => {
+				var move = {};
+				move.unit = gameState.units[territory];
+				move.moveType = 'DESTROY';
+				move.firstLoc = territory;
+				move.secondLoc = null;
+				move.thirdLoc = null; 
+				move.coast = null;
+				self.model.addMove(move);
+				results[territory] = {};
+				results[territory].success = true;
+				results[territory].description = 'Unit auto-disbanded due to failing to input enough disbands.';
+				results[territory].dislodged = false;
+			});
+			
+		} catch(error) {
+			console.log(error);
+		}
+		next(results);
+	});
 }
 
 Game.prototype.prepareNewGameState = function(results, next) {

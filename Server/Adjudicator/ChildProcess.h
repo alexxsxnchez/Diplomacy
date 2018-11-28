@@ -11,12 +11,17 @@
 #include "SupportMove.h"
 #include "ConvoyMove.h"
 #include <string>
+#include <map>
 
 using std::string;
 
 class ChildProcess {
 	private:
-	
+		unsigned int calculateDistanceToHome(Graph * g, string location, Nation nation, string unitType) const;
+		void outputDestroyUnitResults(std::map<string, std::map<string, unsigned int> > distances) const;
 	public:
+		// main adjudication
 		ChildProcess(Graph * g, string data);
+		// program to determine which units to auto destroy 
+		ChildProcess(Graph * g, string units, string destroyCounts);
 };
