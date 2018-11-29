@@ -178,7 +178,6 @@ void ChildProcess::outputDestroyUnitResults(std::map<string, std::map<string, un
 	cout << "[" << endl;
 	bool first = true;
 	for(auto it : distances) {
-		bool first = true;
 		for(auto it2 : it.second) {
 			if(!first) {
 				cout << "," << endl;
