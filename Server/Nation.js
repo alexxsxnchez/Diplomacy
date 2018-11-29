@@ -8,3 +8,5 @@ var Nation = {
 	TURKEY: 'TURKEY',
 	NEUTRAL: 'NEUTRAL'
 }
+
+module.exports = Nation;

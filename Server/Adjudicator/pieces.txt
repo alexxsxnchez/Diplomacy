@@ -1,0 +1,35 @@
+// France
+a f Marseilles
+a f Paris
+f f Brest
+
+// England
+a e Liverpool
+f e London
+f e Edinburgh
+
+// Italy
+a i Rome
+a i Venice
+f i Naples
+
+// Germany
+a g Munich
+f g Kiel
+a g Berlin
+
+// Russia
+a r Moscow
+a r Warsaw
+f r Sevastopol
+f r StPetersburg StPetersburg_SC
+
+// Austria
+a a Vienna
+a a Budapest
+f a Trieste
+
+// Turkey
+a t Constantinople
+a t Smyrna
+f t Ankara

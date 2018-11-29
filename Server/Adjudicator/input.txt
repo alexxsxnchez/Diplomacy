@@ -1,0 +1,428 @@
+// --- Nodes ---
+
+// England
+c Clyde false
+c Liverpool true
+c Wales false
+c London true
+c Yorkshire false
+c Edinburgh true
+
+// Iberia
+c Portugal true
+c Spain true
+c Spain_SC false
+c Spain_NC false
+
+// France
+c Gascony false
+c Marseilles true
+c Brest true
+l Paris true
+l Burgundy false
+c Picardy false
+
+// Lowlands
+c Belgium true
+c Holland true
+
+// Germany
+l Ruhr false
+l Munich true
+c Kiel true
+c Berlin true
+l Silesia false
+c Prussia false
+
+// Scandinavia
+c Denmark true
+c Sweden true
+c Norway true
+
+// Russia
+c Finland false
+c StPetersburg true
+c StPetersburg_SC false
+c StPetersburg_NC false
+c Livonia false
+l Warsaw true
+l Moscow true
+l Ukraine false
+c Sevastopol true
+
+// Austria-Hungry
+l Bohemia false
+l Tyrolia false
+l Vienna true
+c Trieste true
+l Budapest true
+l Galicia false
+
+// Italy
+c Piedmont false
+c Venice true
+c Tuscany false
+c Apulia false
+c Rome true
+c Naples true
+
+// Africa
+c NorthAfrica false
+c Tunis true
+
+// Balkans
+l Serbia true
+c Albania false
+c Greece true
+c Rumania true
+c Bulgaria true
+c Bulgaria_SC false
+c Bulgaria_EC false
+
+// Turkey
+c Constantinople true
+c Ankara true
+c Smyrna true
+c Armenia false
+c Syria false
+
+// Water
+w BarentsSea false
+w NorwegianSea false
+w NorthSea false
+w Skagerrak false
+w BalticSea false
+w GulfOfBothnia false
+w HelgolandBight false
+w NorthAtlantic false
+w IrishSea false
+w EnglishChannel false
+w MidAtlantic false
+w WesternMed false
+w GulfOfLyon false
+w TyrrhenianSea false
+w IonianSea false
+w AdriaticSea false
+w AegeanSea false
+w EasternMed false
+w BlackSea false
+
+// --- Connections ---
+
+// England -- Army
+a Clyde Edinburgh
+a Clyde Liverpool
+a Edinburgh Liverpool
+a Edinburgh Yorkshire
+a Liverpool Yorkshire
+a Liverpool Wales
+a Yorkshire Wales
+a Yorkshire London
+a Wales London
+
+// England -- Fleet
+f Clyde Edinburgh
+f Clyde Liverpool
+f Clyde NorthAtlantic
+f Clyde NorwegianSea
+f Edinburgh NorwegianSea
+f Edinburgh NorthSea
+f Edinburgh Yorkshire
+f Liverpool NorthAtlantic
+f Liverpool IrishSea
+f Liverpool Wales
+f Yorkshire NorthSea
+f Yorkshire London
+f Wales IrishSea
+f Wales London
+f Wales EnglishChannel
+f London EnglishChannel
+f London NorthSea
+
+// France -- Army
+a Brest Picardy
+a Brest Paris
+a Brest Gascony
+a Picardy Paris
+a Picardy Belgium
+a Picardy Burgundy
+a Paris Burgundy
+a Paris Gascony
+a Gascony Spain
+a Gascony Marseilles
+a Gascony Burgundy
+a Marseilles Spain
+a Marseilles Piedmont
+a Marseilles Burgundy
+a Burgundy Belgium
+a Burgundy Ruhr
+a Burgundy Munich
+
+// France -- Fleet
+f Brest EnglishChannel
+f Brest MidAtlantic
+f Brest Picardy
+f Brest Gascony
+f Picardy Belgium
+f Picardy EnglishChannel
+f Gascony MidAtlantic
+f Gascony Spain_NC
+f Marseilles Spain_SC
+f Marseilles GulfOfLyon
+f Marseilles Piedmont
+
+// Iberia -- Army
+a Portugal Spain
+
+// Iberia -- Fleet
+f Portugal Spain_SC
+f Portugal Spain_NC
+f Portugal MidAtlantic
+f Spain_SC MidAtlantic
+f Spain_NC MidAtlantic
+f Spain_SC GulfOfLyon
+f Spain_SC WesternMed
+d Spain GulfOfLyon
+d Spain WesternMed
+d Spain MidAtlantic
+d Spain Portugal
+d Spain Marseilles
+d Spain Gascony
+
+// Africa -- Army
+a NorthAfrica Tunis
+
+// Africa -- Fleet
+f NorthAfrica Tunis
+f NorthAfrica MidAtlantic
+f NorthAfrica WesternMed
+f Tunis WesternMed
+f Tunis TyrrhenianSea
+f Tunis IonianSea
+
+// Italy -- Army
+a Piedmont Tyrolia
+a Piedmont Venice
+a Piedmont Tuscany
+a Venice Tyrolia
+a Venice Trieste
+a Venice Tuscany
+a Venice Apulia
+a Venice Rome
+a Tuscany Rome
+a Rome Apulia
+a Rome Naples
+a Naples Apulia
+
+// Italy -- Fleet
+f Piedmont GulfOfLyon
+f Piedmont Tuscany
+f Venice Trieste
+f Venice AdriaticSea
+f Venice Apulia
+f Tuscany Rome
+f Tuscany GulfOfLyon
+f Tuscany TyrrhenianSea
+f Rome TyrrhenianSea
+f Rome Naples
+f Naples TyrrhenianSea
+f Naples IonianSea
+f Naples Apulia
+f Apulia IonianSea
+f Apulia AdriaticSea
+
+// Lowlands -- Army
+a Belgium Holland
+a Belgium Ruhr
+a Holland Ruhr
+a Holland Kiel
+
+// Lowlands -- Fleet
+f Belgium Holland
+f Belgium EnglishChannel
+f Belgium NorthSea
+f Holland NorthSea
+f Holland HelgolandBight
+f Holland Kiel
+
+// Germany -- Army
+a Ruhr Kiel
+a Ruhr Munich
+a Kiel Denmark
+a Kiel Berlin
+a Kiel Munich
+a Munich Berlin
+a Munich Silesia
+a Munich Bohemia
+a Munich Tyrolia
+a Berlin Prussia
+a Berlin Silesia
+a Prussia Silesia
+a Prussia Livonia
+a Prussia Warsaw
+a Silesia Bohemia
+a Silesia Galicia
+a Silesia Warsaw
+
+// Germany - Fleet
+f Kiel HelgolandBight
+f Kiel Denmark
+f Kiel BalticSea
+f Kiel Berlin
+f Berlin BalticSea
+f Berlin Prussia
+f Prussia Livonia
+f Prussia BalticSea
+
+// Scandinavia -- Army
+a Denmark Sweden
+a Sweden Norway
+a Sweden Finland
+a Norway Finland
+a Norway StPetersburg
+
+// Scandinavia -- Fleet
+f Denmark HelgolandBight
+f Denmark NorthSea
+f Denmark Skagerrak
+f Denmark Sweden
+f Denmark BalticSea
+f Sweden Skagerrak
+f Sweden BalticSea
+f Sweden GulfOfBothnia
+f Sweden Norway
+f Sweden Finland
+f Norway BarentsSea
+f Norway NorwegianSea
+f Norway NorthSea
+f Norway Skagerrak
+f Norway StPetersburg_NC
+
+// Russia -- Army
+a Finland StPetersburg
+a StPetersburg Moscow
+a StPetersburg Livonia
+a Livonia Moscow
+a Livonia Warsaw
+a Moscow Warsaw
+a Moscow Ukraine
+a Moscow Sevastopol
+a Warsaw Ukraine
+a Warsaw Galicia
+a Ukraine Sevastopol
+a Ukraine Galicia
+a Ukraine Rumania
+a Sevastopol Rumania
+a Sevastopol Armenia
+
+// Russia -- Fleet
+f Finland GulfOfBothnia
+f Finland StPetersburg_SC
+f StPetersburg_NC BarentsSea
+f StPetersburg_SC GulfOfBothnia
+f StPetersburg_SC Livonia
+d StPetersburg Livonia
+d StPetersburg Finland
+d StPetersburg Norway
+d StPetersburg BarentsSea
+d StPetersburg GulfOfBothnia
+f Livonia GulfOfBothnia
+f Livonia BalticSea
+f Sevastopol Rumania
+f Sevastopol BlackSea
+f Sevastopol Armenia
+
+// Austria -- Army
+a Bohemia Galicia
+a Bohemia Vienna
+a Bohemia Tyrolia
+a Galicia Rumania
+a Galicia Budapest
+a Galicia Vienna
+a Vienna Budapest
+a Vienna Tyrolia
+a Vienna Trieste
+a Tyrolia Trieste
+a Trieste Serbia
+a Trieste Albania
+a Trieste Budapest
+a Budapest Serbia
+a Budapest Rumania
+
+// Austria -- Fleet
+f Trieste AdriaticSea
+f Trieste Albania
+
+// Balkans -- Army
+a Albania Serbia
+a Albania Greece
+a Serbia Greece
+a Serbia Rumania
+a Serbia Bulgaria
+a Rumania Bulgaria
+a Bulgaria Greece
+a Bulgaria Constantinople
+
+// Balkans -- Fleet
+f Albania AdriaticSea
+f Albania IonianSea
+f Albania Greece
+f Rumania BlackSea
+f Rumania Bulgaria_EC
+f Bulgaria_EC BlackSea
+f Bulgaria_EC Constantinople
+f Bulgaria_SC AegeanSea
+f Bulgaria_SC Greece
+f Bulgaria_SC Constantinople
+d Bulgaria BlackSea
+d Bulgaria AegeanSea
+d Bulgaria Constantinople
+d Bulgaria Rumania
+d Bulgaria Greece
+f Greece IonianSea
+f Greece AegeanSea
+
+// Turkey -- Army
+a Constantinople Smyrna
+a Constantinople Ankara
+a Ankara Armenia
+a Ankara Smyrna
+a Armenia Syria
+a Armenia Smyrna
+a Smyrna Syria
+
+// Turkey -- Fleet
+f Constantinople BlackSea
+f Constantinople AegeanSea
+f Constantinople Smyrna
+f Constantinople Ankara
+f Ankara BlackSea
+f Ankara Armenia
+f Armenia BlackSea
+f Smyrna AegeanSea
+f Smyrna EasternMed
+f Smyrna Syria
+f Syria EasternMed
+
+// Water
+f EasternMed AegeanSea
+f EasternMed IonianSea
+f AegeanSea IonianSea
+f IonianSea AdriaticSea
+f IonianSea TyrrhenianSea
+f TyrrhenianSea GulfOfLyon
+f TyrrhenianSea WesternMed
+f GulfOfLyon WesternMed
+f WesternMed MidAtlantic
+f MidAtlantic NorthAtlantic
+f MidAtlantic IrishSea
+f MidAtlantic EnglishChannel
+f NorthAtlantic IrishSea
+f NorthAtlantic NorwegianSea
+f IrishSea EnglishChannel
+f EnglishChannel NorthSea
+f NorthSea HelgolandBight
+f NorthSea Skagerrak
+f NorthSea NorwegianSea
+f NorwegianSea BarentsSea
+f BalticSea GulfOfBothnia

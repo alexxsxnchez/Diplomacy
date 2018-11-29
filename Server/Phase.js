@@ -1,0 +1,9 @@
+var Phase = {
+	SPRING: "SPRING",
+	SPRING_RETREAT: "SPRING_RETREAT",
+	FALL: "FALL",
+	FALL_RETREAT: "FALL_RETREAT",
+	WINTER: "WINTER"
+}
+
+module.exports = Phase;
