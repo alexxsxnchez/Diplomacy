@@ -358,18 +358,31 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 		}
 	}
 
-	int count = 15;
+	int count = 50;
+	bool alreadyHadWholeLoopOfNoDecisionsUpdated = false;
 	while(count > 0) {
 		bool allDone = true;
 		bool isParadox = true;
+		bool isParadoxDoubleCheck = true;
 		for(Move * move : moves_) {
-//			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
-			if(move->isCompletelyDecided()) {
+			bool moveIsCompletelyDecidedBeforeProcess = move->isCompletelyDecided();
+			if(moveIsCompletelyDecidedBeforeProcess) {
+				std::cerr << move->getPiece()->getLocation() << " is completely decided" << std::endl;
+				//continue;
+			}
+		
+			std::cerr << "About to process " << move->getPiece()->getLocation() << std::endl;
+			bool decisionsUpdated = move->process(*this);
+			if(decisionsUpdated) {
+				std::cerr << move->getPiece()->getLocation() << " has been updated!" << std::endl;
+			} else {
+				std::cerr << move->getPiece()->getLocation() << " has NOT been updated" << std::endl;
+			}
+			if(moveIsCompletelyDecidedBeforeProcess) {
 				continue;
 			}
-			bool decisionsUpdated = move->process(*this);
 			isParadox = isParadox && !decisionsUpdated;
-			if(!move->isCompletelyDecided()) {
+			if(!move->isCompletelyDecided()) {			
 				allDone = false;
 			}
 		}
@@ -378,8 +391,12 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 			break;
 		}
 		if(isParadox) {
-			std::cerr << "\nPARADOX!!!!\n" << std::endl;
-			fixParadox();
+			std::cerr << "Had whole loop of no decisions being updated!!" << std::endl;
+			if(alreadyHadWholeLoopOfNoDecisionsUpdated) {
+				std::cerr << "\nPARADOX!!!!\n" << std::endl;
+				fixParadox();
+			}
+			alreadyHadWholeLoopOfNoDecisionsUpdated = true;
 		}
 		count--;
 	}
