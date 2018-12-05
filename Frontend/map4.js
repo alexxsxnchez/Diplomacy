@@ -1,16 +1,21 @@
 //var rsr = Raphael('map', '1700', '1496');
 var w = 1700;
 var h = 1496;
-var rsr = Raphael("map");
+var rsr = Raphael("map", '100%', '100%');
 rsr.setViewBox(0,0,w,h,true);
-var ratio = w / h;
+
+var svg = document.querySelector("svg");
+svg.removeAttribute("width");
+svg.removeAttribute("height");
+svg.style.display = 'block';
+/*var ratio = w / h;
 var desiredWidth = window.innerHeight * ratio - 9;
 var desiredHeight = window.innerWidth / ratio;
 var width = desiredWidth / window.innerWidth * 100;
 var widthPercentage = width.toString() + "%";
 var height = desiredHeight / window.innerHeight * 100;
 var heightPercentage = height.toString() + "%";
-rsr.setSize(widthPercentage, heightPercentage);
+rsr.setSize(widthPercentage, heightPercentage);*/
 
 /*    // trying to center map
     var mapDiv = document.getElementById("wrapper");

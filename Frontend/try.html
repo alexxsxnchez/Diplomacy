@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <title>Diplomacy</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="tryStyle.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">
+				<div class="container">
+					<img src="img/Garchomp.png" class="img-fluid"></img>
+				</div>
+			</a>
+			<a class="navbar-brand" href="#">Diplomacy</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    			<span class="navbar-toggler-icon"></span>
+  			</button>
+  			<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    			<ul class="navbar-nav">
+      				<li class="nav-item active">
+        				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      			</ul>
+      		</div>
+		</nav>
+		<div class="container-fluid">
+			<label id="yearText">1900</label>
+			<label id="phaseText">WINTER</label>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-7 bg-primary">
+					<div id="map">
+						<!-- Raphaël JS Map Here -->
+						
+					</div>
+				</div>
+				<div class="col-sm bg-secondary">
+					<button id="finalizebutton">Finalize</button>
+					<div id="movemenu">
+						<button id="holdbutton">Hold</button>
+						<button id="movebutton">Move</button>
+						<button id="supportbutton">Support</button>
+						<button id="convoybutton">Convoy</button>
+						<button id="retreatbutton">Retreat</button>
+						<button id="destroybutton">Destroy</button>
+						<button id="buildarmybutton">Build Army</button>
+						<button id="buildfleetbutton">Build Fleet</button>
+						<button id="buildncbutton">Build Fleet (NC)</button>
+						<button id="buildscbutton">Build Fleet (SC)</button>
+						<button id="movencbutton">NC</button>
+						<button id="moveecbutton">EC</button>
+						<button id="movescbutton">SC</button>
+						<button id="landroutebutton">Land Route</button>
+						<button id="viaconvoybutton">Via Convoy</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="Nation.js"></script>
+        <script src="MoveType.js"></script>
+        <script src="raphael-min.js"></script>
+        <script src="ConvoyPairs.js"></script>
+        <script src="map4.js"></script>
+        <script src="MapModel.js"></script>
+        <script src="Interactor.js"></script>
+        <script src="MapController.js"></script>
+        <script src="app.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	</body>
+</html>
