@@ -96,6 +96,14 @@ void FleetPiece::determineConvoyStatus(MovementMove * move, Graph * graph) {
 	move->setConvoyStatus(false);
 }
 
+string FleetPiece::getCoast() const {
+	return coast_;
+}
+
+string FleetPiece::getFullLocation() const {
+	return getLocation() + "_" + coast_;
+}
+
 void FleetPiece::print(ostream & out) const {
 	out << "Piece at: " << getLocation();
 	if(coast_ != "") {

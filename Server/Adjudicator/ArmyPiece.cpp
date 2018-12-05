@@ -65,6 +65,10 @@ void ArmyPiece::determineConvoyStatus(MovementMove * move, Graph * graph) {
 	}
 }
 
+string ArmyPiece::getFullLocation() const {
+	return getLocation();
+}
+
 void ArmyPiece::print(ostream & out) const {
 	out << "Piece at: " << getLocation() << " is a " << getNationality() << " ARMY" << endl;
 }

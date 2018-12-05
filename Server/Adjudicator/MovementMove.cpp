@@ -525,7 +525,7 @@ bool MovementMove::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES && moved_ == NO) {
-					dislodgedFrom_ = move->getPiece()->getLocation();
+					dislodgedFrom_ = move->getPiece()->getFullLocation();
 					dislodged_ = YES; // dependency
 					return true;
 				}

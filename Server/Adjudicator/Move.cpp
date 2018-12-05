@@ -32,7 +32,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES) {
-					dislodgedFrom_ = move->getPiece()->getLocation();
+					dislodgedFrom_ = move->getPiece()->getFullLocation();
 					dislodged_ = YES;
 					return true;
 				}
