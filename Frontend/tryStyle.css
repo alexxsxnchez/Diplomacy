@@ -1,7 +1,44 @@
-.navbar-brand div {
-	width: 6rem;
+body {
+	padding-top: 4.5rem;
+	background-color: #f0f0f0;
 }
 
+.navbar-brand div {
+	width: 2.2rem;
+}
+
+/*#map-container {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}*/
+
+#movemenu button {
+	width: 100%;
+	background-color: #f0f0f0;
+}
+
+.game-container {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	height: 100%;
+	/*min-height: 90%;*/
+}
+
+#order-container {
+	height: 95%;
+	width:100%;
+}
+
+#status-container {
+	height: 95%;
+	width: 100%;
+	padding-left: 1rem;
+}
+
+#movemenu {
+	position: absolute;
+	padding: 5px;
+}
 /*.image-container {
 	overflow: hidden;
 }

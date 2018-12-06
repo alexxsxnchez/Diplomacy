@@ -103,7 +103,7 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	this.firstLocation = territory;
 	this.selectedUnit = selectedUnit;
 	this.selectPhase = SelectPhase.MOVEMENU;
-	this.view.showMoveMenu(options);
+	this.view.showMoveMenu(options, territory);
 }
 
 MapController.prototype.moveMenuOptionNotSelected = function(territory) {
@@ -124,7 +124,7 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 		}
 		options.push(MoveType.MOVESC);
 		this.selectPhase = SelectPhase.COAST1;
-		this.view.showMoveMenu(options);
+		this.view.showMoveMenu(options, territory);
 		return;
 	}
 	console.log('haha');
@@ -158,7 +158,7 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			this.selectPhase = SelectPhase.CONVOYMENU;
 			options.push(MoveType.LANDROUTE);
 			options.push(MoveType.VIACONVOY);
-			this.view.showMoveMenu(options);
+			this.view.showMoveMenu(options, territory);
 			return;
 		}
 	}
@@ -192,7 +192,7 @@ MapController.prototype.thirdTerritorySelected = function(territory) {
 		}
 		options.push(MoveType.MOVESC);
 		this.selectPhase = SelectPhase.COAST2;
-		this.view.showMoveMenu(options);
+		this.view.showMoveMenu(options, territory);
 	} else {
 		this.moveSelectionComplete();
 	}

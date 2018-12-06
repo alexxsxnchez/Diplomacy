@@ -1263,6 +1263,8 @@ function MapView() {
 			// register click event
 			var self = this;
 			region.click(function(e) {
+				self.mouseX = e.clientX;
+				self.mouseY = e.clientY;
 				self.territoryClickHandler(this.data('id'));
 			});
 	
@@ -1478,11 +1480,12 @@ MapView.prototype.onFailureToClickMoveMenu = function() {
 	//movemenu.style.animation-duration = '1s';
 }
 
-MapView.prototype.showMoveMenu = function(options) {
+MapView.prototype.showMoveMenu = function(options, territory) {
 	this.updateMoveMenu(options);
 	var movemenu = document.getElementById('movemenu');
-	movemenu.style.top = "50%";
-	movemenu.style.left = "50%";
+	var elementBoundingBox = Interactable[territory][0].getBBox();
+	movemenu.style.top = this.mouseY - 15  + "px";
+	movemenu.style.left = this.mouseX + 15 + "px";
 	movemenu.style.display = 'block';
 }
 

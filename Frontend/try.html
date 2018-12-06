@@ -8,13 +8,15 @@
         <link rel="stylesheet" href="tryStyle.css">
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">
-				<div class="container">
-					<img src="img/Garchomp.png" class="img-fluid"></img>
-				</div>
-			</a>
-			<a class="navbar-brand" href="#">Diplomacy</a>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">
+					<div>
+						<img src="img/Garchomp.png" class="img-fluid"></img>
+					</div>
+				</a>
+				<a class="navbar-brand" href="#">Diplomacy</a>
+			</div>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     			<span class="navbar-toggler-icon"></span>
   			</button>
@@ -38,39 +40,52 @@
       			</ul>
       		</div>
 		</nav>
-		<div class="container-fluid">
-			<label id="yearText">1900</label>
-			<label id="phaseText">WINTER</label>
-		</div>
+		
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-sm-7 bg-primary">
-					<div id="map">
-						<!-- Raphaël JS Map Here -->
-						
+				<div class="col-sm-7">
+					<div class="game-container">
+						<div id="map">
+							<!-- Raphaël JS Map Here -->
+						</div>
 					</div>
 				</div>
-				<div class="col-sm bg-secondary">
-					<button id="finalizebutton">Finalize</button>
-					<div id="movemenu">
-						<button id="holdbutton">Hold</button>
-						<button id="movebutton">Move</button>
-						<button id="supportbutton">Support</button>
-						<button id="convoybutton">Convoy</button>
-						<button id="retreatbutton">Retreat</button>
-						<button id="destroybutton">Destroy</button>
-						<button id="buildarmybutton">Build Army</button>
-						<button id="buildfleetbutton">Build Fleet</button>
-						<button id="buildncbutton">Build Fleet (NC)</button>
-						<button id="buildscbutton">Build Fleet (SC)</button>
-						<button id="movencbutton">NC</button>
-						<button id="moveecbutton">EC</button>
-						<button id="movescbutton">SC</button>
-						<button id="landroutebutton">Land Route</button>
-						<button id="viaconvoybutton">Via Convoy</button>
+				<div class="col-sm">
+					<div class="game-container">
+						<div class="row h-50">
+							<div id="status-container" class="col-xs-12 bg-warning">	
+								<h2>Game Status</h2>
+								<label id="yearText">1900</label>
+								<label id="phaseText">WINTER</label>
+							</div>
+						</div>
+						
+						<div class="row h-50 flex-column-reverse">
+							<div id="order-container" class="col-xs-12 bg-info">
+								<button id="finalizebutton">Finalize</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+		
+		<div id="movemenu" class="bg-warning m-auto border border-dark rounded">
+			<button id="holdbutton" class="btn-sm">Hold</button>
+			<button id="movebutton" class="btn-sm">Move</button>
+			<button id="supportbutton" class="btn-sm">Support</button>
+			<button id="convoybutton" class="btn-sm">Convoy</button>
+			<button id="retreatbutton" class="btn-sm">Retreat</button>
+			<button id="destroybutton" class="btn-sm">Destroy</button>
+			<button id="buildarmybutton" class="btn-sm">Build Army</button>
+			<button id="buildfleetbutton" class="btn-sm">Build Fleet</button>
+			<button id="buildncbutton" class="btn-sm">Build Fleet (NC)</button>
+			<button id="buildscbutton" class="btn-sm">Build Fleet (SC)</button>
+			<button id="movencbutton" class="btn-sm">NC</button>
+			<button id="moveecbutton" class="btn-sm">EC</button>
+			<button id="movescbutton" class="btn-sm">SC</button>
+			<button id="landroutebutton" class="btn-sm">Land Route</button>
+			<button id="viaconvoybutton" class="btn-sm">Via Convoy</button>
 		</div>
 		
 		<script src="Nation.js"></script>
