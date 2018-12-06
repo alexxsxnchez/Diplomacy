@@ -1484,8 +1484,8 @@ MapView.prototype.showMoveMenu = function(options, territory) {
 	this.updateMoveMenu(options);
 	var movemenu = document.getElementById('movemenu');
 	var elementBoundingBox = Interactable[territory][0].getBBox();
-	movemenu.style.top = this.mouseY - 15  + "px";
-	movemenu.style.left = this.mouseX + 15 + "px";
+	movemenu.style.top = this.mouseY - 70  + "px";
+	movemenu.style.left = this.mouseX + 10 + "px";
 	movemenu.style.display = 'block';
 }
 
