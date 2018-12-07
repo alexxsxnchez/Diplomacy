@@ -1284,24 +1284,9 @@ function MapView() {
 	});
 }
 
-MapView.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized) {
-	this.updateUI(year, phase);
+MapView.prototype.update = function(territories, units, dislodgedUnits) {
 	colourTerritories(territories);
 	drawUnits(units, dislodgedUnits);
-	this.updateIsFinalized(isFinalized);
-}
-
-MapView.prototype.updateUI = function(year, phase) {
-	document.getElementById('yearText').innerHTML = year;
-	document.getElementById('phaseText').innerHTML = phase;
-}
-
-MapView.prototype.updateIsFinalized = function(isFinalized) {
-	var text = 'Finalize';
-	if(isFinalized) {
-		text = 'Unfinalize';
-	}
-	document.getElementById('finalizebutton').innerHTML = text;
 }
 
 function colourTerritories(territoryOwnership) {
@@ -1465,12 +1450,6 @@ MapView.prototype.addRouteSelectedHandler = function(routeSelectedHandler) {
 	});
 	document.getElementById('viaconvoybutton').addEventListener("click", function() {
 		routeSelectedHandler(MoveType.VIACONVOY);
-	});
-}
-
-MapView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
-	document.getElementById('finalizebutton').addEventListener("click", function() {
-		finalizeClickHandler();
 	});
 }
 

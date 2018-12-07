@@ -51,6 +51,21 @@ button {
 	position: absolute;
 	padding: 5px;
 }
+
+label, h1, h2, h3, h4, h5, h6, p {
+	-webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+svg text {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
 /*.image-container {
 	overflow: hidden;
 }
