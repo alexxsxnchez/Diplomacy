@@ -17,7 +17,6 @@ class ArmyPiece : public Piece {
 		bool isConvoyValid(const ConvoyMove * move, Graph * graph) const;
 		void determineConvoyStatus(MovementMove * move, Graph * graph);
 		std::unordered_set<string> getNeighbours(Graph * graph) const;
-		string getFullLocation() const;
 };
 
 #endif

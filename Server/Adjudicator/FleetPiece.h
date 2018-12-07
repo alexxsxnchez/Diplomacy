@@ -25,8 +25,6 @@ class FleetPiece : public Piece {
 		void determineConvoyStatus(MovementMove * move, Graph * graph);
 		
 		std::unordered_set<string> getNeighbours(Graph * graph) const;
-		
-		string getFullLocation() const;
 };
 
 #endif

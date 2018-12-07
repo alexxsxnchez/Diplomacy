@@ -26,7 +26,6 @@ class Piece {
 		Piece(Nation nationality, string startingLocation);
 		Nation getNationality() const;
 		string getLocation() const;
-		virtual string getFullLocation() const = 0;
 		void setLocation(string newLocation);
 //		virtual vector<Move> findPossibleMoves(const Graph * territories) const = 0;
 		bool isHoldValid(const HoldMove * move, Graph * graph) const;

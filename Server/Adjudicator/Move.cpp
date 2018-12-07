@@ -32,7 +32,7 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 			if(move->getMoveDecision() != NO) {
 				canBecomeSustained = false;
 				if(move->getMoveDecision() == YES) {
-					dislodgedFrom_ = move->getPiece()->getFullLocation();
+					dislodgedFrom_ = move->getPiece()->getLocation();
 					dislodged_ = YES;
 					return true;
 				}
@@ -52,13 +52,15 @@ bool Move::determineDislodgeDecision(MoveProcessor & processor) {
 	return false;
 }
 
-std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const {
+std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<string> & contestedAreas, Graph * graph) const {
 	std::unordered_set<string> retreatOptions = piece_->getNeighbours(graph); // with coasts
 //	std::cerr << "neighbours" << std::endl;
 /*	for(string s : retreatOptions) {
 		std::cerr << s << std::endl;
 	}
 	*/
+	bool dislodgedFromNotContested = contestedAreas.count(dislodgedFrom_) == 0;
+	contestedAreas.insert(dislodgedFrom_);
 	for(string contestedArea : contestedAreas) {
 		retreatOptions.erase(contestedArea);
 		if(contestedArea == "Spain") {
@@ -78,7 +80,9 @@ std::unordered_set<string> Move::calculateRetreatOptions(std::unordered_set<stri
 			retreatOptions.erase("Bulgaria");
 		}
 	}
-	retreatOptions.erase(dislodgedFrom_);
+	if(dislodgedFromNotContested) {
+		contestedAreas.erase(dislodgedFrom_);
+	}
 	return retreatOptions;
 }
 
