@@ -52,16 +52,120 @@
 				</div>
 				<div class="col-sm">
 					<div class="game-container">
-						<div class="row h-50">
+						<div class="row status-row">
 							<div id="status-container" class="col-xs-12 bg-warning">	
-								<h2>Game Status</h2>
+								<h5>Game Status</h5>
 								<label id="yearText">1900</label>
 								<label id="phaseText">WINTER</label>
 							</div>
 						</div>
 						
-						<div class="row h-50 flex-column-reverse">
+						<div class="row order-row flex-column-reverse">
 							<div id="order-container" class="col-xs-12 bg-info">
+								<table class="orderList">
+									<tr>
+										<th>Austria</th>
+										<td id="austria-orders" class="td-left">
+											<p id="order_Vienna">A Vienna</p>
+											<p id="order_Budapest">A Budapest</p>
+											<p id="order_Trieste">F Trieste</p>
+										</td>
+									</tr>
+									<tr>
+										<th>England</th>
+										<td id="england-orders" class="td-left">
+											<p id="order_Edinburgh">F Edinburgh</p>
+											<p id="order_Liverpool">A Liverpool</p>
+											<p id="order_London">F London</p>
+										</td>
+									</tr>
+									<tr>
+										<th>France</th>
+										<td id="france-orders" class="td-left">
+											<p id="order_Brest">F Brest</p>
+											<p id="order_Paris">A Paris</p>
+											<p id="order_Marseilles">A Marseilles</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Germany</th>
+										<td id="germany-orders" class="td-left">
+											<p id="order_Munich">A Munich</p>
+											<p id="order_Berlin">A Berlin</p>
+											<p id="order_Kiel">F Kiel</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Italy</th>
+										<td id="italy-orders" class="td-right">
+											<p id="order_Venice">A Venice</p>
+											<p id="order_Rome">A Rome</p>
+											<p id="order_Naples">F Naples</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Russia</th>
+										<td id="russia-orders" class="td-right">
+											<p id="order_StPetersburg">F St. Petersburg (SC)</p>
+											<p id="order_Warsaw">A Warsaw</p>
+											<p id="order_Moscow">A Moscow</p>
+											<p id="order_Sevastopol">F Sevastopol</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Turkey</th>
+										<td id="turkey-orders" class="td-right">
+											<p id="order_Constantinople">A Constantinople</p>
+											<p id="order_Ankara">F Ankara</p>
+											<p id="order_Smyrna">A Smyrna</p>
+										</td>
+									</tr>
+									
+								</table>
+								
+								
+								
+								<!--<div class="row">
+									<div class="col-xs-12">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<h6>Austria</h6>
+												<p>Trieste -</p>
+												<p>Budapest -</p>
+												<p>Vienna -</p>
+										
+												<ul class="list-group list-group-flush list-group-sm">
+													<li class="list-group-item">Trieste -</li>
+													<li class="list-group-item">Budapest -</li>
+													<li class="list-group-item">Vienna -</li>
+												</ul>
+											</li>
+											<li class="list-group-item">England</li>
+											<li class="list-group-item">France</li>
+											<li class="list-group-item">Germany</li>
+										</ul>
+									</div>
+									<div class="col-xs">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<h6>Italy</h6>
+												<p>Venice -</p>
+												<p>Naples -</p>
+												<p>Rome -</p>
+										
+												<ul class="list-group list-group-flush list-group-sm">
+													<li class="list-group-item">Trieste -</li>
+													<li class="list-group-item">Budapest -</li>
+													<li class="list-group-item">Vienna -</li>
+												</ul>
+											</li>
+											<li class="list-group-item">Russia</li>
+											<li class="list-group-item">Turkey</li>
+										</ul>
+									
+									</div>
+								</div>
+								-->
 								<button id="finalizebutton">Finalize</button>
 							</div>
 						</div>

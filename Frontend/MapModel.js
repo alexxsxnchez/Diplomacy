@@ -276,6 +276,7 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	move.coast = coast;
 	move.viaConvoy = viaConvoy;
 	this.moveCreatedHandler(move);
+	this.presenter.updateMoves(move, this.territories);
 }
 
 MapModel.prototype.toggleIsFinalized = function() {

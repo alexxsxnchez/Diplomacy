@@ -310,7 +310,7 @@ Game.prototype.prepareNewGameState = function(results, next) {
 		}
 	});
 	console.log(units);
-	
+	gameState.units = units;
 	
 	
 	// update territories

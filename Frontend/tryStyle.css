@@ -29,22 +29,57 @@ button {
 	color: #A8A8A8;
 }
 
+.orderList {
+	font-size: 9pt;
+	line-height: 1px;
+	border-collapse: collapse;
+}
+
+.orderList tr:first-child {
+	border-top: none;
+}
+
+.orderList tr {
+	border-top: 1px solid #ddd;
+	margin-top: 100px;
+}
+
+.orderList th, .orderList td {
+	padding: 3px 8px 6px 8px;
+	vertical-align: top;
+}
+
+.orderlist td {
+	padding-right: 10px;
+}
+
 .game-container {
 	padding-left: 1rem;
 	padding-right: 1rem;
-	height: 100%;
-	/*min-height: 90%;*/
+	/*height: 100%;*/
+	min-height: 410px;
+	margin-bottom: 20px;
+}
+
+.game-container .status-row {
+	height: 20%;
+}
+
+.game-container .order-row {
+	height: 80%;
 }
 
 #order-container {
 	height: 95%;
 	width:100%;
+	padding: 10px;
 }
 
 #status-container {
 	height: 95%;
 	width: 100%;
-	padding-left: 1rem;
+	padding: 10px, 0, 0, 10px;
+	box-sizing: border-box;
 }
 
 #movemenu {
