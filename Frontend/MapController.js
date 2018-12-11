@@ -67,7 +67,6 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	}
 	var options = [];
 	if(selectedUnit !== null) {
-		this.mapView.highlightTerritory(territory);
 		if(phase === 'WINTER') {
 			if(this.model.getStarToUnitCount(selectedUnit.nation) < 0) {
 				options.push(MoveType.DESTROY);
@@ -86,7 +85,6 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 			}
 		}
 	} else if(phase === "WINTER") {
-		this.mapView.highlightTerritory(territory);
 		// check if home centre and then we can show build option
 		if(this.model.territories[territory] === undefined) {
 			return;
@@ -104,6 +102,7 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	this.firstLocation = territory;
 	this.selectedUnit = selectedUnit;
 	this.selectPhase = SelectPhase.MOVEMENU;
+	this.mapView.highlightFirstLocation(territory);
 	this.mapView.showMoveMenu(options, territory);
 }
 
@@ -124,6 +123,9 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			options.push(MoveType.MOVENC);
 		}
 		options.push(MoveType.MOVESC);
+		if(territory !== this.firstLocation) {
+			this.mapView.highlightSecondLocation(territory);
+		}
 		this.selectPhase = SelectPhase.COAST1;
 		this.mapView.showMoveMenu(options, territory);
 		return;
@@ -159,6 +161,9 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			this.selectPhase = SelectPhase.CONVOYMENU;
 			options.push(MoveType.LANDROUTE);
 			options.push(MoveType.VIACONVOY);
+			if(territory !== this.firstLocation) {
+				this.mapView.highlightSecondLocation(territory);
+			}
 			this.mapView.showMoveMenu(options, territory);
 			return;
 		}
@@ -170,6 +175,9 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			this.moveSelectionComplete();
 			break;
 		default:
+			if(territory !== this.firstLocation) {
+				this.mapView.highlightSecondLocation(territory);
+			}
 			this.selectPhase = SelectPhase.SECOND;
 	}
 }

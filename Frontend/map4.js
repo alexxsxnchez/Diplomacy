@@ -1214,37 +1214,40 @@ for(var i = 0; i < Units.length; i++) {
 // outside frame ---
 var Frame = rsr.path("M0 0 L1700 0 L1700 1496 L0 1496 L0 0 Z").attr({fill: 'none',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t0, 0").data('id', 'path_kf');
 
-
-function LightenDarkenColor(col,amt) {
+function LightenDarkenColor(color, amt) {
     var usePound = false;
-    if ( col[0] == "#" ) {
-        col = col.slice(1);
+    if ( color[0] == "#" ) {
+        color = color.slice(1);
         usePound = true;
     }
-
-    var num = parseInt(col,16);
-
-    var r = (num >> 16) + amt;
-
-    if ( r > 255 ) r = 255;
-    else if  (r < 0) r = 0;
-
-    var b = ((num >> 8) & 0x00FF) + amt;
-
-    if ( b > 255 ) b = 255;
-    else if  (b < 0) b = 0;
-
-    var g = (num & 0x0000FF) + amt;
-
-    if ( g > 255 ) g = 255;
-    else if  ( g < 0 ) g = 0;
+    var num = parseInt(color,16);
+    var r = (num >> 16) * amt;
+    if ( r > 255 ) {
+    	r = 255;
+    } else if  (r < 0) {
+    	r = 0;
+    }
+    var b = ((num >> 8) & 0x00FF) * amt;
+    if ( b > 255 ) {
+    	b = 255;
+    } else if (b < 0) {
+    	b = 0;
+    }
+    var g = (num & 0x0000FF) * amt;
+    if ( g > 255 ) {
+    	g = 255; 
+    } else if( g < 0 ) {
+    	g = 0;
+    }
 
     return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
+
 function MapView() {
 	this.closeMoveMenu();
-	this.highlighted = null;
+	this.firstLocHighlighted = null;
+	this.secondLocHighlighted = null;
 	// disable mouse events for some territories
 	for(var i = 0; i < NotInteractable.length; i++) {
 		NotInteractable[i].node.setAttribute('pointer-events', 'none');
@@ -1270,12 +1273,18 @@ function MapView() {
 	
 			// register hover effect
 			region.mouseover(function(e) {
+				if(self.firstLocHighlighted === id || self.secondLocHighlighted === id) {
+					return;
+				}
 				territory.forEach((region2) => {
-					region2.node.style.fill = LightenDarkenColor(region2.attr('fill'), -40);
+					region2.node.style.fill = LightenDarkenColor(region2.attr('fill'), 0.75);
 				});
 			});
 
 			region.mouseout(function(e) {
+				if(self.firstLocHighlighted === id || self.secondLocHighlighted === id) {
+					return;
+				}
 				territory.forEach((region2) => {
 					region2.node.style.fill = region2.attr('fill');
 				});
@@ -1540,11 +1549,65 @@ MapView.prototype.closeMoveMenu = function() {
 	movemenu.style.display = 'none';
 }
 
-MapView.prototype.highlightTerritory = function(territory) {
-	this.highlighted = territory;	
+MapView.prototype.highlightFirstLocation = function(territoryName) {
+	this.firstLocHighlighted = territoryName;
+	var territory = Interactable[territoryName];
+	var self = this;
+	territory.forEach((region) => {
+		self.startHighlightAnimation(region, territoryName);
+	});
+}
 
+MapView.prototype.highlightSecondLocation = function(territoryName) {
+	this.secondLocHighlighted = territoryName;
+	var territory = Interactable[territoryName];
+	var self = this;
+	territory.forEach((region) => {
+		self.startHighlightAnimation(region, territoryName);
+	});
 }
 
 MapView.prototype.unhighlightTerritory = function() {
-	this.highlighted = null;
+	var firstLocName = this.firstLocHighlighted;
+	var secondLocName = this.secondLocHighlighted;
+	this.firstLocHighlighted = null;
+	this.secondLocHighlighted = null;
+	if(firstLocName === null) {
+		return;
+	}
+	var self = this;
+	var firstTerritory = Interactable[firstLocName];
+	firstTerritory.forEach((region) => {
+		region.node.style.fill = region.attr('fill');
+	});
+	if(secondLocName === null) {
+		return;
+	}
+	var secondTerritory = Interactable[secondLocName];
+	secondTerritory.forEach((region) => {
+		region.node.style.fill = region.attr('fill');
+	});
+}
+
+MapView.prototype.startHighlightAnimation = function(region, territoryName) {
+	var count = 0.75;
+	var goingDown = true;
+	var self = this;
+	let timer = setInterval(function() {
+		if (self.firstLocHighlighted !== territoryName && self.secondLocHighlighted !== territoryName) {
+			clearInterval(timer);
+		} else {
+			if(goingDown) {
+				count -= 0.02;
+			} else {
+				count += 0.02;
+			}
+			if(count >= 1.0) {
+				goingDown = true;
+			} else if(count <= 0.6) {
+				goingDown = false;
+			}
+			region.node.style.fill = LightenDarkenColor(region.attr('fill'), count);
+		}
+	}, 50);
 }
