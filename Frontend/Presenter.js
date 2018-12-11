@@ -90,8 +90,11 @@ Presenter.prototype.update = function(year, phase, territories, units, dislodged
 	var isBuildPhase = false;
 	if(phase === "WINTER") {
 		isBuildPhase = true;
-	} else if(phase === "RETREAT_FALL" || phase === "RETREAT_SPRING") {
-		moveListUnits = dislodgeUnits;
+	} else if(phase === "FALL_RETREAT" || phase === "SPRING_RETREAT") {
+		moveListUnits = {};
+		Object.keys(dislodgedUnits).forEach((key) => {
+			moveListUnits[key] = dislodgedUnits[key].unit;
+		});
 	} else {
 		moveListUnits = units;
 	}
@@ -127,14 +130,6 @@ Presenter.prototype.resetMoveList = function(units, territories, isBuildPhase) {
 }
 
 Presenter.prototype.updateMoves = function(move, territories) {
-	/*var move = {};
-	move.unit = unit;
-	move.moveType = moveType;
-	move.firstLoc = firstLocation;
-	move.secondLoc = secondLocation;
-	move.thirdLoc = thirdLocation;
-	move.coast = coast;
-	move.viaConvoy = viaConvoy;*/
 	var description = "";
 	var unitType;
 	if(move.unit !== null && move.unit.type === 'army') {
