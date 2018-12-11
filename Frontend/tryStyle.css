@@ -29,7 +29,27 @@ button {
 	color: #A8A8A8;
 }
 
-.orderList {
+#status-table {
+	/*border: 1px solid black;
+  	border-collapse: collapse;*/
+  	width: 100%;
+}
+
+#status-table th, #status-table td {
+	vertical-align: top;
+	/*border: 1px solid black;
+  	border-collapse: collapse;*/
+}
+
+#status-table td:not(#year-phase) {
+	text-align: center;
+}
+
+#status-table td span:first-child {
+	line-height: 30px;
+}
+
+.orderList, #status-table {
 	font-size: 9pt;
 }
 
@@ -61,24 +81,29 @@ button {
 }
 
 .game-container .status-row {
-	height: 20%;
+
 }
 
 .game-container .order-row {
-	height: 80%;
+
+}
+
+#year-phase {
+	text-align: right;
 }
 
 #order-container {
-	height: 95%;
-	width:100%;
-	padding: 10px;
+	/*width: 100%;*/
+	margin-top: 1rem;
+	padding: 1rem;
 	background-color: #ddd;
+	border-left: 6px solid #abcdef;
+	border-radius: 5px;
 }
 
 #status-container {
-	height: 95%;
+	padding: 1rem;
 	width: 100%;
-	padding: 10px, 0, 0, 10px;
 }
 
 #movemenu {
@@ -89,6 +114,11 @@ button {
 #finalizebutton {
 	margin-top: 1rem;
 	width: 100%;
+}
+
+#finalizebutton:focus {
+	outline: none;
+	box-shadow: none;
 }
 
 label, h1, h2, h3, h4, h5, h6, p {
