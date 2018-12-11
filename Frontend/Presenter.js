@@ -108,7 +108,7 @@ Presenter.prototype.updateIsFinalized = function(isFinalized) {
 Presenter.prototype.resetMoveList = function(units, territories, isBuildPhase) {
 	this.gameView.clearOrderLists();
 	if(isBuildPhase) {
-		//TODO
+		
 		return;
 	}
 	Object.keys(units).forEach((location) => {

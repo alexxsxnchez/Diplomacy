@@ -31,8 +31,6 @@ button {
 
 .orderList {
 	font-size: 9pt;
-	line-height: 1px;
-	border-collapse: collapse;
 }
 
 .orderList tr:first-child {
@@ -40,17 +38,18 @@ button {
 }
 
 .orderList tr {
-	border-top: 1px solid #ddd;
-	margin-top: 100px;
+	border-top: 1px solid #999;
 }
 
 .orderList th, .orderList td {
-	padding: 3px 8px 6px 8px;
+	padding: 10px 8px 0px 8px;
 	vertical-align: top;
 }
 
-.orderlist td {
-	padding-right: 10px;
+.orderList td p {
+	line-height: 1;
+	margin-top: 3px;
+	margin-bottom: 7px;
 }
 
 .game-container {
@@ -73,18 +72,23 @@ button {
 	height: 95%;
 	width:100%;
 	padding: 10px;
+	background-color: #ddd;
 }
 
 #status-container {
 	height: 95%;
 	width: 100%;
 	padding: 10px, 0, 0, 10px;
-	box-sizing: border-box;
 }
 
 #movemenu {
 	position: absolute;
 	padding: 5px;
+}
+
+#finalizebutton {
+	margin-top: 1rem;
+	width: 100%;
 }
 
 label, h1, h2, h3, h4, h5, h6, p {
