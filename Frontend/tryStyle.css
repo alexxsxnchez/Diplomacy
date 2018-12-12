@@ -41,15 +41,21 @@ button {
   	border-collapse: collapse;*/
 }
 
+#status-table td:first-child {
+	border-left: none !important;
+}
+
 #status-table td:not(#year-phase) {
+	font-size: 9pt;
 	text-align: center;
+	border-left: 1px solid #999;
 }
 
 #status-table td span:first-child {
 	line-height: 30px;
 }
 
-.orderList, #status-table {
+.orderList {
 	font-size: 9pt;
 }
 

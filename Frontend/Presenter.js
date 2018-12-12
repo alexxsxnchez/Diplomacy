@@ -76,16 +76,62 @@ LocationPresentationNames = {
 	"Syria": "Syria"
 }
 
-
-
 function Presenter(mapView, gameView) {
 	this.mapView = mapView;
 	this.gameView = gameView;
 }
 
+Presenter.prototype.createCounts = function(territories, units) {
+	var counts = {
+		"AUSTRIA": {
+			stars: 0,
+			units: 0
+		},
+		"ENGLAND": {
+			stars: 0,
+			units: 0
+		},
+		"FRANCE": {
+			stars: 0,
+			units: 0
+		},
+		"GERMANY": {
+			stars: 0,
+			units: 0
+		},
+		"ITALY": {
+			stars: 0,
+			units: 0
+		},
+		"RUSSIA": {
+			stars: 0,
+			units: 0
+		},
+		"TURKEY": {
+			stars: 0,
+			units: 0
+		},
+		"NEUTRAL": {
+			stars: 0,
+			units: 0
+		},
+	}
+	Object.keys(territories).forEach((key) => {
+		if(territories[key].hasStar) {
+			var nation = territories[key].nation;
+			counts[nation].stars++;
+		}
+	});
+	Object.keys(units).forEach((key) => {
+		var nation = units[key].nation;
+		counts[nation].units++;
+	});
+	return counts;
+}
+
 Presenter.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized) {
 	this.mapView.update(territories, units, dislodgedUnits);
-	this.gameView.update(year, phase, isFinalized);
+	this.gameView.update(year, phase, this.createCounts(territories, units), isFinalized);
 	var moveListUnits;
 	var isBuildPhase = false;
 	if(phase === "WINTER") {
