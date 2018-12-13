@@ -1248,6 +1248,8 @@ function MapView() {
 	this.closeMoveMenu();
 	this.firstLocHighlighted = null;
 	this.secondLocHighlighted = null;
+	this.timers = {};
+	this.currentId = 0;
 	// disable mouse events for some territories
 	for(var i = 0; i < NotInteractable.length; i++) {
 		NotInteractable[i].node.setAttribute('pointer-events', 'none');
@@ -1550,20 +1552,30 @@ MapView.prototype.closeMoveMenu = function() {
 }
 
 MapView.prototype.highlightFirstLocation = function(territoryName) {
+	if(this.firstLocHighlighted === territoryName) {
+		return;
+	}
 	this.firstLocHighlighted = territoryName;
 	var territory = Interactable[territoryName];
+	delete this.timers[this.currentId];
+	this.currentId++;
+	var id = this.currentId;
+	this.timers[id] = false;
 	var self = this;
 	territory.forEach((region) => {
-		self.startHighlightAnimation(region, territoryName);
+		self.startHighlightAnimation(region, territoryName, id);
 	});
 }
 
 MapView.prototype.highlightSecondLocation = function(territoryName) {
+	if(this.secondLocHighlighted === territoryName) {
+		return;
+	}
 	this.secondLocHighlighted = territoryName;
 	var territory = Interactable[territoryName];
 	var self = this;
 	territory.forEach((region) => {
-		self.startHighlightAnimation(region, territoryName);
+		self.startHighlightAnimation(region, territoryName, this.currentId);
 	});
 }
 
@@ -1572,6 +1584,10 @@ MapView.prototype.unhighlightTerritory = function() {
 	var secondLocName = this.secondLocHighlighted;
 	this.firstLocHighlighted = null;
 	this.secondLocHighlighted = null;
+	if(this.timers[this.currentId]) {
+		delete this.timers[this.currentId];
+	}
+
 	if(firstLocName === null) {
 		return;
 	}
@@ -1579,6 +1595,7 @@ MapView.prototype.unhighlightTerritory = function() {
 	var firstTerritory = Interactable[firstLocName];
 	firstTerritory.forEach((region) => {
 		region.node.style.fill = region.attr('fill');
+		region.attr("stroke-dasharray", "");
 	});
 	if(secondLocName === null) {
 		return;
@@ -1586,28 +1603,43 @@ MapView.prototype.unhighlightTerritory = function() {
 	var secondTerritory = Interactable[secondLocName];
 	secondTerritory.forEach((region) => {
 		region.node.style.fill = region.attr('fill');
+		region.attr("stroke-dasharray", "");
 	});
 }
 
-MapView.prototype.startHighlightAnimation = function(region, territoryName) {
+MapView.prototype.startHighlightAnimation = function(region, territoryName, id) {
+	var dashToggle = true;
 	var count = 0.75;
+	var lastCount = 0.75;
 	var goingDown = true;
 	var self = this;
 	let timer = setInterval(function() {
-		if (self.firstLocHighlighted !== territoryName && self.secondLocHighlighted !== territoryName) {
+		if(!(id in self.timers)) {
 			clearInterval(timer);
 		} else {
 			if(goingDown) {
 				count -= 0.02;
+				//region.attr("stroke-dasharray", ". ");
 			} else {
 				count += 0.02;
+				//region.attr("stroke-dasharray", "--.");
 			}
 			if(count >= 1.0) {
 				goingDown = true;
 			} else if(count <= 0.6) {
 				goingDown = false;
 			}
+			if(Math.abs(lastCount - count) > 0.1) {
+				if(dashToggle) {
+					region.attr("stroke-dasharray", "");
+				} else {
+					region.attr("stroke-dasharray", "--");
+				}
+				dashToggle = !dashToggle;
+				lastCount = count;
+			}
 			region.node.style.fill = LightenDarkenColor(region.attr('fill'), count);
+			self.timers[id] = true;
 		}
 	}, 50);
 }
