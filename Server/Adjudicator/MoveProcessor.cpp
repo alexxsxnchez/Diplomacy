@@ -405,7 +405,20 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	std::unordered_set<string> contestedAreas;
 	for(auto it : attacks_) {
 		for(auto it2 : it.second) {
-			if(it2->getDislodgeDecision() == NO) {
+			bool lostHeadOnOrNoPath = false;
+			if(it2->getPathDecision() == NO) {
+				lostHeadOnOrNoPath = true;
+			} else if(it2->getDislodgeDecision() == YES) {
+				auto it3 = attacks_.find(it2->getPiece()->getLocation());
+				if(it3 != attacks_.end()) {
+					for(auto it4 : it3->second) {
+						if(it4->getPiece()->getLocation() == it.first) {
+							lostHeadOnOrNoPath = true;
+						}
+					}
+				}
+			}
+			if(!lostHeadOnOrNoPath) {
 				contestedAreas.insert(it.first);
 			}
 			if(it2->getMoveDecision() == NO) {
@@ -415,10 +428,6 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 	}
 	for(auto it : nonAttacks_) {
 		contestedAreas.insert(it.first);
-	}
-//	std::cerr << "--======----" << std::endl;
-	for(auto it : contestedAreas) {
-//		std::cerr << it << std::endl;
 	}
 	
 	// display results:
