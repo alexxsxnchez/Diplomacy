@@ -33,6 +33,10 @@ GameView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
 	});
 }
 
+GameView.prototype.addMoveDeletedHandler = function(moveDeletedHandler) {
+	this.moveDeletedHandler = moveDeletedHandler;
+}
+
 GameView.prototype.updateFinalizeButton = function(isFinalized) {
 	var text = 'Finalize';
 	if(isFinalized) {
@@ -72,7 +76,7 @@ GameView.prototype.clearOrderLists = function() {
 	}
 }
 
-GameView.prototype.updateMove = function(location, nation, description) {
+GameView.prototype.updateMove = function(location, nation, description, showDeleteButton = false) {
 	var idName;
 	switch(nation) {
 		case Nation.AUSTRIA:
@@ -98,12 +102,38 @@ GameView.prototype.updateMove = function(location, nation, description) {
 			break;
 	}
 	var list = document.getElementById(idName);
-	var oldOrder = document.getElementById('order_' + location);
+	var orderId = 'order_' + location;
+	var oldOrder = document.getElementById(orderId);
 	var orderExists = oldOrder !== undefined && oldOrder !== null;
 	var order = document.createElement('p');
-	order.setAttribute('id', 'order_' + location);
+	order.setAttribute('id', orderId);
 	var text = document.createTextNode(description);
 	order.appendChild(text);
+	if(showDeleteButton) {
+		var button = document.createElement('button');
+		button.innerHTML = "X";
+		button.style.border = "none";
+		button.style.background = "transparent";
+		button.style.color = "red";
+		button.style.outline = "none";
+		button.style.margin = "0";
+		let mouseOver = function() {
+			button.style.color = "grey";
+		}
+		let mouseOut = function() {
+			button.style.color = "red";
+		}
+		var self = this;
+		let mouseClick = function() {
+			list.removeChild(order);
+			self.moveDeletedHandler(location);
+		}
+		button.addEventListener("mouseover", mouseOver);
+		button.addEventListener("mouseout", mouseOut);
+		button.addEventListener("click", mouseClick);
+		order.appendChild(button);
+	}
+	
 	if(orderExists) {
 		list.replaceChild(order, oldOrder);
 	} else {

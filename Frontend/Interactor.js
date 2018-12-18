@@ -2,12 +2,18 @@ function Interactor(model) {
 	this.model = model;
 	this.setupServerConnection();
 	this.model.addMoveCreatedHandler(this.onMoveCreated.bind(this));
+	this.model.addMoveDeletedHandler(this.onMoveDeleted.bind(this));
 	this.model.addFinalizeHandler(this.onFinalizedToggled.bind(this));
 }
 
 Interactor.prototype.onMoveCreated = function(move) {
 	console.log('emitting move');
 	this.socket.emit('move', move);
+}
+
+Interactor.prototype.onMoveDeleted = function(location) {
+	console.log('deleting move');
+	this.socket.emit('deletemove', location);
 }
 
 Interactor.prototype.onFinalizedToggled = function(isFinalized) {

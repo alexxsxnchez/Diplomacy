@@ -9,6 +9,10 @@ MapModel.prototype.addMoveCreatedHandler = function(handler) {
 	this.moveCreatedHandler = handler;
 }
 
+MapModel.prototype.addMoveDeletedHandler = function(handler) {
+	this.moveDeletedHandler = handler;
+}
+
 MapModel.prototype.addFinalizeHandler = function(handler) {
 	this.finalizeHandler = handler;
 }
@@ -277,6 +281,17 @@ MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secon
 	move.viaConvoy = viaConvoy;
 	this.moveCreatedHandler(move);
 	this.presenter.updateMoves(move, this.territories);
+}
+
+MapModel.prototype.deleteMove = function(location) {
+	this.moveDeletedHandler(location);
+	if(this.phase != "WINTER") {
+		if(this.phase == "SPRING" || this.phase == "FALL") {
+			this.presenter.resetMove(this.units, location);
+		} else {
+			this.presenter.resetMove(this.dislodgedUnits, location, true);
+		}
+	}
 }
 
 MapModel.prototype.toggleIsFinalized = function() {

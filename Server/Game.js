@@ -17,6 +17,10 @@ Game.prototype.setupEvents = function() {
 		console.log('move received: ' + JSON.stringify(moveData, null, '    ')); 
 		self.addMove(moveData);
 	});
+	this.socket.on('deletemove', function(location) {
+		console.log('delete move request received: ' + location);
+		self.deleteMove(location);
+	});
 	this.socket.on('finalize', function(finalizeData) {
 		console.log('player finalized: ' + finalizeData);
 		self.playerFinalized(finalizeData);
@@ -34,6 +38,10 @@ Game.prototype.start = function(move) {
 
 Game.prototype.addMove = function(move) {
 	this.model.addMove(move);
+}
+
+Game.prototype.deleteMove = function(location) {
+	this.model.deleteMove(location);
 }
 
 Game.prototype.playerFinalized = function(player) {

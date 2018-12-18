@@ -29,6 +29,7 @@ function MapController(mapView, gameView, model) {
 	this.mapView.addCoastSelectedHandler(this.onCoastSpecifierSelected.bind(this));
 	this.gameView.addFinalizeSelectedHandler(this.onFinalizeSelected.bind(this));
 	this.mapView.addRouteSelectedHandler(this.onRouteSelected.bind(this));
+	this.gameView.addMoveDeletedHandler(this.onMoveDeleted.bind(this));
 }
 
 MapController.prototype.onTerritorySelected = function(territory) {
@@ -284,3 +285,8 @@ MapController.prototype.onFinalizeSelected = function() {
 	this.model.toggleIsFinalized();
 	this.coastMenuOptionNotSelected();
 }
+
+MapController.prototype.onMoveDeleted = function(location) {
+	this.model.deleteMove(location);
+}
+

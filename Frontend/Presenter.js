@@ -158,21 +158,26 @@ Presenter.prototype.resetMoveList = function(units, territories, isBuildPhase) {
 		return;
 	}
 	Object.keys(units).forEach((location) => {
-		var unitType;
-		if(units[location].type === 'army') {
-			unitType = "A";
-		} else {
-			unitType = "F";
-		}
-		var presenterLocation = LocationPresentationNames[location];
-		if(units[location].coast !== undefined && units[location].coast !== null) {
-			presenterLocation += " (";
-			presenterLocation += units[location].coast;
-			presenterLocation += ")";
-		}
-		var description = unitType + " " + presenterLocation;
-		this.gameView.updateMove(location, units[location].nation, description);
+		this.resetMove(units, location);
 	});
+}
+
+Presenter.prototype.resetMove = function(units, location, isRetreatingUnit = false) {
+	var unit = isRetreatingUnit ? units[location].unit : units[location];
+	var unitType;
+	if(unit.type === 'army') {
+		unitType = "A";
+	} else {
+		unitType = "F";
+	}
+	var presenterLocation = LocationPresentationNames[location];
+	if(unit.coast !== undefined && unit.coast !== null) {
+		presenterLocation += " (";
+		presenterLocation += unit.coast;
+		presenterLocation += ")";
+	}
+	var description = unitType + " " + presenterLocation;
+	this.gameView.updateMove(location, unit.nation, description);
 }
 
 Presenter.prototype.updateMoves = function(move, territories) {
@@ -253,5 +258,5 @@ Presenter.prototype.updateMoves = function(move, territories) {
 	} else {
 		nation = move.unit.nation;
 	}
-	this.gameView.updateMove(move.firstLoc, nation, description);
+	this.gameView.updateMove(move.firstLoc, nation, description, true);
 }
