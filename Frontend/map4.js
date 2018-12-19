@@ -1473,7 +1473,6 @@ MapView.prototype.onFailureToClickMoveMenu = function() {
 MapView.prototype.showMoveMenu = function(options, territory) {
 	this.updateMoveMenu(options);
 	var movemenu = document.getElementById('movemenu');
-	var elementBoundingBox = Interactable[territory][0].getBBox();
 	var scrollLeft = window.pageXOffset;
 	var scrollTop = window.pageYOffset;
 	movemenu.style.top = this.mouseY - 70 + scrollTop + "px";
