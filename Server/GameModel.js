@@ -70,6 +70,25 @@ GameModel.prototype.addMove = function(move) {
 	this.gameState.moves[firstLocation] = move;
 }
 
+GameModel.prototype.deleteMove = function(location) {
+	var defaultMove = {};
+	var phase = this.gameState.phase;
+	if(phase === Phase.SPRING_RETREAT || phase === Phase.FALL_RETREAT) {
+		defaultMove.unit = this.gameState.dislodgedUnits[location];
+		defaultMove.moveType = 'DISBAND';
+	} else if(phase === Phase.WINTER) {
+		delete this.gameState.moves[location];
+		return;
+	} else {
+		defaultMove.unit = this.gameState.units[location];
+		defaultMove.moveType = 'HOLD';
+	}
+	defaultMove.secondLoc = null;
+	defaultMove.thirdLoc = null; 
+	defaultMove.coast = null;
+	this.gameState.moves[location] = defaultMove;
+}
+
 GameModel.prototype.getGameState = function() {
 	return this.gameState;
 }

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <title>Diplomacy</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="tryStyle.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">
+					<div>
+						<img src="img/Garchomp.png" class="img-fluid"></img>
+					</div>
+				</a>
+				<a class="navbar-brand" href="#">Diplomacy</a>
+			</div>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    			<span class="navbar-toggler-icon"></span>
+  			</button>
+  			<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    			<ul class="navbar-nav">
+      				<li class="nav-item active">
+        				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      				<li class="nav-item">
+        				<a class="nav-link" href="#">About</a>
+      				</li>
+      			</ul>
+      		</div>
+		</nav>
+		
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-7">
+					<div class="game-container">
+						<div id="map">
+							<!-- Raphaël JS Map Here -->
+						</div>
+					</div>
+				</div>
+				<div class="col-sm">
+					<div class="game-container">
+						<div class="row status-row">
+							<div id="status-container" class="col-xs-12 bg-warning">
+								<table id="status-table">
+									<tr>
+										<th colspan="5">
+											<h5 id="game_title">Game Title</h5>
+										</th>
+										<td colspan="2" id="year-phase">
+											<span id="yearText">1900</span>
+											<span id="phaseText">WINTER</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span><strong>AUSTRIA</strong><br></span>
+											<span id="austria-stars">3 Centers<br></span>
+											<span id="austria-units">3 Units</span>
+										</td>
+										<td>
+											<span><strong>ENGLAND</strong><br></span>
+											<span id="england-stars">3 Centers<br></span>
+											<span id="england-units">3 Units</span>
+										</td>
+										<td>
+											<span><strong>FRANCE</strong><br></span>
+											<span id="france-stars">3 Centers<br></span>
+											<span id="france-units">3 Units</span>
+										</td>
+										<td>
+											<span><strong>GERMANY</strong><br></span>
+											<span id="germany-stars">3 Centers<br></span>
+											<span id="germany-units">3 Units</span>
+										</td>
+										<td>
+											<span><strong>ITALY</strong><br></span>
+											<span id="italy-stars">3 Centers<br></span>
+											<span id="italy-units">3 Units</span>
+										</td>
+										<td>
+											<span><strong>RUSSIA</strong><br></span>
+											<span id="russia-stars">4 Centers<br></span>
+											<span id="russia-units">4 Units</span>
+										</td>
+										<td>
+											<span><strong>TURKEY</strong><br></span>
+											<span id="turkey-stars">3 Centers<br></span>
+											<span id="turkey-units">3 Units</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						
+						<div class="row order-row flex-column-reverse">
+							<div id="order-container" class="col-xs-12">
+								<table class="orderList">
+									<tr>
+										<th>Austria</th>
+										<td id="austria-orders" class="td-left">
+											<p id="order_Vienna">A Vienna</p>
+											<p id="order_Budapest">A Budapest</p>
+											<p id="order_Trieste">F Trieste</p>
+										</td>
+									</tr>
+									<tr>
+										<th>England</th>
+										<td id="england-orders" class="td-left">
+											<p id="order_Edinburgh">F Edinburgh</p>
+											<p id="order_Liverpool">A Liverpool</p>
+											<p id="order_London">F London</p>
+										</td>
+									</tr>
+									<tr>
+										<th>France</th>
+										<td id="france-orders" class="td-left">
+											<p id="order_Brest">F Brest</p>
+											<p id="order_Paris">A Paris</p>
+											<p id="order_Marseilles">A Marseilles</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Germany</th>
+										<td id="germany-orders" class="td-left">
+											<p id="order_Munich">A Munich</p>
+											<p id="order_Berlin">A Berlin</p>
+											<p id="order_Kiel">F Kiel</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Italy</th>
+										<td id="italy-orders" class="td-right">
+											<p id="order_Venice">A Venice</p>
+											<p id="order_Rome">A Rome</p>
+											<p id="order_Naples">F Naples</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Russia</th>
+										<td id="russia-orders" class="td-right">
+											<p id="order_StPetersburg">F St. Petersburg (SC)</p>
+											<p id="order_Warsaw">A Warsaw</p>
+											<p id="order_Moscow">A Moscow</p>
+											<p id="order_Sevastopol">F Sevastopol</p>
+										</td>
+									</tr>
+									<tr>
+										<th>Turkey</th>
+										<td id="turkey-orders" class="td-right">
+											<p id="order_Constantinople">A Constantinople</p>
+											<p id="order_Ankara">F Ankara</p>
+											<p id="order_Smyrna">A Smyrna</p>
+										</td>
+									</tr>
+									
+								</table>
+								
+								
+								
+								<!--<div class="row">
+									<div class="col-xs-12">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<h6>Austria</h6>
+												<p>Trieste -</p>
+												<p>Budapest -</p>
+												<p>Vienna -</p>
+										
+												<ul class="list-group list-group-flush list-group-sm">
+													<li class="list-group-item">Trieste -</li>
+													<li class="list-group-item">Budapest -</li>
+													<li class="list-group-item">Vienna -</li>
+												</ul>
+											</li>
+											<li class="list-group-item">England</li>
+											<li class="list-group-item">France</li>
+											<li class="list-group-item">Germany</li>
+										</ul>
+									</div>
+									<div class="col-xs">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<h6>Italy</h6>
+												<p>Venice -</p>
+												<p>Naples -</p>
+												<p>Rome -</p>
+										
+												<ul class="list-group list-group-flush list-group-sm">
+													<li class="list-group-item">Trieste -</li>
+													<li class="list-group-item">Budapest -</li>
+													<li class="list-group-item">Vienna -</li>
+												</ul>
+											</li>
+											<li class="list-group-item">Russia</li>
+											<li class="list-group-item">Turkey</li>
+										</ul>
+									
+									</div>
+								</div>
+								-->
+								<button id="finalizebutton" class="btn-danger">Finalize</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="movemenu" class="bg-warning m-auto border border-dark rounded">
+			<button id="holdbutton" class="btn-sm">Hold</button>
+			<button id="movebutton" class="btn-sm">Move</button>
+			<button id="supportbutton" class="btn-sm">Support</button>
+			<button id="convoybutton" class="btn-sm">Convoy</button>
+			<button id="retreatbutton" class="btn-sm">Retreat</button>
+			<button id="destroybutton" class="btn-sm">Destroy</button>
+			<button id="buildarmybutton" class="btn-sm">Build Army</button>
+			<button id="buildfleetbutton" class="btn-sm">Build Fleet</button>
+			<button id="buildncbutton" class="btn-sm">Build Fleet (NC)</button>
+			<button id="buildscbutton" class="btn-sm">Build Fleet (SC)</button>
+			<button id="movencbutton" class="btn-sm">NC</button>
+			<button id="moveecbutton" class="btn-sm">EC</button>
+			<button id="movescbutton" class="btn-sm">SC</button>
+			<button id="landroutebutton" class="btn-sm">Land Route</button>
+			<button id="viaconvoybutton" class="btn-sm">Via Convoy</button>
+		</div>
+		
+		<script src="Nation.js"></script>
+        <script src="MoveType.js"></script>
+        <script src="raphael-min.js"></script>
+        <script src="ConvoyPairs.js"></script>
+        <script src="map4.js"></script>
+        <script src="GameView.js"></script>
+        <script src="Presenter.js"></script>
+        <script src="MapModel.js"></script>
+        <script src="Interactor.js"></script>
+        <script src="MapController.js"></script>
+        <script src="app.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	</body>
+</html>

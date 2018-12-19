@@ -1,16 +1,21 @@
 //var rsr = Raphael('map', '1700', '1496');
 var w = 1700;
 var h = 1496;
-var rsr = Raphael("map");
+var rsr = Raphael("map", '100%', '100%');
 rsr.setViewBox(0,0,w,h,true);
-var ratio = w / h;
+
+var svg = document.querySelector("svg");
+svg.removeAttribute("width");
+svg.removeAttribute("height");
+svg.style.display = 'block';
+/*var ratio = w / h;
 var desiredWidth = window.innerHeight * ratio - 9;
 var desiredHeight = window.innerWidth / ratio;
 var width = desiredWidth / window.innerWidth * 100;
 var widthPercentage = width.toString() + "%";
 var height = desiredHeight / window.innerHeight * 100;
 var heightPercentage = height.toString() + "%";
-rsr.setSize(widthPercentage, heightPercentage);
+rsr.setSize(widthPercentage, heightPercentage);*/
 
 /*    // trying to center map
     var mapDiv = document.getElementById("wrapper");
@@ -1209,37 +1214,42 @@ for(var i = 0; i < Units.length; i++) {
 // outside frame ---
 var Frame = rsr.path("M0 0 L1700 0 L1700 1496 L0 1496 L0 0 Z").attr({fill: 'none',stroke: '#161413'," stroke-width": '2'," stroke-linecap": 'butt'," stroke-linejoin": 'miter'," stroke-dasharray": 'none','stroke-opacity': '1'}).transform("t0, 0").data('id', 'path_kf');
 
-
-function LightenDarkenColor(col,amt) {
+function LightenDarkenColor(color, amt) {
     var usePound = false;
-    if ( col[0] == "#" ) {
-        col = col.slice(1);
+    if ( color[0] == "#" ) {
+        color = color.slice(1);
         usePound = true;
     }
-
-    var num = parseInt(col,16);
-
-    var r = (num >> 16) + amt;
-
-    if ( r > 255 ) r = 255;
-    else if  (r < 0) r = 0;
-
-    var b = ((num >> 8) & 0x00FF) + amt;
-
-    if ( b > 255 ) b = 255;
-    else if  (b < 0) b = 0;
-
-    var g = (num & 0x0000FF) + amt;
-
-    if ( g > 255 ) g = 255;
-    else if  ( g < 0 ) g = 0;
+    var num = parseInt(color,16);
+    var r = (num >> 16) * amt;
+    if ( r > 255 ) {
+    	r = 255;
+    } else if  (r < 0) {
+    	r = 0;
+    }
+    var b = ((num >> 8) & 0x00FF) * amt;
+    if ( b > 255 ) {
+    	b = 255;
+    } else if (b < 0) {
+    	b = 0;
+    }
+    var g = (num & 0x0000FF) * amt;
+    if ( g > 255 ) {
+    	g = 255; 
+    } else if( g < 0 ) {
+    	g = 0;
+    }
 
     return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
+
 function MapView() {
 	this.closeMoveMenu();
-	this.highlighted = null;
+	this.firstLocHighlighted = null;
+	this.secondLocHighlighted = null;
+	this.timers = {};
+	this.currentId = 0;
 	// disable mouse events for some territories
 	for(var i = 0; i < NotInteractable.length; i++) {
 		NotInteractable[i].node.setAttribute('pointer-events', 'none');
@@ -1258,17 +1268,25 @@ function MapView() {
 			// register click event
 			var self = this;
 			region.click(function(e) {
+				self.mouseX = e.clientX;
+				self.mouseY = e.clientY;
 				self.territoryClickHandler(this.data('id'));
 			});
 	
 			// register hover effect
 			region.mouseover(function(e) {
+				if(self.firstLocHighlighted === id || self.secondLocHighlighted === id) {
+					return;
+				}
 				territory.forEach((region2) => {
-					region2.node.style.fill = LightenDarkenColor(region2.attr('fill'), -40);
+					region2.node.style.fill = LightenDarkenColor(region2.attr('fill'), 0.75);
 				});
 			});
 
 			region.mouseout(function(e) {
+				if(self.firstLocHighlighted === id || self.secondLocHighlighted === id) {
+					return;
+				}
 				territory.forEach((region2) => {
 					region2.node.style.fill = region2.attr('fill');
 				});
@@ -1277,24 +1295,9 @@ function MapView() {
 	});
 }
 
-MapView.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized) {
-	this.updateUI(year, phase);
+MapView.prototype.update = function(territories, units, dislodgedUnits) {
 	colourTerritories(territories);
 	drawUnits(units, dislodgedUnits);
-	this.updateIsFinalized(isFinalized);
-}
-
-MapView.prototype.updateUI = function(year, phase) {
-	document.getElementById('yearText').innerHTML = year;
-	document.getElementById('phaseText').innerHTML = phase;
-}
-
-MapView.prototype.updateIsFinalized = function(isFinalized) {
-	var text = 'Finalize';
-	if(isFinalized) {
-		text = 'Unfinalize';
-	}
-	document.getElementById('finalizebutton').innerHTML = text;
 }
 
 function colourTerritories(territoryOwnership) {
@@ -1461,23 +1464,19 @@ MapView.prototype.addRouteSelectedHandler = function(routeSelectedHandler) {
 	});
 }
 
-MapView.prototype.addFinalizeSelectedHandler = function(finalizeClickHandler) {
-	document.getElementById('finalizebutton').addEventListener("click", function() {
-		finalizeClickHandler();
-	});
-}
-
 MapView.prototype.onFailureToClickMoveMenu = function() {
 	var movemenu = document.getElementById('movemenu');
 	// want shake animation
 	//movemenu.style.animation-duration = '1s';
 }
 
-MapView.prototype.showMoveMenu = function(options) {
+MapView.prototype.showMoveMenu = function(options, territory) {
 	this.updateMoveMenu(options);
 	var movemenu = document.getElementById('movemenu');
-	movemenu.style.top = "50%";
-	movemenu.style.left = "50%";
+	var scrollLeft = window.pageXOffset;
+	var scrollTop = window.pageYOffset;
+	movemenu.style.top = this.mouseY - 70 + scrollTop + "px";
+	movemenu.style.left = this.mouseX + 20 + scrollLeft + "px";
 	movemenu.style.display = 'block';
 }
 
@@ -1553,11 +1552,95 @@ MapView.prototype.closeMoveMenu = function() {
 	movemenu.style.display = 'none';
 }
 
-MapView.prototype.highlightTerritory = function(territory) {
-	this.highlighted = territory;	
+MapView.prototype.highlightFirstLocation = function(territoryName) {
+	if(this.firstLocHighlighted === territoryName) {
+		return;
+	}
+	this.firstLocHighlighted = territoryName;
+	var territory = Interactable[territoryName];
+	delete this.timers[this.currentId];
+	this.currentId++;
+	var id = this.currentId;
+	this.timers[id] = false;
+	var self = this;
+	territory.forEach((region) => {
+		self.startHighlightAnimation(region, territoryName, id);
+	});
+}
 
+MapView.prototype.highlightSecondLocation = function(territoryName) {
+	if(this.secondLocHighlighted === territoryName) {
+		return;
+	}
+	this.secondLocHighlighted = territoryName;
+	var territory = Interactable[territoryName];
+	var self = this;
+	territory.forEach((region) => {
+		self.startHighlightAnimation(region, territoryName, this.currentId);
+	});
 }
 
 MapView.prototype.unhighlightTerritory = function() {
-	this.highlighted = null;
+	var firstLocName = this.firstLocHighlighted;
+	var secondLocName = this.secondLocHighlighted;
+	this.firstLocHighlighted = null;
+	this.secondLocHighlighted = null;
+	if(this.timers[this.currentId]) {
+		delete this.timers[this.currentId];
+	}
+
+	if(firstLocName === null) {
+		return;
+	}
+	var self = this;
+	var firstTerritory = Interactable[firstLocName];
+	firstTerritory.forEach((region) => {
+		region.node.style.fill = region.attr('fill');
+		region.attr("stroke-dasharray", "");
+	});
+	if(secondLocName === null) {
+		return;
+	}
+	var secondTerritory = Interactable[secondLocName];
+	secondTerritory.forEach((region) => {
+		region.node.style.fill = region.attr('fill');
+		region.attr("stroke-dasharray", "");
+	});
+}
+
+MapView.prototype.startHighlightAnimation = function(region, territoryName, id) {
+	var dashToggle = true;
+	var count = 0.75;
+	var lastCount = 0.75;
+	var goingDown = true;
+	var self = this;
+	let timer = setInterval(function() {
+		if(!(id in self.timers)) {
+			clearInterval(timer);
+		} else {
+			if(goingDown) {
+				count -= 0.02;
+				//region.attr("stroke-dasharray", ". ");
+			} else {
+				count += 0.02;
+				//region.attr("stroke-dasharray", "--.");
+			}
+			if(count >= 1.0) {
+				goingDown = true;
+			} else if(count <= 0.6) {
+				goingDown = false;
+			}
+			if(Math.abs(lastCount - count) > 0.1) {
+				if(dashToggle) {
+					region.attr("stroke-dasharray", "");
+				} else {
+					region.attr("stroke-dasharray", "--");
+				}
+				dashToggle = !dashToggle;
+				lastCount = count;
+			}
+			region.node.style.fill = LightenDarkenColor(region.attr('fill'), count);
+			self.timers[id] = true;
+		}
+	}, 50);
 }

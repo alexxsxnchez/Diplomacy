@@ -10,8 +10,9 @@ var SelectPhase = {
 }
 
 
-function MapController(view, model) {
-	this.view = view;
+function MapController(mapView, gameView, model) {
+	this.mapView = mapView;
+	this.gameView = gameView;
 	this.model = model;
 	////// abstract into move struct -> maybe?
 	this.selectPhase = SelectPhase.NONE;
@@ -23,11 +24,12 @@ function MapController(view, model) {
 	this.coast = null;
 	this.viaConvoy = null;
 	/////
-	this.view.addTerritorySelectedHandler(this.onTerritorySelected.bind(this));
-	this.view.addMoveTypeSelectedHandler(this.onMoveTypeSelected.bind(this));
-	this.view.addCoastSelectedHandler(this.onCoastSpecifierSelected.bind(this));
-	this.view.addFinalizeSelectedHandler(this.onFinalizeSelected.bind(this));
-	this.view.addRouteSelectedHandler(this.onRouteSelected.bind(this));
+	this.mapView.addTerritorySelectedHandler(this.onTerritorySelected.bind(this));
+	this.mapView.addMoveTypeSelectedHandler(this.onMoveTypeSelected.bind(this));
+	this.mapView.addCoastSelectedHandler(this.onCoastSpecifierSelected.bind(this));
+	this.gameView.addFinalizeSelectedHandler(this.onFinalizeSelected.bind(this));
+	this.mapView.addRouteSelectedHandler(this.onRouteSelected.bind(this));
+	this.gameView.addMoveDeletedHandler(this.onMoveDeleted.bind(this));
 }
 
 MapController.prototype.onTerritorySelected = function(territory) {
@@ -66,7 +68,6 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	}
 	var options = [];
 	if(selectedUnit !== null) {
-		this.view.highlightTerritory(territory);
 		if(phase === 'WINTER') {
 			if(this.model.getStarToUnitCount(selectedUnit.nation) < 0) {
 				options.push(MoveType.DESTROY);
@@ -85,7 +86,6 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 			}
 		}
 	} else if(phase === "WINTER") {
-		this.view.highlightTerritory(territory);
 		// check if home centre and then we can show build option
 		if(this.model.territories[territory] === undefined) {
 			return;
@@ -103,11 +103,12 @@ MapController.prototype.firstTerritorySelected = function(territory) {
 	this.firstLocation = territory;
 	this.selectedUnit = selectedUnit;
 	this.selectPhase = SelectPhase.MOVEMENU;
-	this.view.showMoveMenu(options);
+	this.mapView.highlightFirstLocation(territory);
+	this.mapView.showMoveMenu(options, territory);
 }
 
 MapController.prototype.moveMenuOptionNotSelected = function(territory) {
-	this.view.closeMoveMenu();
+	this.mapView.closeMoveMenu();
 	this.resetMoveSelection();
 	this.firstTerritorySelected(territory);
 }
@@ -123,8 +124,11 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			options.push(MoveType.MOVENC);
 		}
 		options.push(MoveType.MOVESC);
+		if(territory !== this.firstLocation) {
+			this.mapView.highlightSecondLocation(territory);
+		}
 		this.selectPhase = SelectPhase.COAST1;
-		this.view.showMoveMenu(options);
+		this.mapView.showMoveMenu(options, territory);
 		return;
 	}
 	console.log('haha');
@@ -158,7 +162,10 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			this.selectPhase = SelectPhase.CONVOYMENU;
 			options.push(MoveType.LANDROUTE);
 			options.push(MoveType.VIACONVOY);
-			this.view.showMoveMenu(options);
+			if(territory !== this.firstLocation) {
+				this.mapView.highlightSecondLocation(territory);
+			}
+			this.mapView.showMoveMenu(options, territory);
 			return;
 		}
 	}
@@ -169,12 +176,15 @@ MapController.prototype.secondTerritorySelected = function(territory) {
 			this.moveSelectionComplete();
 			break;
 		default:
+			if(territory !== this.firstLocation) {
+				this.mapView.highlightSecondLocation(territory);
+			}
 			this.selectPhase = SelectPhase.SECOND;
 	}
 }
 
 MapController.prototype.coastMenuOptionNotSelected = function() {
-	this.view.closeMoveMenu();
+	this.mapView.closeMoveMenu();
 	this.resetMoveSelection();
 }
 
@@ -192,7 +202,7 @@ MapController.prototype.thirdTerritorySelected = function(territory) {
 		}
 		options.push(MoveType.MOVESC);
 		this.selectPhase = SelectPhase.COAST2;
-		this.view.showMoveMenu(options);
+		this.mapView.showMoveMenu(options, territory);
 	} else {
 		this.moveSelectionComplete();
 	}
@@ -201,7 +211,7 @@ MapController.prototype.thirdTerritorySelected = function(territory) {
 MapController.prototype.onMoveTypeSelected = function(moveType) {
 	console.log(moveType + " was selected");
 	this.selectedMoveType = moveType;
-	this.view.closeMoveMenu();
+	this.mapView.closeMoveMenu();
 	switch(moveType) {
 		case MoveType.BUILDARMY:
 		case MoveType.BUILDFLEET:
@@ -229,7 +239,7 @@ MapController.prototype.onCoastSpecifierSelected = function(coastSpecifier) {
 			coast = 'EC';
 			break;
 	}
-	this.view.closeMoveMenu();
+	this.mapView.closeMoveMenu();
 	this.coast = coast;
 	if(this.selectPhase === SelectPhase.COAST1) {
 		this.secondTerritorySelected(this.secondLocation);
@@ -244,7 +254,7 @@ MapController.prototype.onRouteSelected = function(route) {
 	} else {
 		this.viaConvoy = false;
 	}
-	this.view.closeMoveMenu();
+	this.mapView.closeMoveMenu();
 	this.secondTerritorySelected(this.secondLocation);
 }
 
@@ -257,7 +267,7 @@ MapController.prototype.resetMoveSelection = function() {
 	this.thirdLocation = null;
 	this.coast = null;
 	this.viaConvoy = null;
-	this.view.unhighlightTerritory();
+	this.mapView.unhighlightTerritory();
 }
 
 MapController.prototype.moveSelectionComplete = function() {
@@ -275,3 +285,8 @@ MapController.prototype.onFinalizeSelected = function() {
 	this.model.toggleIsFinalized();
 	this.coastMenuOptionNotSelected();
 }
+
+MapController.prototype.onMoveDeleted = function(location) {
+	this.model.deleteMove(location);
+}
+

@@ -14,9 +14,7 @@ class FleetPiece : public Piece {
 	public:
 		FleetPiece(Nation nationality, string startingLocation, string coastSpecifier = "");
 //		vector<Move> findPossibleMoves(const Graph * territories) const;
-		string getCoast() const {
-			return coast_;
-		}
+		string getCoast() const;
 		
 		bool isMovementValid(const MovementMove * move, Graph * graph) const;
 

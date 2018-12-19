@@ -129,25 +129,19 @@ bool MovementMove::calculateAttackStrength(MoveProcessor & processor) {
 	if(it != processor.getNonAttacks().end()) {
 		defender = it->second->getPiece();
 	} else {
-		auto it2 = processor.getAttacks().find(source); // no coast
-		if(it2 != processor.getAttacks().end()) {
-			for(auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
-				if((*it3)->getPiece()->getLocation() == destination_) {
-					if(viaConvoy_ || (*it3)->getViaConvoy()) {
-						leavingDefender = *it3;
-					} else {
-						defender = (*it3)->getPiece();
+		for(auto it3 = processor.getAttacks().begin(); it3 != processor.getAttacks().end(); it3++) {
+			for(auto it4 = it3->second.begin(); it4 != it3->second.end(); it4++) { 
+				if((*it4)->getPiece()->getLocation() == destination_) {
+					if(it3->first == source) { // if head-on
+						if(viaConvoy_ || (*it4)->getViaConvoy()) {
+							leavingDefender = *it4;
+						} else {
+							defender = (*it4)->getPiece();
+						}
+					} else if((*it4)->getMoveDecision() != YES) {
+						leavingDefender = *it4;
 					}
 					break;
-				}
-			}
-		} else {
-			for(auto it3 = processor.getAttacks().begin(); it3 != processor.getAttacks().end(); it3++) {
-				for(auto it4 = it3->second.begin(); it4 != it3->second.end(); it4++) { 
-					if((*it4)->getPiece()->getLocation() == destination_ && (*it4)->getMoveDecision() != YES) {
-						leavingDefender = *it4;
-						break;
-					}
 				}
 			}
 		}

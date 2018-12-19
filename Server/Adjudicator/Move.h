@@ -55,7 +55,7 @@ class Move {
 		Strength getHoldStrength() const;
 		void setDescription(string description);
 		string getDescription() const;
-		std::unordered_set<string> calculateRetreatOptions(std::unordered_set<string> contestedAreas, Graph * graph) const;
+		std::unordered_set<string> calculateRetreatOptions(std::unordered_set<string> & contestedAreas, Graph * graph) const;
 		virtual bool isCompletelyDecided() const = 0;
 		virtual void forceFail() = 0;
 		

@@ -1,0 +1,175 @@
+body {
+	padding-top: 4.5rem;
+	background-color: #f0f0f0;
+}
+
+a, a:hover, a:visited, a:link, a:active{
+	text-decoration: none;
+	
+}
+
+.navbar-brand div {
+	width: 2.2rem;
+}
+
+/*#map-container {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}*/
+button {
+	cursor: pointer;
+}
+
+#movemenu button {
+	width: 100%;
+	background-color: #f0f0f0;
+}
+
+#movemenu button:hover {
+	color: #A8A8A8;
+}
+
+#status-table {
+	/*border: 1px solid black;
+  	border-collapse: collapse;*/
+  	width: 100%;
+}
+
+#status-table th, #status-table td {
+	vertical-align: top;
+	/*border: 1px solid black;
+  	border-collapse: collapse;*/
+}
+
+#status-table td:first-child {
+	border-left: none !important;
+}
+
+#status-table td:not(#year-phase) {
+	font-size: 9pt;
+	text-align: center;
+	border-left: 1px solid #999;
+}
+
+#status-table td span:first-child {
+	line-height: 30px;
+}
+
+.orderList {
+	font-size: 9pt;
+}
+
+.orderList tr:first-child {
+	border-top: none;
+}
+
+.orderList tr {
+	border-top: 1px solid #999;
+}
+
+.orderList th, .orderList td {
+	padding: 10px 8px 0px 8px;
+	vertical-align: top;
+}
+
+.orderList td p {
+	line-height: 1;
+	margin-top: 3px;
+	margin-bottom: 7px;
+}
+
+.game-container {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	/*height: 100%;*/
+	min-height: 410px;
+	margin-bottom: 20px;
+}
+
+.game-container .status-row {
+
+}
+
+.game-container .order-row {
+
+}
+
+#year-phase {
+	text-align: right;
+}
+
+#order-container {
+	/*width: 100%;*/
+	margin-top: 1rem;
+	padding: 1rem;
+	background-color: #ddd;
+	border-left: 6px solid #abcdef;
+	border-radius: 5px;
+}
+
+#status-container {
+	padding: 1rem;
+	width: 100%;
+}
+
+#movemenu {
+	position: absolute;
+	padding: 5px;
+}
+
+#finalizebutton {
+	margin-top: 1rem;
+	width: 100%;
+}
+
+#finalizebutton:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+label, h1, h2, h3, h4, h5, h6, p {
+	-webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+svg text {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+/*.image-container {
+	overflow: hidden;
+}
+
+.image-container img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+#banner {
+	width: 100%;
+	height: 6rem;
+	background-color: blue;
+	text-align: center;
+	padding: 1rem 0;
+}
+
+#icon-image-container {
+	position: absolute;
+	left: 1rem;
+	max-height: 90%;
+	width: 5rem;
+	background-color: white;
+	display: inline-block;
+	border-radius: 50%;
+}
+
+#banner, h1 {
+	display: inline-block;
+	font-size: 2rem;
+}*/
