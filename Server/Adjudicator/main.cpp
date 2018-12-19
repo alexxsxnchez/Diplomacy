@@ -821,7 +821,8 @@ void runTests(Graph * g) {
 	}
 	piece = new FleetPiece(Nation::ENGLAND, "Bulgaria", "SC");
 	MovementMove * move = new MovementMove(piece, "Constantinople");
-	if(move->isLegal(g)) {
+	move->calculateIsLegal(g);
+	if(move->getIsLegal()) {
 		cout << "move is valid" << endl;
 	} else {
 		cout << "move is not valid" << endl;

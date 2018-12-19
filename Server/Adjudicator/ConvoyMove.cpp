@@ -13,8 +13,8 @@ void ConvoyMove::print(ostream & out) const {
 	out << *getPiece() << " CONVOYS " << source_ << " to " << destination_ << std::endl;
 }
 
-bool ConvoyMove::isLegal(Graph * graph) const {
-	return getPiece()->isConvoyValid(this, graph);
+void ConvoyMove::calculateIsLegal(Graph * graph) {
+	isLegal_ = getPiece()->isConvoyValid(this, graph);
 }
 
 bool ConvoyMove::process(MoveProcessor & processor) {

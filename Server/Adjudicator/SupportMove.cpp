@@ -13,8 +13,8 @@ void SupportMove::print(ostream & out) const {
 	out << *getPiece() << " SUPPORTS " << source_ << " to " << destination_ << std::endl;
 }
 
-bool SupportMove::isLegal(Graph * graph) const {
-	return getPiece()->isSupportValid(this, graph);
+void SupportMove::calculateIsLegal(Graph * graph) {
+	isLegal_ = getPiece()->isSupportValid(this, graph);
 }
 
 bool SupportMove::isPartOfParadoxCore(MoveProcessor * processor) const {

@@ -353,7 +353,8 @@ void MoveProcessor::fixParadox() {
 
 MoveProcessor::Results MoveProcessor::processMoves() {
 	for(Move * move : moves_) {
-		if(!move->isLegal(map_)) {
+		move->calculateIsLegal(map_);
+		if(!move->getIsLegal()) {
 			move->forceFail();
 		}
 	}
@@ -418,7 +419,7 @@ MoveProcessor::Results MoveProcessor::processMoves() {
 					}
 				}
 			}
-			if(!lostHeadOnOrNoPath) {
+			if(!lostHeadOnOrNoPath && it2->getIsLegal()) {
 				contestedAreas.insert(it.first);
 			}
 			if(it2->getMoveDecision() == NO) {

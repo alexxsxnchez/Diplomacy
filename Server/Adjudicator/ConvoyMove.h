@@ -20,7 +20,7 @@ class ConvoyMove : public Move {
 
 	public:
 		ConvoyMove(Piece * piece, string source, string destination);
-		bool isLegal(Graph * graph) const;
+		void calculateIsLegal(Graph * graph);
 		bool process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;

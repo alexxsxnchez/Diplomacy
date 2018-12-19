@@ -16,8 +16,8 @@ void MovementMove::print(ostream & out) const {
 	out << *getPiece() << " MOVES to " << destination_ << std::endl;
 }
 
-bool MovementMove::isLegal(Graph * graph) const {
-	return getPiece()->isMovementValid(this, graph);
+void MovementMove::calculateIsLegal(Graph * graph) {
+	isLegal_ = getPiece()->isMovementValid(this, graph);
 }
 
 bool MovementMove::isPartOfParadoxCore(MoveProcessor * processor) const {

@@ -24,7 +24,7 @@ class SupportMove : public Move {
 
 	public:
 		SupportMove(Piece * piece, string source, string destination, string coast_ = "");
-		bool isLegal(Graph * graph) const;
+		void calculateIsLegal(Graph * graph);
 		bool process(MoveProcessor & processor);
 		string getSource() const;
 		string getDestination() const;

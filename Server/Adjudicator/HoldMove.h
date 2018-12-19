@@ -17,7 +17,7 @@ class HoldMove : public Move {
 	public:
 		HoldMove(Piece * piece);
 		void putIntoSet(unordered_set<HoldMove *> & holdMoves, unordered_set<MovementMove *> & movementMoves, unordered_set<SupportMove *> & supportMoves, unordered_set<ConvoyMove *> & convoyMoves);
-		bool isLegal(Graph * graph) const;
+		void calculateIsLegal(Graph * graph);
 		bool process(MoveProcessor & processor);
 		bool isCompletelyDecided() const;
 		

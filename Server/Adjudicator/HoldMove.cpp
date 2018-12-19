@@ -8,8 +8,8 @@ void HoldMove::print(ostream & out) const {
 	out << *getPiece() << " HOLDS" << std::endl;
 }
 
-bool HoldMove::isLegal(Graph * graph) const {
-	return getPiece()->isHoldValid(this, graph);
+void HoldMove::calculateIsLegal(Graph * graph) {
+	isLegal_ = getPiece()->isHoldValid(this, graph);
 }
 
 bool HoldMove::process(MoveProcessor & processor) {

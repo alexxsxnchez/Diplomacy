@@ -40,6 +40,7 @@ class Move {
 		Strength holdStrength_;
 		string description_ = "";
 		string dislodgedFrom_ = "";
+		bool isLegal_ = true;
 		
 		virtual bool calculateHoldStrength(MoveProcessor & processor);
 		virtual bool determineDislodgeDecision(MoveProcessor & processor);
@@ -49,7 +50,7 @@ class Move {
 		Move(Piece * piece);
 		virtual ~Move();
 		Piece * getPiece() const;
-		virtual bool isLegal(Graph * graph) const = 0;
+		virtual void calculateIsLegal(Graph * graph) = 0;
 		virtual bool process(MoveProcessor & processor) = 0;
 		DecisionResult getDislodgeDecision() const;
 		Strength getHoldStrength() const;
@@ -64,6 +65,7 @@ class Move {
 		virtual Move * getParadoxDependency(MoveProcessor * processor) const = 0;
 		virtual void settleParadox(bool isParadoxCore) = 0;
 
+		bool getIsLegal() const;
 		friend ostream & operator<<(ostream & out, const Move & move);
 };
 

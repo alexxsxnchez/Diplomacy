@@ -33,7 +33,7 @@ class MovementMove : public Move {
 		
 	public:
 		MovementMove(Piece * piece, string destination, string coastSpecifier = "", bool viaConvoy = false);
-		bool isLegal(Graph * graph) const;
+		void calculateIsLegal(Graph * graph);
 		bool process(MoveProcessor & processor);
 		string getDestination() const;
 		string getCoast() const;

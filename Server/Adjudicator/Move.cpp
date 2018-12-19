@@ -102,6 +102,10 @@ string Move::getDescription() const {
 	return description_;
 }
 
+bool Move::getIsLegal() const {
+	return isLegal_;
+}
+
 ostream & operator<<(ostream & out, const Move & move) {
 	move.print(out);
 	return out;
