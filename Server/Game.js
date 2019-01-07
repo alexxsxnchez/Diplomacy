@@ -7,7 +7,7 @@ function Game(io, socket) {
 	this.io = io;
 	this.socket = socket;
 	this.model = new GameModel();
-	console.log("hello");
+	console.log("new game created");
 	this.setupEvents();
 }
 
@@ -29,11 +29,14 @@ Game.prototype.setupEvents = function() {
 		console.log('player unfinalized: ' + finalizeData);
 		self.playerUnfinalized(finalizeData);
 	});
+	this.socket.on('requestgamedata', function() {
+		self.socket.emit('update', self.model.getGameState());
+	});
 }
 
 Game.prototype.start = function(move) {
 	this.model.loadInitialConditions();
-	this.io.emit('update', this.model.getGameState());
+	//this.io.emit('update', this.model.getGameState());
 }
 
 Game.prototype.addMove = function(move) {
@@ -61,6 +64,7 @@ Game.prototype.playerUnfinalized = function(player) {
 
 Game.prototype.processTurn = function(next) {
 	var nextPhase;
+	this.model.fillInDefaultMoves();
 	switch(this.model.getGameState().phase) {
 		case Phase.SPRING_RETREAT:
 		case Phase.FALL_RETREAT:

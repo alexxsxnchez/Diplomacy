@@ -129,7 +129,7 @@ Presenter.prototype.createCounts = function(territories, units) {
 	return counts;
 }
 
-Presenter.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized) {
+Presenter.prototype.update = function(year, phase, territories, units, dislodgedUnits, isFinalized, moves) {
 	this.mapView.update(territories, units, dislodgedUnits);
 	this.gameView.update(year, phase, this.createCounts(territories, units), isFinalized);
 	var moveListUnits;
@@ -145,6 +145,14 @@ Presenter.prototype.update = function(year, phase, territories, units, dislodged
 		moveListUnits = units;
 	}
 	this.resetMoveList(moveListUnits, territories, isBuildPhase);
+	if(moves) {
+		var self = this;
+		Object.keys(moves).forEach((key) => {
+			console.log(key);
+			console.log(moves[key]);
+			self.updateMoves(moves[key], territories);
+		});
+	}
 }
 
 Presenter.prototype.updateIsFinalized = function(isFinalized) {

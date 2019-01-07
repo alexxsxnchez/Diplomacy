@@ -1,6 +1,6 @@
 function MapModel(presenter) {
 	this.presenter = presenter;
-	this.interactor = interactor;
+	//this.interactor = interactor;
 	//this.loadGameState();
 	//this.interactor.addLoadGameStateHandler(this.loadGameState.bind(this));
 }
@@ -27,7 +27,7 @@ MapModel.prototype.dataReceived = function(gameState) {
 	this.moves = gameState.moves;
 	this.moveDescriptions = gameState.moveDescriptions;
 	this.isFinalized = gameState.finalized.length > 0;
-	this.presenter.update(this.year, this.phase, this.territories, this.units, this.dislodgedUnits, this.isFinalized);
+	this.presenter.update(this.year, this.phase, this.territories, this.units, this.dislodgedUnits, this.isFinalized, this.moves);
 }
 
 MapModel.prototype.getHomeCentres = function(nation) {
