@@ -19,8 +19,7 @@ app.get('/game', function(req, res) {
 	if(id && !isNaN(id)) {
 		
 		var game = gameManager.getGameWithId(id);
-		console.log(game);
-		if(/*game*/true) {
+		if(game) {
 			var path = require('path');
 			res.sendFile(path.resolve(__dirname + "/../Frontend/try.html"));
 			//res.send('hello worldafj;fhaha');
@@ -38,7 +37,7 @@ app.get('/game', function(req, res) {
 
 
 var io = socket(server);
-var gameManager = new GameManager();
+var gameManager = new GameManager(io);
 var room;
 
 io.on('connection', function(socket) {
@@ -54,6 +53,6 @@ io.on('connection', function(socket) {
 		console.log('creating room');
 		room = new Room(io, socket, 0);
 	});*/
-	gameManager.loadDefaultGameList(io, socket);
+	gameManager.addGameRequestListener(socket);
 	
 });

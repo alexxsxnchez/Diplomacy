@@ -3,34 +3,41 @@ var Phase = require('./Phase.js');
 var GameModel = require('./GameModel.js');
 var ChildProcess = require('child_process');
 
-function Game(io, socket) {
+function Game(io) {
 	this.io = io;
-	this.socket = socket;
+	//this.socket = socket; // will switch to room
 	this.model = new GameModel();
 	console.log("new game created");
-	this.setupEvents();
 }
 
-Game.prototype.setupEvents = function() {
+Game.prototype.addUserSocketToRoom = function(socket, userId) {
+	this.setupUserEvents(socket);
+	this.addSocketToRoom(socket);
+	socket.emit('update', this.model.getGameState());
+}
+
+// TODO
+Game.prototype.addSocketToRoom = function(socket) {
+	this.socket = socket;
+}
+
+Game.prototype.setupUserEvents = function(socket) {
 	var self = this;
-	this.socket.on('move', function(moveData) {
+	socket.on('move', function(moveData) {
 		console.log('move received: ' + JSON.stringify(moveData, null, '    ')); 
 		self.addMove(moveData);
 	});
-	this.socket.on('deletemove', function(location) {
+	socket.on('deletemove', function(location) {
 		console.log('delete move request received: ' + location);
 		self.deleteMove(location);
 	});
-	this.socket.on('finalize', function(finalizeData) {
+	socket.on('finalize', function(finalizeData) {
 		console.log('player finalized: ' + finalizeData);
 		self.playerFinalized(finalizeData);
 	});
-	this.socket.on('unfinalize', function(finalizeData) {
+	socket.on('unfinalize', function(finalizeData) {
 		console.log('player unfinalized: ' + finalizeData);
 		self.playerUnfinalized(finalizeData);
-	});
-	this.socket.on('requestgamedata', function() {
-		self.socket.emit('update', self.model.getGameState());
 	});
 }
 

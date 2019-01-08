@@ -4,7 +4,6 @@ function GameInteractor(gameModel) {
 	
 //	this.mainController = mainController;
 //	this.mainController.addGameClickedHandler(this.requestGameAccess.bind(this));
-	
 }
 
 GameInteractor.prototype.registerGameModel = function(model) {
@@ -16,7 +15,15 @@ GameInteractor.prototype.registerGameModel = function(model) {
 		console.log('received update data');
 		model.dataReceived(data);
 	});
-	this.socket.emit('requestgamedata');
+	var url = window.location.href;
+	console.log(url);
+	var getQuery = url.split('?')[1];
+	console.log(getQuery);
+	var params = getQuery.split('&')[0];
+	console.log(params);
+	var gameId = params.split('=');
+	console.log(gameId);
+	this.socket.emit('requestgamedata', parseInt(gameId[1]), "userid");
 }
 
 GameInteractor.prototype.onMoveCreated = function(move) {
