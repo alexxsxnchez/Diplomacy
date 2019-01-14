@@ -25,10 +25,10 @@ GameManager.prototype.loadDefaultGameList = function(io) {
 		this.gameList[0].setupEvents();
 		return;
 	}*/
-	var game0 = new Game(io);
+	var game0 = new Game(io, 0);
 	game0.start();
 	this.gameList[0] = game0;
-	var game1 = new Game(io);
+	var game1 = new Game(io, 1);
 	game1.start();
 	this.gameList[1] = game1;
 	this.loadedGameList = true;

@@ -3,9 +3,9 @@ var Phase = require('./Phase.js');
 var GameModel = require('./GameModel.js');
 var ChildProcess = require('child_process');
 
-function Game(io) {
+function Game(io, id) {
 	this.io = io;
-	//this.socket = socket; // will switch to room
+	this.id = id.toString();
 	this.model = new GameModel();
 	console.log("new game created");
 }
@@ -16,9 +16,8 @@ Game.prototype.addUserSocketToRoom = function(socket, userId) {
 	socket.emit('update', this.model.getGameState());
 }
 
-// TODO
 Game.prototype.addSocketToRoom = function(socket) {
-	this.socket = socket;
+	socket.join(this.id);
 }
 
 Game.prototype.setupUserEvents = function(socket) {
@@ -56,11 +55,10 @@ Game.prototype.deleteMove = function(location) {
 
 Game.prototype.playerFinalized = function(player) {
 	this.model.playerFinalized(player);
-	this.socket.emit('finalize');
 	if(this.model.getIsAllFinalized()) {
 		var self = this;
 		this.processTurn(function() {
-			self.io.emit('update', self.model.getGameState());
+			self.io.to(self.id).emit('update', self.model.getGameState());
 		});
 	}
 }
