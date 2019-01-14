@@ -1,22 +1,40 @@
-function Interactor(model) {
-	this.model = model;
+function GameInteractor(gameModel) {
 	this.setupServerConnection();
-	this.model.addMoveCreatedHandler(this.onMoveCreated.bind(this));
-	this.model.addMoveDeletedHandler(this.onMoveDeleted.bind(this));
-	this.model.addFinalizeHandler(this.onFinalizedToggled.bind(this));
+	this.registerGameModel(gameModel);
 }
 
-Interactor.prototype.onMoveCreated = function(move) {
+GameInteractor.prototype.registerGameModel = function(model) {
+	model.addMoveCreatedHandler(this.onMoveCreated.bind(this));
+	model.addMoveDeletedHandler(this.onMoveDeleted.bind(this));
+	model.addFinalizeHandler(this.onFinalizedToggled.bind(this));
+	
+	this.socket.on('update', function(data) {
+		console.log('received update data');
+		model.dataReceived(data);
+	});
+	
+	var url = window.location.href;
+	console.log(url);
+	var getQuery = url.split('?')[1];
+	console.log(getQuery);
+	var params = getQuery.split('&')[0];
+	console.log(params);
+	var gameId = params.split('=');
+	console.log(gameId);
+	this.socket.emit('requestgamedata', parseInt(gameId[1]), "userid");
+}
+
+GameInteractor.prototype.onMoveCreated = function(move) {
 	console.log('emitting move');
 	this.socket.emit('move', move);
 }
 
-Interactor.prototype.onMoveDeleted = function(location) {
+GameInteractor.prototype.onMoveDeleted = function(location) {
 	console.log('deleting move');
 	this.socket.emit('deletemove', location);
 }
 
-Interactor.prototype.onFinalizedToggled = function(isFinalized) {
+GameInteractor.prototype.onFinalizedToggled = function(isFinalized) {
 	if(isFinalized) {
 		this.socket.emit('finalize', 'some nation');
 	} else {
@@ -24,20 +42,9 @@ Interactor.prototype.onFinalizedToggled = function(isFinalized) {
 	}
 }
 
-Interactor.prototype.setupServerConnection = function() {
+GameInteractor.prototype.setupServerConnection = function() {
 	this.socket = io.connect();
 	var self = this;
 	console.log('setting up server connection');
-	this.socket.on('join', function(data) {
-		console.log('I have joined room');
-		//self.model.loadGameState();
-	});
-	
-	this.socket.on('update', function(data) {
-		console.log('received update data');
-		self.model.dataReceived(data);
-	});
-	
-	this.socket.emit('joinroom');
 }
 

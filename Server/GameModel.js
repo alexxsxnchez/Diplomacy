@@ -17,7 +17,7 @@ GameModel.prototype.loadInitialConditions = function() {
 	this.gameState.territories = JSON.parse(JSON.stringify(initialConditions.territories));
 	this.gameState.units = JSON.parse(JSON.stringify(initialConditions.units));
 	this.gameState.dislodgedUnits = {};
-	this.gameState.moves = this.generateDefaultMoves(this.gameState.units, this.gameState.dislodgedUnits);
+	this.gameState.moves = {};//this.generateDefaultMoves(this.gameState.units, this.gameState.dislodgedUnits);
 	this.gameState.moveDescriptions = {};
 	this.gameState.finalized = [];
 }
@@ -28,7 +28,7 @@ GameModel.prototype.updateNewTurn = function(year, phase, territories, units, di
 	this.gameState.territories = territories;
 	this.gameState.units = units;
 	this.gameState.dislodgedUnits = dislodgedUnits;
-	this.gameState.moves = this.generateDefaultMoves(units, dislodgedUnits);
+	this.gameState.moves = {};//this.generateDefaultMoves(units, dislodgedUnits);
 	this.gameState.moveDescriptions = moveDescriptions;
 	this.gameState.finalized = [];
 	//updateDb as well
@@ -37,41 +37,50 @@ GameModel.prototype.updateNewTurn = function(year, phase, territories, units, di
 	next();
 }
 
-GameModel.prototype.generateDefaultMoves = function(units, dislodgedUnits) {
+GameModel.prototype.fillInDefaultMoves = function() {
+	var units = this.gameState.units;
+	var dislodgedUnits = this.gameState.dislodgedUnits;
 	var phase = this.gameState.phase;
-	var defaultMoves = {};
+	//var defaultMoves = {};
 	if(phase === Phase.SPRING_RETREAT || phase === Phase.FALL_RETREAT) {
 		Object.keys(dislodgedUnits).forEach((key) => {
+			if(key in this.gameState.moves) {
+				return;
+			}
 			var disbandMove = {};
 			disbandMove.unit = dislodgedUnits[key];
 			disbandMove.moveType = 'DISBAND';
+			disbandMove.firstLoc = key;
 			disbandMove.secondLoc = null;
-			defaultMoves[key] = disbandMove;
+			this.gameState.moves[key] = disbandMove;
 		});
 	} else if(phase === Phase.WINTER) { // TODO
 	
 	} else {
 		Object.keys(units).forEach((key) => {
+			if(key in this.gameState.moves) {
+				return;
+			}
 			var holdMove = {};
 			holdMove.unit = units[key];
 			holdMove.moveType = 'HOLD';
+			holdMove.firstLoc = key;
 			holdMove.secondLoc = null;
 			holdMove.thirdLoc = null; 
 			holdMove.coast = null;
-			defaultMoves[key] = holdMove;
+			this.gameState.moves[key] = holdMove;
 		});
 	}
-	return defaultMoves;
 }
 
 GameModel.prototype.addMove = function(move) {
 	var firstLocation = move.firstLoc;
-	delete move.firstLoc;
+	//delete move.firstLoc;
 	this.gameState.moves[firstLocation] = move;
 }
 
 GameModel.prototype.deleteMove = function(location) {
-	var defaultMove = {};
+	/*var defaultMove = {};
 	var phase = this.gameState.phase;
 	if(phase === Phase.SPRING_RETREAT || phase === Phase.FALL_RETREAT) {
 		defaultMove.unit = this.gameState.dislodgedUnits[location];
@@ -86,7 +95,8 @@ GameModel.prototype.deleteMove = function(location) {
 	defaultMove.secondLoc = null;
 	defaultMove.thirdLoc = null; 
 	defaultMove.coast = null;
-	this.gameState.moves[location] = defaultMove;
+	this.gameState.moves[location] = defaultMove;*/
+	delete this.gameState.moves[location];
 }
 
 GameModel.prototype.getGameState = function() {
