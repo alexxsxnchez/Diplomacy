@@ -6,13 +6,7 @@ function MainController() {
 	});
 }
 
-MainController.prototype.addGameClickedHandler = function(handler) {
-	this.gameClickedHandler = handler;
-}
-
 MainController.prototype.onGameClicked = function(id) {
-	this.gameClickedHandler(id);
-	console.log("haglaj");
 	document.location.href = "/game?gameId=" + id;
 }
 

@@ -74,25 +74,19 @@ Game.prototype.processTurn = function(next) {
 		case Phase.SPRING_RETREAT:
 		case Phase.FALL_RETREAT:
 			var results = this.processRetreatMoves();
-			this.prepareNewGameState(results, function() {
-				next();
-			});
+			this.prepareNewGameState(results, next);
 			break;
 		case Phase.SPRING:
 		case Phase.FALL:
 			var self = this;
 			this.processAdjudicationMoves(function(results) {
-				self.prepareNewGameState(results, function() {
-					next();
-				});
+				self.prepareNewGameState(results, next);
 			});
 			break;
 		case Phase.WINTER:
 			var self = this;
 			var results = this.processWinterMoves(function(results) {
-				self.prepareNewGameState(results, function() {
-					next();
-				});
+				self.prepareNewGameState(results, next);
 			});
 			break;
 	}

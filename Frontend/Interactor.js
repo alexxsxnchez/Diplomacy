@@ -15,6 +15,7 @@ GameInteractor.prototype.registerGameModel = function(model) {
 		console.log('received update data');
 		model.dataReceived(data);
 	});
+	
 	var url = window.location.href;
 	console.log(url);
 	var getQuery = url.split('?')[1];
@@ -48,20 +49,5 @@ GameInteractor.prototype.setupServerConnection = function() {
 	this.socket = io.connect();
 	var self = this;
 	console.log('setting up server connection');
-	/*this.socket.on('join', function(data) {
-		console.log('I have joined room');
-		//self.model.loadGameState();
-	});*/
-	
-	
-	
 }
-
-/*Interactor.prototype.requestGameAccess = function(id) {
-	this.socket.emit('gameaccess', id);
-	var self = this;
-	this.socket.on('gameaccess', function(gameData) {
-		self.mainController.enterGame(gameData);		
-	});
-}*/
 

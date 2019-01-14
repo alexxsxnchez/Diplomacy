@@ -1,8 +1,5 @@
 function MapModel(presenter) {
 	this.presenter = presenter;
-	//this.interactor = interactor;
-	//this.loadGameState();
-	//this.interactor.addLoadGameStateHandler(this.loadGameState.bind(this));
 }
 
 MapModel.prototype.addMoveCreatedHandler = function(handler) {
@@ -30,6 +27,7 @@ MapModel.prototype.dataReceived = function(gameState) {
 	this.presenter.update(this.year, this.phase, this.territories, this.units, this.dislodgedUnits, this.isFinalized, this.moves);
 }
 
+// Should be validated by servers
 MapModel.prototype.getHomeCentres = function(nation) {
 	switch(nation) {
 		case Nation.AUSTRIA:
@@ -51,6 +49,7 @@ MapModel.prototype.getHomeCentres = function(nation) {
 	}
 }
 
+// Should be validated by server
 MapModel.prototype.getBuildOptions = function(territory) {
 	var options = [];
 	switch(territory) {
@@ -85,148 +84,6 @@ MapModel.prototype.getBuildOptions = function(territory) {
 	}
 	return options;
 }
-		/*,
-		'Prussia': {
-			type: 'army',
-			nation: Nation.GERMANY
-		},
-		'Silesia': {
-			type: 'army',
-			nation: Nation.GERMANY
-		},
-		'Ruhr': {
-			type: 'army',
-			nation: Nation.GERMANY
-		},
-		'Wales': {
-			type: 'army',
-			nation: Nation.ENGLAND
-		},
-		'Yorkshire': {
-			type: 'fleet',
-			nation: Nation.ENGLAND
-		},
-		'Clyde': {
-			type: 'army',
-			nation: Nation.ENGLAND
-		},
-		'Burgundy': {
-			type: 'army',
-			nation: Nation.FRANCE
-		},
-		'Gascony': {
-			type: 'fleet',
-			nation: Nation.FRANCE
-		},
-		'Picardy': {
-			type: 'army',
-			nation: Nation.FRANCE
-		},
-		'Piedmont': {
-			type: 'fleet',
-			nation: Nation.ITALY
-		},
-		'Tuscany': {
-			type: 'army',
-			nation: Nation.ITALY
-		},
-		'Apulia': {
-			type: 'army',
-			nation: Nation.ITALY
-		},
-		'Tyrolia': {
-			type: 'army',
-			nation: Nation.AUSTRIA
-		},
-		'Bohemia': {
-			type: 'army',
-			nation: Nation.AUSTRIA
-		},
-		'Galicia': {
-			type: 'army',
-			nation: Nation.AUSTRIA
-		},
-		'Armenia': {
-			type: 'fleet',
-			nation: Nation.TURKEY
-		},
-		'Syria': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'Rumania': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'Ukraine': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Livonia': {
-			type: 'fleet',
-			nation: Nation.RUSSIA
-		},
-		'Serbia': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Finland': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Albania': {
-			type: 'fleet',
-			nation: Nation.AUSTRIA
-		},
-		'Greece': {
-			type: 'fleet',
-			nation: Nation.AUSTRIA
-		},
-		'Bulgaria': {
-			type: 'army',
-			nation: Nation.TURKEY,
-		},
-		'Tunis': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'NorthAfrica': {
-			type: 'army',
-			nation: Nation.TURKEY
-		},
-		'Portugal': {
-			type: 'fleet',
-			nation: Nation.RUSSIA
-		},
-		'Belgium': {
-			type: 'fleet',
-			nation: Nation.RUSSIA
-		},
-		'Holland': {
-			type: 'fleet',
-			nation: Nation.RUSSIA
-		},
-		'Norway': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Sweden': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Spain': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		},
-		'Denmark': {
-			type: 'army',
-			nation: Nation.RUSSIA
-		}
-	}
-	
-	this.moves = [];
-	this.presenter.update(this.territories, this.units);
-}*/
 
 MapModel.prototype.getDislodgedUnitAt = function(territory) {
 	if(territory in this.dislodgedUnits) {
@@ -267,6 +124,7 @@ MapModel.prototype.getPhase = function() {
 	return this.phase;
 }
 
+// Should be validated by server
 MapModel.prototype.createNewMove = function(unit, moveType, firstLocation, secondLocation, thirdLocation, coast, viaConvoy) {
 	// send to server
 	var s = 'move: ' + firstLocation + " " + moveType + " " + secondLocation + " " + thirdLocation + " " + coast + " withConvoy: " + viaConvoy;
