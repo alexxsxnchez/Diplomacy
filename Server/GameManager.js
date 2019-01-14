@@ -19,12 +19,6 @@ GameManager.prototype.addGameRequestListener = function(socket) {
 }
 
 GameManager.prototype.loadDefaultGameList = function(io) {
-	
-	/*if(this.loadedGameList) {
-		this.gameList[0].socket = socket;
-		this.gameList[0].setupEvents();
-		return;
-	}*/
 	var game0 = new Game(io, 0);
 	game0.start();
 	this.gameList[0] = game0;

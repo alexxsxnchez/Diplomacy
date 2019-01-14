@@ -10,6 +10,8 @@ function Game(io, id) {
 	console.log("new game created");
 }
 
+// Consider moving "addUserSocketToRoom" and "addSocketToRoom" to the Room class
+// The Room class can then be used to keep track of authorized users maybe?
 Game.prototype.addUserSocketToRoom = function(socket, userId) {
 	this.setupUserEvents(socket);
 	this.addSocketToRoom(socket);
@@ -42,7 +44,6 @@ Game.prototype.setupUserEvents = function(socket) {
 
 Game.prototype.start = function(move) {
 	this.model.loadInitialConditions();
-	//this.io.emit('update', this.model.getGameState());
 }
 
 Game.prototype.addMove = function(move) {

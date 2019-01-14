@@ -1,9 +1,6 @@
 function GameInteractor(gameModel) {
 	this.setupServerConnection();
 	this.registerGameModel(gameModel);
-	
-//	this.mainController = mainController;
-//	this.mainController.addGameClickedHandler(this.requestGameAccess.bind(this));
 }
 
 GameInteractor.prototype.registerGameModel = function(model) {
