@@ -2,6 +2,7 @@ var Nation = require('./Nation.js');
 var Phase = require('./Phase.js');
 var GameModel = require('./GameModel.js');
 var ChildProcess = require('child_process');
+var Validator = require('./Validator.js');
 
 function Game(io, id) {
 	this.io = io;
@@ -47,11 +48,17 @@ Game.prototype.start = function(move) {
 }
 
 Game.prototype.addMove = function(move) {
-	this.model.addMove(move);
+	var validator = new Validator();
+	if(validator.validateMoveData(move)) {
+		this.model.addMove(move);
+	}
 }
 
 Game.prototype.deleteMove = function(location) {
-	this.model.deleteMove(location);
+	var validator = new Validator();
+	if(validator.validateLocation(location)) {
+		this.model.deleteMove(location);
+	}
 }
 
 Game.prototype.playerFinalized = function(player) {
